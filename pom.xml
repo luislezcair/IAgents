@@ -7,6 +7,10 @@
     <groupId>ia</groupId>
     <artifactId>ia</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>Sistema Multi-Agente - Inteligencia Artificial</name>
+    <url>https://github.com/luislezcair/IAgents</url>
 
     <repositories>
         <repository>
