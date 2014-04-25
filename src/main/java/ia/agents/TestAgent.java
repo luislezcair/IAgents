@@ -13,6 +13,7 @@ public class TestAgent extends Agent {
     protected void setup() {
         System.out.println("Hola, soy el agente "
                 + getLocalName() + " y funciono de maravillas");
+        System.out.println("GUID: " + getName());
         doDelete();
     }
 }
