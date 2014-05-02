@@ -7,11 +7,11 @@ package ia.agents;
 import jade.core.Agent;
 
 @SuppressWarnings("unused")
-public class TestAgent extends Agent {
+public class Agencia extends Agent {
 
     @Override
     protected void setup() {
-        System.out.println("Hola, soy el agente "
+        System.out.println("Hola, soy el agente agencia "
                 + getLocalName() + " y funciono de maravillas");
         System.out.println("GUID: " + getName());
         doDelete();
