@@ -4,10 +4,9 @@
       <root url="jar://$MAVEN_REPOSITORY$/com/tilab/jade/jade/4.3.1/jade-4.3.1.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$MAVEN_REPOSITORY$/com/tilab/jade/jade/4.3.1/jade-4.3.1-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/JADE-doc-4.3.1.zip!/jade/doc/api" />
+      <root url="jar://$PROJECT_DIR$/JADE-doc-4.3.1.zip!/jade/doc/tools/sniffer/html/jdoc" />
     </JAVADOC>
-    <SOURCES>
-      <root url="jar://$MAVEN_REPOSITORY$/com/tilab/jade/jade/4.3.1/jade-4.3.1-sources.jar!/" />
-    </SOURCES>
+    <SOURCES />
   </library>
 </component>
