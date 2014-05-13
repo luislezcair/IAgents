@@ -1,5 +1,6 @@
 /**
- * Created by Luis Lezcano Airaldi
+ * Created by IA - Grupo 3.
+ * Part of IAgents
  */
 
 package ia.agents;
@@ -59,6 +60,5 @@ public class Lugar extends Agent {
         System.out.println("Hola, soy el agente lugar "
                 + getLocalName() + " y funciono de maravillas");
         System.out.println("GUID: " + getName());
-        doDelete();
     }
 }

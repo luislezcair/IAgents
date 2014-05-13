@@ -1,5 +1,6 @@
 /**
- * Created by Luis Lezcano Airaldi
+ * Created by IA - Grupo 3.
+ * Part of IAgents
  */
 
 package ia.agents;
@@ -50,6 +51,5 @@ public class Transporte extends Agent {
         System.out.println("Hola, soy el agente transporte "
                 + getLocalName() + " y funciono de maravillas");
         System.out.println("GUID: " + getName());
-        doDelete();
     }
 }

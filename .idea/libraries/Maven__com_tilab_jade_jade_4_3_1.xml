@@ -7,6 +7,8 @@
       <root url="jar://$PROJECT_DIR$/JADE-doc-4.3.1.zip!/jade/doc/api" />
       <root url="jar://$PROJECT_DIR$/JADE-doc-4.3.1.zip!/jade/doc/tools/sniffer/html/jdoc" />
     </JAVADOC>
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/JADE-src-4.3.1.zip!/jade/src" />
+    </SOURCES>
   </library>
 </component>

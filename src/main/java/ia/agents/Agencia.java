@@ -1,19 +1,19 @@
 /**
- * Created by Luis Lezcano Airaldi
+ * Created by IA - Grupo 3.
+ * Part of IAgents
  */
 
 package ia.agents;
 
+import ia.agents.ui.UIAgency;
 import jade.core.Agent;
 
-@SuppressWarnings("unused")
 public class Agencia extends Agent {
+    private UIAgency ui;
 
     @Override
     protected void setup() {
-        System.out.println("Hola, soy el agente agencia "
-                + getLocalName() + " y funciono de maravillas");
-        System.out.println("GUID: " + getName());
-        doDelete();
+        ui = new UIAgency(this);
+        ui.setupUi();
     }
 }
