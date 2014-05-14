@@ -8,7 +8,7 @@ package ia.agents;
 import jade.core.Agent;
 
 @SuppressWarnings("unused")
-public class Turista extends Agent {
+public class AgenteTurista extends Agent {
     @Override
     protected void setup() {
         System.out.println("Hola, soy el agente turista "

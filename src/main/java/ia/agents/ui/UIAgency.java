@@ -5,26 +5,26 @@
 
 package ia.agents.ui;
 
-import ia.agents.Agencia;
+import ia.agents.AgenteAgencia;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class UIAgency {
-    private Agencia agencia;
+    private AgenteAgencia agenteAgencia;
     private JPanel mainPanel;
     private JLabel labelAgentInfo;
     private JFrame mainFrame;
 
-    public UIAgency(Agencia a) {
-        agencia = a;
+    public UIAgency(AgenteAgencia a) {
+        agenteAgencia = a;
 
         // Crea una ventana con el nombre del agente como título
-        mainFrame = new JFrame(agencia.getLocalName());
+        mainFrame = new JFrame(agenteAgencia.getLocalName());
     }
 
     public void setupUi() {
-        labelAgentInfo.setText("Hola, soy " + agencia.getName() +
+        labelAgentInfo.setText("Hola, soy " + agenteAgencia.getName() +
                 " y esta es mi interfaz");
 
         // Agrega el contenido de la ventana

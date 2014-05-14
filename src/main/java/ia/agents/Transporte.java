@@ -5,10 +5,11 @@
 
 package ia.agents;
 
-import jade.core.Agent;
-
+/**
+ * Clase que representa a una unidad de transporte
+ */
 @SuppressWarnings("unused")
-public class Transporte extends Agent {
+public class Transporte {
     private String destino;
     private int tipo;
     private int capacidadDisp;
@@ -44,12 +45,5 @@ public class Transporte extends Agent {
 
     public void setDescuento(double descuento) {
         this.descuento = descuento;
-    }
-
-    @Override
-    protected void setup() {
-        System.out.println("Hola, soy el agente transporte "
-                + getLocalName() + " y funciono de maravillas");
-        System.out.println("GUID: " + getName());
     }
 }

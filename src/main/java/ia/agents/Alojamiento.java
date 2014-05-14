@@ -5,10 +5,11 @@
 
 package ia.agents;
 
-import jade.core.Agent;
-
+/**
+ * Clase que representa un lugar de alojamiento para los turistas
+ */
 @SuppressWarnings("unused")
-public class Lugar extends Agent {
+public class Alojamiento {
     private String destino;
     private int cantPersonas;
     private int tipoLugar;
@@ -53,12 +54,5 @@ public class Lugar extends Agent {
 
     public void setDescuento(double descuento) {
         this.descuento = descuento;
-    }
-
-    @Override
-    protected void setup() {
-        System.out.println("Hola, soy el agente lugar "
-                + getLocalName() + " y funciono de maravillas");
-        System.out.println("GUID: " + getName());
     }
 }

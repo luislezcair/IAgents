@@ -7,8 +7,11 @@ package ia.agents;
 
 import java.util.Date;
 
+/**
+ * Clase que epresenta a un paquete de viaje
+ */
 @SuppressWarnings("unused")
-public class TravelPackage {
+public class Paquete {
 	private int cantPersonas;
     private Date fecha;
     private String tipoLugar;
