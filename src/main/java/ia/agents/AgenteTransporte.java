@@ -13,6 +13,8 @@ import jade.domain.FIPAException;
 
 @SuppressWarnings("unused")
 public class AgenteTransporte extends Agent {
+    // TODO: recibir agencia como argumento y registrarse con esa
+
     @Override
     protected void setup() {
         // TODO: Crear y mostrar la interfaz

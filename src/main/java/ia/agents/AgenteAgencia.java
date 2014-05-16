@@ -11,14 +11,21 @@ import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.*;
 import jade.domain.FIPAException;
 
+//import java.util.Vector;
+
 public class AgenteAgencia extends Agent {
     private UIAgency ui;
+    //private Vector lugares;
+    //private Vector transportes;
+
+    // TODO: recibir proposals de lugares y transportes y agregarlos a las listas
 
     @Override
     protected void setup() {
         // Crear y mostrar la interfaz
+        /*
         ui = new UIAgency(this);
-        ui.setupUi();
+        ui.setupUi();*/
 
         // Registrarse en el servicio de páginas amarillas
         DFAgentDescription ad = new DFAgentDescription();
