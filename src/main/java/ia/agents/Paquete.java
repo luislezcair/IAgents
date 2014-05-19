@@ -10,22 +10,28 @@ import java.util.Date;
 /**
  * Clase que epresenta a un paquete de viaje
  */
-@SuppressWarnings("unused")
 public class Paquete {
-	private int cantPersonas;
-    private Date fecha;
-    private String tipoLugar;
     private String destino;
-    private int cantDias;
-    private double importeMaxPP;
-    private int formaPago;
+    private int dias;
+    private Date fecha;
+    private int formaDePago;
+    private double importeMaxPorPersona;
+    private int personas;
 
-    public int getCantPersonas() {
-        return cantPersonas;
+    public String getDestino() {
+        return destino;
     }
 
-    public void setCantPersonas(int cantPersonas) {
-        this.cantPersonas = cantPersonas;
+    public void setDestino(String destino) {
+        this.destino = destino;
+    }
+
+    public int getDias() {
+        return dias;
+    }
+
+    public void setDias(int dias) {
+        this.dias = dias;
     }
 
     public Date getFecha() {
@@ -36,43 +42,41 @@ public class Paquete {
         this.fecha = fecha;
     }
 
-    public String getTipoLugar() {
-        return tipoLugar;
+    public int getFormaDePago() {
+        return formaDePago;
     }
 
-    public void setTipoLugar(String tipoLugar) {
-        this.tipoLugar = tipoLugar;
+    public void setFormaDePago(int formaDePago) {
+        this.formaDePago = formaDePago;
     }
 
-    public String getDestino() {
-        return destino;
+    public double getImporteMaxPorPersona() {
+        return importeMaxPorPersona;
     }
 
-    public void setDestino(String destino) {
-        this.destino = destino;
+    public void setImporteMaxPorPersona(double importeMaxPorPersona) {
+        this.importeMaxPorPersona = importeMaxPorPersona;
     }
 
-    public int getCantDias() {
-        return cantDias;
+    public int getPersonas() {
+        return personas;
     }
 
-    public void setCantDias(int cantDias) {
-        this.cantDias = cantDias;
+    public void setPersonas(int personas) {
+        this.personas = personas;
     }
 
-    public double getImporteMaxPP() {
-        return importeMaxPP;
-    }
-
-    public void setImporteMaxPP(double importeMaxPP) {
-        this.importeMaxPP = importeMaxPP;
-    }
-
-    public int getFormaPago() {
-        return formaPago;
-    }
-
-    public void setFormaPago(int formaPago) {
-        this.formaPago = formaPago;
+    /**
+     * Versión serializada de un paquete turístico
+     * @return Cadena con los atributos separados por '@'
+     */
+    @Override
+    public String toString() {
+        return destino + "@" +
+               dias + "@" +
+               fecha + "@" +
+               formaDePago + "@" +
+               importeMaxPorPersona + "@" +
+               personas;
     }
 }

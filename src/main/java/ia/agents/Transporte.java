@@ -10,17 +10,33 @@ package ia.agents;
  */
 @SuppressWarnings("unused")
 public class Transporte {
-    private String destino;
-    private int tipo;
-    private int capacidadDisp;
+    private int capacidad;
     private double descuento;
+    private double precioPorPersona;
+    private int tipo;
 
-    public String getDestino() {
-        return destino;
+    public int getCapacidad() {
+        return capacidad;
     }
 
-    public void setDestino(String destino) {
-        this.destino = destino;
+    public void setCapacidad(int capacidad) {
+        this.capacidad = capacidad;
+    }
+
+    public double getDescuento() {
+        return descuento;
+    }
+
+    public void setDescuento(double descuento) {
+        this.descuento = descuento;
+    }
+
+    public double getPrecioPorPersona() {
+        return precioPorPersona;
+    }
+
+    public void setPrecioPorPersona(double precioPorPersona) {
+        this.precioPorPersona = precioPorPersona;
     }
 
     public int getTipo() {
@@ -31,19 +47,15 @@ public class Transporte {
         this.tipo = tipo;
     }
 
-    public int getCapacidadDisp() {
-        return capacidadDisp;
-    }
-
-    public void setCapacidadDisp(int capacidadDisp) {
-        this.capacidadDisp = capacidadDisp;
-    }
-
-    public double getDescuento() {
-        return descuento;
-    }
-
-    public void setDescuento(double descuento) {
-        this.descuento = descuento;
+    /**
+     * Versión serializada de un medio de transporte
+     * @return Cadena con los atributos separados por '@'
+     */
+    @Override
+    public String toString() {
+        return capacidad + "@" +
+               descuento + "@" +
+               precioPorPersona + "@" +
+               tipo;
     }
 }

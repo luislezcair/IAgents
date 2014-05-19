@@ -5,9 +5,8 @@
 
 package ia.main;
 
-class Main {
-    public static void main(String[] argv) {
-        // Crea el administrador de agentes y muestra su interfaz
+public class Main {
+    public static void main(String[] args) {
         AgentManager am = new AgentManager();
         am.showUi();
     }

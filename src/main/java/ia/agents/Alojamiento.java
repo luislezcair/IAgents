@@ -10,34 +10,25 @@ package ia.agents;
  */
 @SuppressWarnings("unused")
 public class Alojamiento {
-    private String destino;
-    private int cantPersonas;
-    private int tipoLugar;
-    private double precioPorPersona;
+    private int capacidad;
     private double descuento;
+    private double precioPorPersona;
+    private int tipo;
 
-    public String getDestino() {
-        return destino;
+    public int getCapacidad() {
+        return capacidad;
     }
 
-    public void setDestino(String destino) {
-        this.destino = destino;
+    public void setCapacidad(int capacidad) {
+        this.capacidad = capacidad;
     }
 
-    public int getCantPersonas() {
-        return cantPersonas;
+    public double getDescuento() {
+        return descuento;
     }
 
-    public void setCantPersonas(int cantPersonas) {
-        this.cantPersonas = cantPersonas;
-    }
-
-    public int getTipoLugar() {
-        return tipoLugar;
-    }
-
-    public void setTipoLugar(int tipoLugar) {
-        this.tipoLugar = tipoLugar;
+    public void setDescuento(double descuento) {
+        this.descuento = descuento;
     }
 
     public double getPrecioPorPersona() {
@@ -48,11 +39,23 @@ public class Alojamiento {
         this.precioPorPersona = precioPorPersona;
     }
 
-    public double getDescuento() {
-        return descuento;
+    public int getTipo() {
+        return tipo;
     }
 
-    public void setDescuento(double descuento) {
-        this.descuento = descuento;
+    public void setTipo(int tipo) {
+        this.tipo = tipo;
+    }
+
+    /**
+     * Versión serializada de un lugar de alojamiento
+     * @return Cadena con los atributos separados por '@'
+     */
+    @Override
+    public String toString() {
+        return capacidad + "@" +
+               descuento + "@" +
+               precioPorPersona + "@" +
+               tipo;
     }
 }

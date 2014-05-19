@@ -67,6 +67,10 @@ public class AgenteAgencia extends Agent {
      * @return Lista con los agentes encontrados
      */
     private List<AID> getAgentesAsociados(String agentType) {
+        // TODO: este método debería servir para obtener los lugares y
+        // transportes asociados cuando se recibe una petición del turista
+        // y hay que buscar los mejores paquetes. Hay que moverlo a un
+        // Behaviour cuando esté implementada la comunicación entre agentes.
         List<AID> resultList = new ArrayList<AID>();
 
         // Buscamos agentes en el DF
