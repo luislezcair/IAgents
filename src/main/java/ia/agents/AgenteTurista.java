@@ -19,7 +19,6 @@ import jade.lang.acl.ACLMessage;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("unused")
 public class AgenteTurista extends Agent {
     private List<AID> agencias;
     private Paquete paquete;
@@ -78,5 +77,13 @@ public class AgenteTurista extends Agent {
                 myAgent.send(cfp);
             }
         });
+    }
+
+    /**
+     * Este método se usa en la UI para rellenar los datos del paquete
+     * @return Regresa el paquete turístico de este turista
+     */
+    public Paquete getPaquete() {
+        return paquete;
     }
 }
