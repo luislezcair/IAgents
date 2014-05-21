@@ -8,16 +8,17 @@ package ia.agents;
 import ia.agents.ui.UITourist;
 import jade.core.AID;
 import jade.core.Agent;
-import jade.core.behaviours.OneShotBehaviour;
 import jade.core.behaviours.TickerBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
+import jade.proto.ContractNetInitiator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 public class AgenteTurista extends Agent {
     private List<AID> agencias;
@@ -32,6 +33,7 @@ public class AgenteTurista extends Agent {
 
         // Behaviour para obtener las agencias registradas
         // en las páginas amarillas cada 60 segundos.
+        // TODO: Suscribirse al DF
         addBehaviour(new TickerBehaviour(this, 6000) {
             @Override
             protected void onTick() {
@@ -59,31 +61,69 @@ public class AgenteTurista extends Agent {
     }
 
     /**
-     * Envía un CFP a las agencias registradas para empezar la negociación.
-     * TODO: ampliar para manejar las respuestas
+     * Inicia la negociación con las agencias
      */
     public void sendCfp() {
-        addBehaviour(new OneShotBehaviour(this) {
-            @Override
-            public void action() {
-                if(agencias.isEmpty())
-                    return;
-
-                ACLMessage cfp = new ACLMessage(ACLMessage.CFP);
-                for(AID aid : agencias) {
-                    cfp.addReceiver(aid);
-                }
-                cfp.setContent(paquete.toString());
-                myAgent.send(cfp);
-            }
-        });
+        addBehaviour(new PackageNegotiator());
     }
 
     /**
-     * Este método se usa en la UI para rellenar los datos del paquete
-     * @return Regresa el paquete turístico de este turista
+     * Método utilizado en la UI para rellenar los datos del paquete
+     * @return El paquete turístico de este turista
      */
     public Paquete getPaquete() {
         return paquete;
+    }
+
+    /**
+     * Implementación de un contract-net para manejar la interacción con las
+     * agencias.
+     */
+    private class PackageNegotiator extends ContractNetInitiator {
+        public PackageNegotiator() {
+            super(null, null);
+        }
+
+        @Override
+        protected Vector prepareCfps(ACLMessage cfp) {
+            cfp = new ACLMessage(ACLMessage.CFP);
+
+            for(AID aid : agencias) {
+                cfp.addReceiver(aid);
+            }
+
+            // TODO: Usar ontología
+            cfp.setContent(paquete.toString());
+
+            Vector<ACLMessage> v = new Vector<ACLMessage>();
+            v.add(cfp);
+            return v;
+        }
+
+        @Override
+        protected void handleAllResponses(Vector responses,
+                                          Vector acceptances) {
+            // El turista decide el mejor entre todos los paquetes
+            // recibidos de las agencias.
+            for(Object obj : responses) {
+                ACLMessage resp = (ACLMessage) obj;
+                if(resp.getPerformative() == ACLMessage.PROPOSE) {
+                    // Procesar la respuesta recibida de una agencia,
+                    // decidir cuál es la mejor.
+                    System.out.println(
+                            "[TURISTA] Propuesta recibida de la agencia " +
+                                    resp.getSender().getName());
+
+                    // Si nos conviene este paquete, respondemos accept
+                    ACLMessage accept = resp.createReply();
+                    accept.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
+                    acceptances.add(accept);
+                } else {
+                    System.out.println(
+                            "[TURISTA] Rechazo recibido de la agencia " +
+                                        resp.getSender().getName());
+                }
+            }
+        }
     }
 }

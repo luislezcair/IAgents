@@ -11,6 +11,8 @@ import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.*;
 import jade.domain.FIPAException;
+import jade.lang.acl.ACLMessage;
+import jade.proto.ContractNetResponder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,12 +46,7 @@ public class AgenteAgencia extends Agent {
         List<AID> lugares = getAgentesAsociados("Lugar");
         List<AID> transportes = getAgentesAsociados(("Transporte"));
 
-        for(AID aid : lugares) {
-            System.out.println(aid.getName());
-        }
-        for(AID aid : transportes) {
-            System.out.println(aid.getName());
-        }
+        addBehaviour(new TouristNegotiator());
     }
 
     protected void takeDown() {
@@ -91,5 +88,59 @@ public class AgenteAgencia extends Agent {
         }
 
         return resultList;
+    }
+
+    /**
+     * Implementación de un contract-net para manejar la comunicación con
+     * turistas.
+     */
+    private class TouristNegotiator extends ContractNetResponder {
+        public TouristNegotiator() {
+            super(null, null);
+        }
+
+        @Override
+        protected ACLMessage handleCfp(ACLMessage cfp) {
+            // Recibimos un CFP de un agente turista, respondemos con las
+            // ofertas
+            ACLMessage reply = cfp.createReply();
+
+            // TODO: usar ontología
+            String s = cfp.getContent();
+
+            // Chequeo cualquiera
+            if(!s.isEmpty()) {
+                reply.setPerformative(ACLMessage.PROPOSE);
+            } else {
+                reply.setPerformative(ACLMessage.REFUSE);
+            }
+
+            return reply;
+        }
+
+        @Override
+        protected ACLMessage handleAcceptProposal(ACLMessage cfp,
+                                                  ACLMessage propose,
+                                                  ACLMessage accept)
+                                        throws FailureException {
+            System.out.println("[AGENCIA] El turista " +
+                               accept.getSender().getName() +
+                               " aceptó la oferta");
+
+            // FIPA: ante un accept proposal, se realiza una acción y se
+            // responde Inform si se realizó con éxito o failure si falló
+            ACLMessage reply = accept.createReply();
+            reply.setPerformative(ACLMessage.INFORM);
+            return reply;
+        }
+
+        @Override
+        protected void handleRejectProposal(ACLMessage cfp,
+                                            ACLMessage propose,
+                                            ACLMessage reject) {
+
+            // El turista rechazó la oferta de esta agencia.
+            System.out.println("[AGENCIA] El turista rechazó la oferta");
+        }
     }
 }
