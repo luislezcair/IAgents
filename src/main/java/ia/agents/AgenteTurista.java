@@ -27,7 +27,7 @@ public class AgenteTurista extends Agent {
 
     @Override
     protected void setup() {
-        agencias = new ArrayList<AID>();
+        agencias = new ArrayList<>();
         paquete = new Paquete();
         ui = new UITourist(this);
 
@@ -95,12 +95,13 @@ public class AgenteTurista extends Agent {
             // TODO: Usar ontología
             cfp.setContent(paquete.toString());
 
-            Vector<ACLMessage> v = new Vector<ACLMessage>();
+            Vector<ACLMessage> v = new Vector<>();
             v.add(cfp);
             return v;
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         protected void handleAllResponses(Vector responses,
                                           Vector acceptances) {
             // El turista decide el mejor entre todos los paquetes

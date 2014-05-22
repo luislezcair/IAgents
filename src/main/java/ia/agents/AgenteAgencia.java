@@ -74,7 +74,7 @@ public class AgenteAgencia extends Agent {
         // transportes asociados cuando se recibe una petición del turista
         // y hay que buscar los mejores paquetes. Hay que moverlo a un
         // Behaviour cuando esté implementada la comunicación entre agentes.
-        List<AID> resultList = new ArrayList<AID>();
+        List<AID> resultList = new ArrayList<>();
 
         // Buscamos agentes en el DF
         DFAgentDescription ad = new DFAgentDescription();
@@ -164,24 +164,20 @@ public class AgenteAgencia extends Agent {
             ACLMessage cfpLugares = new ACLMessage(ACLMessage.CFP);
             ACLMessage cfpTransportes = new ACLMessage(ACLMessage.CFP);
 
-            for(AID lugar : lugares) {
-                cfpLugares.addReceiver(lugar);
-            }
-
-            for(AID transp : transportes) {
-                cfpTransportes.addReceiver(transp);
-            }
+            lugares.forEach(cfpLugares::addReceiver);
+            transportes.forEach(cfpTransportes::addReceiver);
 
             cfpLugares.setContent("Hola lugares");
             cfpTransportes.setContent("Hola transportes");
 
-            Vector<ACLMessage> msgs = new Vector<ACLMessage>();
+            Vector<ACLMessage> msgs = new Vector<>();
             msgs.add(cfpLugares);
             msgs.add(cfpTransportes);
             return msgs;
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         protected void handleAllResponses(Vector responses,
                                           Vector acceptances) {
             // La agencia recibe las ofertas de los lugares y transportes y
@@ -219,8 +215,7 @@ public class AgenteAgencia extends Agent {
             // Informa al comportamiento padre, a través del DataStore, que
             // terminó la negociación con los lugares y transportes para que
             // pueda continuar la negociación con el turista.
-            // THIS CODE WORKS, I HAVE NO IDEA WHY
-            String key = ((ContractNetResponder) parent).PROPOSE_KEY;
+            String key = ((ContractNetResponder) parent).REPLY_KEY;
             getDataStore().put(key, propose);
         }
     }

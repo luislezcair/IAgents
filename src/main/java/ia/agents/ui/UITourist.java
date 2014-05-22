@@ -10,8 +10,6 @@ import ia.agents.Paquete;
 import org.jdesktop.swingx.JXDatePicker;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * Interfaz para el agente turista con un formulario para los datos del paquete
@@ -28,46 +26,37 @@ public class UITourist {
     private JPanel mainPanel;
     private JFrame mainWindow;
 
-    private AgenteTurista turista;
+    private final AgenteTurista turista;
 
     public UITourist(AgenteTurista agente) {
         turista = agente;
 
         // Click en Consultar
-        buttonConsultar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Actualiza el paquete del agente con los datos del formulario
-                Paquete p = turista.getPaquete();
+        buttonConsultar.addActionListener(event -> {
+            // Actualiza el paquete del agente con los datos del formulario
+            Paquete p = turista.getPaquete();
 
-                p.setDestino(textDestino.getText());
-                p.setDias((Integer)spinnerDias.getValue());
-                p.setFecha(dateFecha.getDate());
-                p.setFormaDePago(comboFormaDePago.getSelectedIndex());
+            p.setDestino(textDestino.getText());
+            p.setDias((Integer)spinnerDias.getValue());
+            p.setFecha(dateFecha.getDate());
+            p.setFormaDePago(comboFormaDePago.getSelectedIndex());
 
-                // En vez de devolver cero, Javita se quiere pasar de listo
-                double importe;
-                try {
-                    importe = Double.valueOf(textImporteMax.getText());
-                } catch (NumberFormatException excepcionInutil) {
-                    importe = 0.0d;
-                }
-                p.setImporteMaxPorPersona(importe);
-
-                p.setPersonas((Integer)spinnerPersonas.getValue());
-
-                turista.sendCfp();
+            // En vez de devolver cero, Javita se quiere pasar de listo
+            double importe;
+            try {
+                importe = Double.valueOf(textImporteMax.getText());
+            } catch (NumberFormatException excepcionInutil) {
+                importe = 0.0d;
             }
+            p.setImporteMaxPorPersona(importe);
+
+            p.setPersonas((Integer)spinnerPersonas.getValue());
+
+            turista.sendCfp();
         });
 
-        // Click en Salir
-        buttonSalir.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Elimina la interfaz, el agente sigue funcionando
-                mainWindow.dispose();
-            }
-        });
+        // Click en Salir. Elimina la interfaz, el agente sigue funcionando
+        buttonSalir.addActionListener(event -> mainWindow.dispose());
 
         // Crear una ventana principal, agrega el contenido y ajusta al tamaño
         mainWindow = new JFrame("Agente Turista");

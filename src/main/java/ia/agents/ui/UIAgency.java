@@ -8,10 +8,9 @@ package ia.agents.ui;
 import ia.agents.AgenteAgencia;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class UIAgency {
-    private AgenteAgencia agenteAgencia;
+    private final AgenteAgencia agenteAgencia;
     private JPanel mainPanel;
     private JLabel labelAgentInfo;
     private JFrame mainFrame;
@@ -21,15 +20,13 @@ public class UIAgency {
 
         // Crea una ventana con el nombre del agente como título
         mainFrame = new JFrame(agenteAgencia.getLocalName());
-    }
+        mainFrame.getContentPane().add(mainPanel);
 
-    public void setupUi() {
         labelAgentInfo.setText("Hola, soy " + agenteAgencia.getName() +
                 " y esta es mi interfaz");
+    }
 
-        // Agrega el contenido de la ventana
-        mainFrame.getContentPane().add(mainPanel, BorderLayout.CENTER);
-        // y la muestra
+    public void showUi() {
         mainFrame.setVisible(true);
     }
 }
