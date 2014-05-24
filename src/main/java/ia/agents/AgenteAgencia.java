@@ -11,9 +11,12 @@ import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.*;
 import jade.domain.FIPAException;
+import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 import jade.proto.ContractNetInitiator;
 import jade.proto.ContractNetResponder;
+import jade.proto.SubscriptionInitiator;
+import jade.util.leap.Iterator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,11 +50,12 @@ public class AgenteAgencia extends Agent {
             e.printStackTrace();
         }
 
-        lugares = getAgentesAsociados("Lugar");
-        transportes = getAgentesAsociados(("Transporte"));
+        lugares = new ArrayList<>();
+        transportes = new ArrayList<>();
+        subscribeToDf();
 
-        TouristNegotiator touristNegotiator = new TouristNegotiator();
-        touristNegotiator.registerHandleCfp(new TravelNegotiator());
+        TouristNegotiator touristNegotiator = new TouristNegotiator(this);
+        touristNegotiator.registerHandleCfp(new TravelNegotiator(this));
         addBehaviour(touristNegotiator);
     }
 
@@ -64,36 +68,52 @@ public class AgenteAgencia extends Agent {
         }
     }
 
-    /**
-     * Consulta el DF para obtener los agentes asociados con esta agencia
-     * @param agentType Tipo de agente a buscar
-     * @return Lista con los agentes encontrados
-     */
-    private List<AID> getAgentesAsociados(String agentType) {
-        // TODO: este método debería servir para obtener los lugares y
-        // transportes asociados cuando se recibe una petición del turista
-        // y hay que buscar los mejores paquetes. Hay que moverlo a un
-        // Behaviour cuando esté implementada la comunicación entre agentes.
-        List<AID> resultList = new ArrayList<>();
-
-        // Buscamos agentes en el DF
+    private void subscribeToDf() {
         DFAgentDescription ad = new DFAgentDescription();
         ServiceDescription sd = new ServiceDescription();
-
-        sd.setType(agentType);
         sd.addProperties(new Property("AgenciaAsociada", getLocalName()));
         ad.addServices(sd);
 
-        try {
-            DFAgentDescription[] result = DFService.search(this, ad);
-            for(DFAgentDescription dfagent : result) {
-                resultList.add(dfagent.getName());
-            }
-        } catch (FIPAException e) {
-            e.printStackTrace();
+        ACLMessage s = DFService.createSubscriptionMessage(this, getDefaultDF(),
+                ad, null);
+
+        addBehaviour(new DFSubscription(this, s));
+    }
+
+    /**
+     * Suscripción al servicio DF para ser notificado cuando aparece algún
+     * agente Lugar o Transporte que esté asociado con esta agencia y
+     * agregarlo a la lista correspondiente.
+     */
+    private class DFSubscription extends SubscriptionInitiator {
+        public DFSubscription(Agent a, ACLMessage msg) {
+            super(a, msg);
         }
 
-        return resultList;
+        @Override
+        protected void handleInform(ACLMessage inform) {
+            try {
+                DFAgentDescription[] dfds =
+                        DFService.decodeNotification(inform.getContent());
+                
+                // Por cada agente, examinamos el tipo de servicio y lo
+                // agregamos a la lista correspondiente.
+                for(DFAgentDescription dfa : dfds) {
+                    AID aid = dfa.getName();
+                    Iterator it = dfa.getAllServices();
+                    while(it.hasNext()) {
+                        ServiceDescription sd = (ServiceDescription) it.next();
+                        if(sd.getType().equals("Lugar")) {
+                            lugares.add(aid);
+                        } else if(sd.getType().equals("Transporte")) {
+                            transportes.add(aid);
+                        }
+                    }
+                }
+            } catch (FIPAException fe) {
+                fe.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -101,27 +121,9 @@ public class AgenteAgencia extends Agent {
      * turistas.
      */
     private class TouristNegotiator extends ContractNetResponder {
-        public TouristNegotiator() {
-            super(null, null);
-        }
-
-        @Override
-        protected ACLMessage handleCfp(ACLMessage cfp) {
-            // Recibimos un CFP de un agente turista, respondemos con las
-            // ofertas
-            ACLMessage reply = cfp.createReply();
-
-            // TODO: usar ontología
-            String s = cfp.getContent();
-
-            // Chequeo cualquiera
-            if(!s.isEmpty()) {
-                reply.setPerformative(ACLMessage.PROPOSE);
-            } else {
-                reply.setPerformative(ACLMessage.REFUSE);
-            }
-
-            return reply;
+        public TouristNegotiator(Agent agent) {
+            super(agent, createMessageTemplate(
+                    FIPANames.InteractionProtocol.FIPA_CONTRACT_NET));
         }
 
         @Override
@@ -155,12 +157,19 @@ public class AgenteAgencia extends Agent {
      * lugares y transportes
      */
     private class TravelNegotiator extends ContractNetInitiator {
-        public TravelNegotiator() {
-            super(null, null);
+        public TravelNegotiator(Agent a) {
+            super(a, null);
         }
 
         @Override
         protected Vector prepareCfps(ACLMessage cfp) {
+            // Obtenemos el CFP del turista, que contiene la información del
+            // paquete.
+            String key = ((ContractNetResponder) parent).CFP_KEY;
+            cfp = (ACLMessage) getDataStore().get(key);
+
+            System.out.println("Paquete: " + cfp.getContent());
+
             ACLMessage cfpLugares = new ACLMessage(ACLMessage.CFP);
             ACLMessage cfpTransportes = new ACLMessage(ACLMessage.CFP);
 
@@ -169,6 +178,11 @@ public class AgenteAgencia extends Agent {
 
             cfpLugares.setContent("Hola lugares");
             cfpTransportes.setContent("Hola transportes");
+
+            cfpLugares.setProtocol(
+                    FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
+            cfpTransportes.setProtocol(
+                    FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
 
             Vector<ACLMessage> msgs = new Vector<>();
             msgs.add(cfpLugares);
@@ -215,7 +229,7 @@ public class AgenteAgencia extends Agent {
             // Informa al comportamiento padre, a través del DataStore, que
             // terminó la negociación con los lugares y transportes para que
             // pueda continuar la negociación con el turista.
-            String key = ((ContractNetResponder) parent).REPLY_KEY;
+            String key = ((ContractNetResponder) parent).PROPOSE_KEY;
             getDataStore().put(key, propose);
         }
     }

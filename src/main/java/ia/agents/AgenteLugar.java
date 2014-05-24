@@ -74,6 +74,14 @@ public class AgenteLugar extends Agent {
         protected ACLMessage handleCfp(ACLMessage cfp) {
             // Recibimos un CFP de una agencia, respondemos con los datos del
             // alojamiento disponible.
+
+            /*
+            CONTROLAR:
+            fecha >= fechaRecibida
+            cantPersonas <= capacidad
+            ENTONCES:
+                Armar propuesta
+             */
             ACLMessage reply = cfp.createReply();
             reply.setContent("Tengo lugar para 2 personas a 20 peco");
             reply.setPerformative(ACLMessage.PROPOSE);

@@ -13,6 +13,7 @@ import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
+import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 import jade.proto.ContractNetInitiator;
 
@@ -64,7 +65,7 @@ public class AgenteTurista extends Agent {
      * Inicia la negociación con las agencias
      */
     public void sendCfp() {
-        addBehaviour(new PackageNegotiator());
+        addBehaviour(new PackageNegotiator(this));
     }
 
     /**
@@ -80,8 +81,8 @@ public class AgenteTurista extends Agent {
      * agencias.
      */
     private class PackageNegotiator extends ContractNetInitiator {
-        public PackageNegotiator() {
-            super(null, null);
+        public PackageNegotiator(Agent a) {
+            super(a, null);
         }
 
         @Override
@@ -94,6 +95,7 @@ public class AgenteTurista extends Agent {
 
             // TODO: Usar ontología
             cfp.setContent(paquete.toString());
+            cfp.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
 
             Vector<ACLMessage> v = new Vector<>();
             v.add(cfp);
