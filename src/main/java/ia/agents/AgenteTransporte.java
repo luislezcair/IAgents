@@ -5,10 +5,9 @@
 
 package ia.agents;
 
+import ia.agents.util.DFRegisterer;
 import jade.core.Agent;
-import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.*;
-import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
 import jade.proto.ContractNetResponder;
 
@@ -18,36 +17,14 @@ public class AgenteTransporte extends Agent {
     protected void setup() {
         // TODO: Crear y mostrar la interfaz
 
-        // Registrarse en el servicio de páginas amarillas
-        DFAgentDescription ad = new DFAgentDescription();
-        ad.setName(getAID());
-
-        ServiceDescription sd = new ServiceDescription();
-        sd.setType("Transporte");
-        sd.setName("Transporte-" + getLocalName());
-
-        // Esta propiedad se usa para saber qué lugar se corresponde con qué
-        // agencia. Se la pasa como argumento al crear el agente.
-        sd.addProperties(new Property("AgenciaAsociada", getAgencia()));
-
-        ad.addServices(sd);
-
-        try {
-            DFService.register(this, ad);
-        } catch (FIPAException e) {
-            e.printStackTrace();
-        }
+        DFRegisterer.register(this, "Transporte",
+                              new Property("AgenciaAsociada", getAgencia()));
 
         addBehaviour(new AgencyNegotiator());
     }
 
     protected void takeDown() {
-        // Deregistrarse del servicio de páginas amarillas
-        try {
-            DFService.deregister(this);
-        } catch(FIPAException e) {
-            //e.printStackTrace();
-        }
+        DFRegisterer.deregister(this);
     }
 
     /**

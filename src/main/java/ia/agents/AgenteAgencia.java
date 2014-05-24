@@ -6,6 +6,7 @@
 package ia.agents;
 
 //import ia.agents.ui.UIAgency;
+import ia.agents.util.DFRegisterer;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.domain.DFService;
@@ -34,21 +35,7 @@ public class AgenteAgencia extends Agent {
         ui = new UIAgency(this);
         ui.setupUi();*/
 
-        // Registrarse en el servicio de páginas amarillas
-        DFAgentDescription ad = new DFAgentDescription();
-        ad.setName(getAID());
-
-        ServiceDescription sd = new ServiceDescription();
-        sd.setType("Agencia");
-        sd.setName("Agencia-" + getLocalName());
-
-        ad.addServices(sd);
-
-        try {
-            DFService.register(this, ad);
-        } catch (FIPAException e) {
-            e.printStackTrace();
-        }
+        DFRegisterer.register(this, "Agencia", null);
 
         lugares = new ArrayList<>();
         transportes = new ArrayList<>();
@@ -60,12 +47,7 @@ public class AgenteAgencia extends Agent {
     }
 
     protected void takeDown() {
-        // Deregistrarse del servicio de páginas amarillas
-        try {
-            DFService.deregister(this);
-        } catch(FIPAException e) {
-            //e.printStackTrace();
-        }
+        DFRegisterer.deregister(this);
     }
 
     private void subscribeToDf() {
@@ -95,7 +77,7 @@ public class AgenteAgencia extends Agent {
             try {
                 DFAgentDescription[] dfds =
                         DFService.decodeNotification(inform.getContent());
-                
+
                 // Por cada agente, examinamos el tipo de servicio y lo
                 // agregamos a la lista correspondiente.
                 for(DFAgentDescription dfa : dfds) {
