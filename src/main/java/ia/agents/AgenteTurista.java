@@ -35,6 +35,7 @@ public class AgenteTurista extends Agent {
         // Behaviour para obtener las agencias registradas
         // en las páginas amarillas cada 60 segundos.
         // TODO: Suscribirse al DF
+
         addBehaviour(new TickerBehaviour(this, 6000) {
             @Override
             protected void onTick() {

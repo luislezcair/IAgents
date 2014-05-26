@@ -25,8 +25,7 @@ import java.util.Vector;
 
 public class AgenteAgencia extends Agent {
     //private UIAgency ui;
-    private List<AID> lugares;
-    private List<AID> transportes;
+    private List<AID> servicios;
 
     @Override
     protected void setup() {
@@ -37,8 +36,7 @@ public class AgenteAgencia extends Agent {
 
         DFRegisterer.register(this, "Agencia", null);
 
-        lugares = new ArrayList<>();
-        transportes = new ArrayList<>();
+        servicios = new ArrayList<>();
         subscribeToDf();
 
         TouristNegotiator touristNegotiator = new TouristNegotiator(this);
@@ -65,11 +63,19 @@ public class AgenteAgencia extends Agent {
     /**
      * Suscripción al servicio DF para ser notificado cuando aparece algún
      * agente Lugar o Transporte que esté asociado con esta agencia y
-     * agregarlo a la lista correspondiente.
+     * agregarlo a la lista de servicios.
      */
     private class DFSubscription extends SubscriptionInitiator {
         public DFSubscription(Agent a, ACLMessage msg) {
             super(a, msg);
+        }
+
+        protected void onRegister(DFAgentDescription dfad) {
+            servicios.add(dfad.getName());
+        }
+
+        protected void onDeregister(DFAgentDescription dfad) {
+            servicios.remove(dfad.getName());
         }
 
         @Override
@@ -80,16 +86,12 @@ public class AgenteAgencia extends Agent {
 
                 // Por cada agente, examinamos el tipo de servicio y lo
                 // agregamos a la lista correspondiente.
-                for(DFAgentDescription dfa : dfds) {
-                    AID aid = dfa.getName();
-                    Iterator it = dfa.getAllServices();
-                    while(it.hasNext()) {
-                        ServiceDescription sd = (ServiceDescription) it.next();
-                        if(sd.getType().equals("Lugar")) {
-                            lugares.add(aid);
-                        } else if(sd.getType().equals("Transporte")) {
-                            transportes.add(aid);
-                        }
+                for(DFAgentDescription dfad : dfds) {
+                    Iterator services = dfad.getAllServices();
+                    if (services.hasNext()) {
+                        onRegister(dfad);
+                    } else {
+                        onDeregister(dfad);
                     }
                 }
             } catch (FIPAException fe) {
@@ -152,23 +154,14 @@ public class AgenteAgencia extends Agent {
 
             System.out.println("Paquete: " + cfp.getContent());
 
-            ACLMessage cfpLugares = new ACLMessage(ACLMessage.CFP);
-            ACLMessage cfpTransportes = new ACLMessage(ACLMessage.CFP);
-
-            lugares.forEach(cfpLugares::addReceiver);
-            transportes.forEach(cfpTransportes::addReceiver);
-
-            cfpLugares.setContent("Hola lugares");
-            cfpTransportes.setContent("Hola transportes");
-
-            cfpLugares.setProtocol(
-                    FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
-            cfpTransportes.setProtocol(
+            ACLMessage cfpServicios = new ACLMessage(ACLMessage.CFP);
+            servicios.forEach(cfpServicios::addReceiver);
+            cfpServicios.setContent("Hola lugares y transportes");
+            cfpServicios.setProtocol(
                     FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
 
             Vector<ACLMessage> msgs = new Vector<>();
-            msgs.add(cfpLugares);
-            msgs.add(cfpTransportes);
+            msgs.add(cfpServicios);
             return msgs;
         }
 

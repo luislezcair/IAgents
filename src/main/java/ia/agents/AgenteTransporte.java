@@ -8,6 +8,7 @@ package ia.agents;
 import ia.agents.util.DFRegisterer;
 import jade.core.Agent;
 import jade.domain.FIPAAgentManagement.*;
+import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 import jade.proto.ContractNetResponder;
 
@@ -44,7 +45,8 @@ public class AgenteTransporte extends Agent {
      */
     private class AgencyNegotiator extends ContractNetResponder {
         public AgencyNegotiator() {
-            super(null, null);
+            super(null, createMessageTemplate(
+                    FIPANames.InteractionProtocol.FIPA_CONTRACT_NET));
         }
 
         @Override
