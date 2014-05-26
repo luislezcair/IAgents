@@ -6,13 +6,11 @@
 package ia.agents;
 
 import ia.agents.ui.UITourist;
+import ia.agents.util.DFAgentSubscriber;
 import jade.core.AID;
 import jade.core.Agent;
-import jade.core.behaviours.TickerBehaviour;
-import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
-import jade.domain.FIPAException;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 import jade.proto.ContractNetInitiator;
@@ -30,36 +28,20 @@ public class AgenteTurista extends Agent {
     protected void setup() {
         agencias = new ArrayList<>();
         paquete = new Paquete();
+
+        subscribeToDf();
+
         ui = new UITourist(this);
-
-        // Behaviour para obtener las agencias registradas
-        // en las páginas amarillas cada 60 segundos.
-        // TODO: Suscribirse al DF
-
-        addBehaviour(new TickerBehaviour(this, 6000) {
-            @Override
-            protected void onTick() {
-                // Descripción del agente y servicio que se quiere consultar
-                DFAgentDescription ad = new DFAgentDescription();
-                ServiceDescription sd = new ServiceDescription();
-                sd.setType("Agencia");
-                ad.addServices(sd);
-
-                try {
-                    DFAgentDescription[] result = DFService.search(myAgent, ad);
-                    agencias.clear();
-                    for(DFAgentDescription dfagent : result) {
-                        agencias.add(dfagent.getName());
-                    }
-                    // Habilita las consultas en el formulario si hay agencias
-                    ui.setConsultaEnabled(!agencias.isEmpty());
-                } catch (FIPAException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
         ui.show();
+    }
+
+    private void subscribeToDf() {
+        DFAgentDescription dfad = new DFAgentDescription();
+        ServiceDescription sd = new ServiceDescription();
+        sd.setType("Agencia");
+        dfad.addServices(sd);
+
+        addBehaviour(new DFAgentSubscriber(this, dfad, agencias));
     }
 
     /**

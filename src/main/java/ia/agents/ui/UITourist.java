@@ -70,13 +70,4 @@ public class UITourist {
     public void show() {
         mainWindow.setVisible(true);
     }
-
-    /**
-     * Habilita o deshabilita el botón de consultar
-     * TODO: comprobar que los datos sean válidos antes de permitir consultas
-     * @param enabled true/false: habilitado/deshabilitado
-     */
-    public void setConsultaEnabled(boolean enabled) {
-        buttonConsultar.setEnabled(enabled);
-    }
 }

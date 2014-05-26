@@ -6,18 +6,15 @@
 package ia.agents;
 
 //import ia.agents.ui.UIAgency;
+import ia.agents.util.DFAgentSubscriber;
 import ia.agents.util.DFRegisterer;
 import jade.core.AID;
 import jade.core.Agent;
-import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.*;
-import jade.domain.FIPAException;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 import jade.proto.ContractNetInitiator;
 import jade.proto.ContractNetResponder;
-import jade.proto.SubscriptionInitiator;
-import jade.util.leap.Iterator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,55 +46,12 @@ public class AgenteAgencia extends Agent {
     }
 
     private void subscribeToDf() {
-        DFAgentDescription ad = new DFAgentDescription();
+        DFAgentDescription dfad = new DFAgentDescription();
         ServiceDescription sd = new ServiceDescription();
         sd.addProperties(new Property("AgenciaAsociada", getLocalName()));
-        ad.addServices(sd);
+        dfad.addServices(sd);
 
-        ACLMessage s = DFService.createSubscriptionMessage(this, getDefaultDF(),
-                ad, null);
-
-        addBehaviour(new DFSubscription(this, s));
-    }
-
-    /**
-     * Suscripción al servicio DF para ser notificado cuando aparece algún
-     * agente Lugar o Transporte que esté asociado con esta agencia y
-     * agregarlo a la lista de servicios.
-     */
-    private class DFSubscription extends SubscriptionInitiator {
-        public DFSubscription(Agent a, ACLMessage msg) {
-            super(a, msg);
-        }
-
-        protected void onRegister(DFAgentDescription dfad) {
-            servicios.add(dfad.getName());
-        }
-
-        protected void onDeregister(DFAgentDescription dfad) {
-            servicios.remove(dfad.getName());
-        }
-
-        @Override
-        protected void handleInform(ACLMessage inform) {
-            try {
-                DFAgentDescription[] dfds =
-                        DFService.decodeNotification(inform.getContent());
-
-                // Por cada agente, examinamos el tipo de servicio y lo
-                // agregamos a la lista correspondiente.
-                for(DFAgentDescription dfad : dfds) {
-                    Iterator services = dfad.getAllServices();
-                    if (services.hasNext()) {
-                        onRegister(dfad);
-                    } else {
-                        onDeregister(dfad);
-                    }
-                }
-            } catch (FIPAException fe) {
-                fe.printStackTrace();
-            }
-        }
+        addBehaviour(new DFAgentSubscriber(this, dfad, servicios));
     }
 
     /**
