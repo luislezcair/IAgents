@@ -5,8 +5,15 @@
 
 package ia.agents;
 
+import ia.agents.ontology.ConsultarAction;
+import ia.agents.ontology.Paquete;
+import ia.agents.ontology.TurismoOntology;
 import ia.agents.ui.UITourist;
 import ia.agents.util.DFAgentSubscriber;
+import jade.content.lang.Codec;
+import jade.content.lang.sl.SLCodec;
+import jade.content.onto.Ontology;
+import jade.content.onto.basic.Action;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
@@ -20,14 +27,16 @@ import java.util.List;
 import java.util.Vector;
 
 public class AgenteTurista extends Agent {
-    private List<AID> agencias;
-    private Paquete paquete;
+    private Codec slCodec = new SLCodec();
+    private Ontology ontology = TurismoOntology.getInstance();
+
+    private List<AID> agencias = new ArrayList<>();
     private UITourist ui;
 
     @Override
     protected void setup() {
-        agencias = new ArrayList<>();
-        paquete = new Paquete();
+        getContentManager().registerLanguage(slCodec);
+        getContentManager().registerOntology(ontology);
 
         subscribeToDf();
 
@@ -44,19 +53,16 @@ public class AgenteTurista extends Agent {
         addBehaviour(new DFAgentSubscriber(this, dfad, agencias));
     }
 
-    /**
-     * Inicia la negociación con las agencias
-     */
-    public void sendCfp() {
-        addBehaviour(new PackageNegotiator(this));
+    @Override
+    protected void takeDown() {
+        ui.dispose();
     }
 
     /**
-     * Método utilizado en la UI para rellenar los datos del paquete
-     * @return El paquete turístico de este turista
+     * Inicia la negociación con las agencias
      */
-    public Paquete getPaquete() {
-        return paquete;
+    public void sendCfp(Paquete p) {
+        addBehaviour(new PackageNegotiator(this, p));
     }
 
     /**
@@ -64,8 +70,11 @@ public class AgenteTurista extends Agent {
      * agencias.
      */
     private class PackageNegotiator extends ContractNetInitiator {
-        public PackageNegotiator(Agent a) {
+        private Paquete paquete;
+
+        public PackageNegotiator(Agent a, Paquete p) {
             super(a, null);
+            paquete = p;
         }
 
         @Override
@@ -76,9 +85,21 @@ public class AgenteTurista extends Agent {
                 cfp.addReceiver(aid);
             }
 
-            // TODO: Usar ontología
-            cfp.setContent(paquete.toString());
+            cfp.setLanguage(slCodec.getName());
+            cfp.setOntology(ontology.getName());
             cfp.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
+
+            ConsultarAction ca = new ConsultarAction();
+            ca.setPaquete(paquete);
+
+            // Hay que "envolver" el AgentAction Consultar en un Action
+            Action action = new Action(myAgent.getAID(), ca);
+
+            try {
+                getContentManager().fillContent(cfp, action);
+            } catch(Exception oe) {
+                System.out.println("[TURISTA]: " + oe.getMessage());
+            }
 
             Vector<ACLMessage> v = new Vector<>();
             v.add(cfp);

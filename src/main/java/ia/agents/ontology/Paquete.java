@@ -3,14 +3,16 @@
  * Part of IAgents
  */
 
-package ia.agents;
+package ia.agents.ontology;
+
+import jade.content.Concept;
 
 import java.util.Date;
 
 /**
  * Clase que epresenta a un paquete de viaje
  */
-public class Paquete {
+public class Paquete implements Concept {
     private String destino;
     private int dias;
     private Date fecha;

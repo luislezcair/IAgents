@@ -6,7 +6,7 @@
 package ia.agents.ui;
 
 import ia.agents.AgenteTurista;
-import ia.agents.Paquete;
+import ia.agents.ontology.Paquete;
 import org.jdesktop.swingx.JXDatePicker;
 
 import javax.swing.*;
@@ -33,8 +33,8 @@ public class UITourist {
 
         // Click en Consultar
         buttonConsultar.addActionListener(event -> {
-            // Actualiza el paquete del agente con los datos del formulario
-            Paquete p = turista.getPaquete();
+            // Carga los datos del paquete y envía un CFP a las agencias
+            Paquete p = new Paquete();
 
             p.setDestino(textDestino.getText());
             p.setDias((Integer)spinnerDias.getValue());
@@ -52,11 +52,11 @@ public class UITourist {
 
             p.setPersonas((Integer)spinnerPersonas.getValue());
 
-            turista.sendCfp();
+            turista.sendCfp(p);
         });
 
         // Click en Salir. Elimina la interfaz, el agente sigue funcionando
-        buttonSalir.addActionListener(event -> mainWindow.dispose());
+        buttonSalir.addActionListener(event -> dispose());
 
         // Crear una ventana principal, agrega el contenido y ajusta al tamaño
         mainWindow = new JFrame("Agente Turista");
@@ -69,5 +69,12 @@ public class UITourist {
      */
     public void show() {
         mainWindow.setVisible(true);
+    }
+
+    /**
+     * Destruye la UI y libera recursos
+     */
+    public void dispose() {
+        mainWindow.dispose();
     }
 }

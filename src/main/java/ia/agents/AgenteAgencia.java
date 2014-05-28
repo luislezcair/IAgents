@@ -6,8 +6,15 @@
 package ia.agents;
 
 //import ia.agents.ui.UIAgency;
-import ia.agents.util.DFAgentSubscriber;
-import ia.agents.util.DFRegisterer;
+import ia.agents.ontology.*;
+import ia.agents.util.*;
+
+import jade.content.Concept;
+import jade.content.ContentElement;
+import jade.content.lang.Codec;
+import jade.content.lang.sl.SLCodec;
+import jade.content.onto.Ontology;
+import jade.content.onto.basic.Action;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.domain.FIPAAgentManagement.*;
@@ -22,7 +29,9 @@ import java.util.Vector;
 
 public class AgenteAgencia extends Agent {
     //private UIAgency ui;
-    private List<AID> servicios;
+    private Codec slCodec = new SLCodec();
+    private Ontology ontology = TurismoOntology.getInstance();
+    private List<AID> servicios = new ArrayList<>();
 
     @Override
     protected void setup() {
@@ -30,10 +39,11 @@ public class AgenteAgencia extends Agent {
         /*
         ui = new UIAgency(this);
         ui.setupUi();*/
+        getContentManager().registerLanguage(slCodec);
+        getContentManager().registerOntology(ontology);
 
         DFRegisterer.register(this, "Agencia", null);
 
-        servicios = new ArrayList<>();
         subscribeToDf();
 
         TouristNegotiator touristNegotiator = new TouristNegotiator(this);
@@ -106,13 +116,32 @@ public class AgenteAgencia extends Agent {
             String key = ((ContractNetResponder) parent).CFP_KEY;
             cfp = (ACLMessage) getDataStore().get(key);
 
-            System.out.println("Paquete: " + cfp.getContent());
+            Paquete p = new Paquete();
+            try {
+                // Extraemos del mensaje la descripción del paquete
+                Action a = (Action) getContentManager().extractContent(cfp);
+                ConsultarAction ca = (ConsultarAction) a.getAction();
+                p = ca.getPaquete();
+            } catch(Exception e) {
+                System.out.println(e.getMessage());
+            }
 
             ACLMessage cfpServicios = new ACLMessage(ACLMessage.CFP);
             servicios.forEach(cfpServicios::addReceiver);
-            cfpServicios.setContent("Hola lugares y transportes");
+            cfpServicios.setOntology(ontology.getName());
+            cfpServicios.setLanguage(slCodec.getName());
             cfpServicios.setProtocol(
                     FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
+
+            ConsultarAction consulta = new ConsultarAction();
+            consulta.setPaquete(p);
+
+            try {
+                getContentManager().fillContent(cfpServicios,
+                        new Action(myAgent.getAID(), consulta));
+            } catch(Exception e) {
+                System.out.println("ERROR: " + e.getMessage());
+            }
 
             Vector<ACLMessage> msgs = new Vector<>();
             msgs.add(cfpServicios);
@@ -128,11 +157,33 @@ public class AgenteAgencia extends Agent {
             for(Object obj : responses) {
                 ACLMessage resp = (ACLMessage) obj;
                 if(resp.getPerformative() == ACLMessage.PROPOSE) {
+                    Action action;
+                    try {
+                        action = (Action) getContentManager()
+                                    .extractContent(resp);
+                    } catch(Exception e) {
+                        System.out.println("ERROR: " + e.getMessage());
+                        return;
+                    }
+
                     // Preguntar si recibimos una oferta de alojamiento o de
                     // transporte y procesar cada una.
-                    System.out.println(
-                            "[AGENCIA] Propuesta recibida del Lugar o " +
-                            "Transporte " + resp.getSender().getName());
+                    Concept concept = action.getAction();
+                    if(concept instanceof OfertarLugarAction) {
+                        OfertarLugarAction of = (OfertarLugarAction) concept;
+                        Alojamiento aloj = of.getAlojamiento();
+                        System.out.println("[AGENCIA] Propuesta recibida " +
+                                "del LUGAR " + action.getActor());
+                        System.out.println("ALOJAMIENTO " + aloj);
+                    }
+                    else if(concept instanceof OfertarTransporteAction) {
+                        OfertarTransporteAction of =
+                                (OfertarTransporteAction) concept;
+                        Transporte transp = of.getTransporte();
+                        System.out.println("[AGENCIA] Propuesta recibida " +
+                                "del TRANSPORTE " + action.getActor());
+                        System.out.println("TRANSPORTE " + transp);
+                    }
 
                     // Si nos convence, aceptamos
                     ACLMessage accept = resp.createReply();

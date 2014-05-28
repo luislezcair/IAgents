@@ -5,7 +5,12 @@
 
 package ia.agents;
 
+import ia.agents.ontology.*;
 import ia.agents.util.DFRegisterer;
+import jade.content.lang.Codec;
+import jade.content.lang.sl.SLCodec;
+import jade.content.onto.Ontology;
+import jade.content.onto.basic.Action;
 import jade.core.Agent;
 import jade.domain.FIPAAgentManagement.*;
 import jade.domain.FIPANames;
@@ -14,16 +19,23 @@ import jade.proto.ContractNetResponder;
 
 @SuppressWarnings("unused")
 public class AgenteLugar extends Agent {
+    private Codec slCodec = new SLCodec();
+    private Ontology ontology = TurismoOntology.getInstance();
+
     @Override
     protected void setup() {
         // TODO: Crear y mostrar la interfaz
 
+        getContentManager().registerLanguage(slCodec);
+        getContentManager().registerOntology(ontology);
+
         DFRegisterer.register(this, "Lugar",
                               new Property("AgenciaAsociada", getAgencia()));
 
-        addBehaviour(new AgencyNegotiator());
+        addBehaviour(new AgencyNegotiator(this));
     }
 
+    @Override
     protected void takeDown() {
         DFRegisterer.deregister(this);
     }
@@ -44,26 +56,42 @@ public class AgenteLugar extends Agent {
      * agencias.
      */
     private class AgencyNegotiator extends ContractNetResponder {
-        public AgencyNegotiator() {
-            super(null, createMessageTemplate(
+        public AgencyNegotiator(Agent a) {
+            super(a, createMessageTemplate(
                     FIPANames.InteractionProtocol.FIPA_CONTRACT_NET));
         }
 
         @Override
         protected ACLMessage handleCfp(ACLMessage cfp) {
-            // Recibimos un CFP de una agencia, respondemos con los datos del
-            // alojamiento disponible.
+            // Recibimos un CFP de una agencia.
+            Paquete p = new Paquete();
+            try {
+                Action a = (Action) getContentManager().extractContent(cfp);
+                ConsultarAction ca = (ConsultarAction) a.getAction();
+                p = ca.getPaquete();
+            } catch(Exception e) {
+                System.out.println(e.getMessage());
+                return null;
+            }
 
-            /*
-            CONTROLAR:
-            fecha >= fechaRecibida
-            cantPersonas <= capacidad
-            ENTONCES:
-                Armar propuesta
-             */
+            // TODO: Analizar paquete
+
+            // Creamos la respuesta
             ACLMessage reply = cfp.createReply();
-            reply.setContent("Tengo lugar para 2 personas a 20 peco");
             reply.setPerformative(ACLMessage.PROPOSE);
+
+            Alojamiento a = new Alojamiento();
+            OfertarLugarAction of = new OfertarLugarAction();
+            of.setAlojamiento(a);
+
+            try {
+                getContentManager().fillContent(reply,
+                        new Action(myAgent.getAID(), of));
+            } catch(Exception e) {
+                System.out.println(e.getMessage());
+                return null;
+            }
+
             return reply;
         }
 

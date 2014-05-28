@@ -5,7 +5,12 @@
 
 package ia.agents;
 
+import ia.agents.ontology.*;
 import ia.agents.util.DFRegisterer;
+import jade.content.lang.Codec;
+import jade.content.lang.sl.SLCodec;
+import jade.content.onto.Ontology;
+import jade.content.onto.basic.Action;
 import jade.core.Agent;
 import jade.domain.FIPAAgentManagement.*;
 import jade.domain.FIPANames;
@@ -14,9 +19,15 @@ import jade.proto.ContractNetResponder;
 
 @SuppressWarnings("unused")
 public class AgenteTransporte extends Agent {
+    private Codec slCodec = new SLCodec();
+    private Ontology ontology = TurismoOntology.getInstance();
+
     @Override
     protected void setup() {
         // TODO: Crear y mostrar la interfaz
+
+        getContentManager().registerLanguage(slCodec);
+        getContentManager().registerOntology(ontology);
 
         DFRegisterer.register(this, "Transporte",
                               new Property("AgenciaAsociada", getAgencia()));
@@ -51,11 +62,35 @@ public class AgenteTransporte extends Agent {
 
         @Override
         protected ACLMessage handleCfp(ACLMessage cfp) {
-            // Recibimos un CFP de una agencia, respondemos con los datos del
-            // alojamiento disponible.
+            // Recibimos un CFP de una agencia
+            Paquete p = new Paquete();
+            try {
+                Action a = (Action) getContentManager().extractContent(cfp);
+                ConsultarAction ca = (ConsultarAction) a.getAction();
+                p = ca.getPaquete();
+            } catch(Exception e) {
+                System.out.println(e.getMessage());
+                return null;
+            }
+
+            // TODO: Analizar paquete
+
+            // Creamos la respuesta
             ACLMessage reply = cfp.createReply();
-            reply.setContent("Tengo un jet privado para 4 personas a 20 peco");
             reply.setPerformative(ACLMessage.PROPOSE);
+
+            Transporte t = new Transporte();
+            OfertarTransporteAction ota = new OfertarTransporteAction();
+            ota.setTransporte(t);
+
+            try {
+                getContentManager().fillContent(reply,
+                        new Action(myAgent.getAID(), ota));
+            } catch(Exception e) {
+                System.out.println(e.getMessage());
+                return null;
+            }
+
             return reply;
         }
 
