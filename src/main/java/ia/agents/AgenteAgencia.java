@@ -10,7 +10,6 @@ import ia.agents.ontology.*;
 import ia.agents.util.*;
 
 import jade.content.Concept;
-import jade.content.ContentElement;
 import jade.content.lang.Codec;
 import jade.content.lang.sl.SLCodec;
 import jade.content.onto.Ontology;
@@ -51,6 +50,7 @@ public class AgenteAgencia extends Agent {
         addBehaviour(touristNegotiator);
     }
 
+    @Override
     protected void takeDown() {
         DFRegisterer.deregister(this);
     }
@@ -202,9 +202,30 @@ public class AgenteAgencia extends Agent {
             // Recibimos inform o failure de algún Lugar o Transporte
             System.out.println("[AGENCIA] INFORM de algún Lugar o Transporte");
 
-            // Acá se construye la oferta que se envía al turista
+            // Creamos el mensaje PROPOSE
             ACLMessage propose = new ACLMessage(ACLMessage.PROPOSE);
-            propose.setContent("Hotel en Hawai y viaje en avión");
+            propose.setLanguage(slCodec.getName());
+            propose.setOntology(ontology.getName());
+
+            // Construimos la lista de ofertas que se envían al turista
+            // TODO: reemplazar por la mejor combinación Lugar-Transporte...
+            OfertarPaqueteAction of = new OfertarPaqueteAction();
+            List<PaqueteAgencia> paquetes = new ArrayList<>();
+            PaqueteAgencia pa = new PaqueteAgencia();
+            Alojamiento aloj = new Alojamiento();
+            Transporte transp = new Transporte();
+            pa.setAlojamiento(aloj);
+            pa.setTransporte(transp);
+            paquetes.add(pa);
+
+            of.setPaqueteAgencias(paquetes);
+
+            try {
+                getContentManager().fillContent(propose,
+                        new Action(myAgent.getAID(), of));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             // Informa al comportamiento padre, a través del DataStore, que
             // terminó la negociación con los lugares y transportes para que

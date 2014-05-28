@@ -8,7 +8,7 @@ package ia.agents.ontology;
 import jade.content.onto.*;
 
 public class TurismoOntology extends BeanOntology {
-    private static final String ONTOLOGY_NAME = "tourism-ontology";
+    private static final String ONTOLOGY_NAME = "turismo-ontology";
 
     // Implementación del patrón Singleton
     private static Ontology instance = new TurismoOntology();
@@ -18,13 +18,14 @@ public class TurismoOntology extends BeanOntology {
     }
 
     private TurismoOntology() {
-        super(ONTOLOGY_NAME);
+        super(ONTOLOGY_NAME, BasicOntology.getInstance());
 
         try {
             // Conceptos:
             add(Paquete.class);
             add(Alojamiento.class);
             add(Transporte.class);
+            add(PaqueteAgencia.class);
 
             // Acciones
             add(ConsultarAction.class);
