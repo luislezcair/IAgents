@@ -5,19 +5,19 @@
 
 package ia.agents;
 
+import ia.agents.negotiation.AgencyNegotiator;
 import ia.agents.ontology.*;
 import ia.agents.util.DFRegisterer;
+import jade.content.AgentAction;
 import jade.content.lang.Codec;
 import jade.content.lang.sl.SLCodec;
 import jade.content.onto.Ontology;
-import jade.content.onto.basic.Action;
 import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
 import jade.domain.FIPAAgentManagement.*;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import jade.proto.SSIteratedContractNetResponder;
 import jade.proto.SSResponderDispatcher;
 
 @SuppressWarnings("unused")
@@ -44,7 +44,15 @@ public class AgenteTransporte extends Agent {
                     MessageTemplate.MatchOntology(ontology.getName()),
                     MessageTemplate.MatchLanguage(slCodec.getName()))));
 
-        addBehaviour(new AgencyResponderDispatcher(this, mt));
+        // El despachador crea un Respondedor cuando llega un CFP para
+        // manejar cada conversación.
+        addBehaviour(new SSResponderDispatcher(this, mt) {
+            @Override
+            protected Behaviour createResponder(ACLMessage initiationMsg) {
+                return new AgencyNegotiatorTransporte(myAgent, initiationMsg);
+            }
+
+        });
     }
 
     protected void takeDown() {
@@ -64,82 +72,28 @@ public class AgenteTransporte extends Agent {
     }
 
     /**
-     * Despachador de mensajes para manejar las respuestas en un
-     * iterated-contract-net
+     * Implementamos un AgencyNegotiator para adecuarlo a Transportes.
      */
-    private class AgencyResponderDispatcher extends SSResponderDispatcher {
-        public AgencyResponderDispatcher(Agent a, MessageTemplate mt) {
-            super(a, mt);
-        }
-
-        @Override
-        protected Behaviour createResponder(ACLMessage initiationMsg) {
-            return new AgencyNegotiator(myAgent, initiationMsg);
-        }
-    }
-
-    /** Implementación de un contract-net para manejar la interacción con las
-     * agencias.
-     */
-    private class AgencyNegotiator extends SSIteratedContractNetResponder {
-        public AgencyNegotiator(Agent a, ACLMessage cfp) {
+    private class AgencyNegotiatorTransporte extends AgencyNegotiator {
+        private AgencyNegotiatorTransporte(Agent a, ACLMessage cfp) {
             super(a, cfp);
         }
 
         @Override
-        protected ACLMessage handleCfp(ACLMessage cfp) {
-            // Recibimos un CFP de una agencia
-            Paquete p = new Paquete();
-            try {
-                Action a = (Action) getContentManager().extractContent(cfp);
-                ConsultarAction ca = (ConsultarAction) a.getAction();
-                p = ca.getPaquete();
-            } catch(Exception e) {
-                System.out.println(e.getMessage());
-                return null;
-            }
-
-            // TODO: Analizar paquete
-
-            // Creamos la respuesta
-            ACLMessage reply = cfp.createReply();
-            reply.setPerformative(ACLMessage.PROPOSE);
-
+        public AgentAction prepareResponseAction(Paquete p) {
+            // TODO: crear un transporte con las características que sean
+            // necesarias para satisfacer las necesidades del paquete.
             Transporte t = new Transporte();
             OfertarTransporteAction ota = new OfertarTransporteAction();
             ota.setTransporte(t);
-
-            try {
-                getContentManager().fillContent(reply,
-                        new Action(myAgent.getAID(), ota));
-            } catch(Exception e) {
-                System.out.println(e.getMessage());
-                return null;
-            }
-
-            return reply;
+            return ota;
         }
 
         @Override
-        protected ACLMessage handleAcceptProposal(ACLMessage cfp,
-                                                  ACLMessage propose,
-                                                  ACLMessage accept)
-                throws FailureException {
-            System.out.println("[TRANSPORTE] La agencia aceptó la propuesta");
-
-            // FIPA: un accept_proposal se responde con Inform o Failure.
-            ACLMessage reply = accept.createReply();
-            reply.setPerformative(ACLMessage.INFORM);
-            return reply;
-        }
-
-        @Override
-        protected void handleRejectProposal(ACLMessage cfp,
-                                            ACLMessage propose,
-                                            ACLMessage reject) {
-
-            // FIPA: ante un reject termina la negociación.
-            System.out.println("[TRANSPORTE] La agencia rechazó la propuesta");
+        public boolean canOfferService(Paquete p) {
+            // TODO: Verificar si este agente puede satisfacer el servicio.
+            // (e.g si tenemos capacidad, si la fecha coincide, etc.)
+            return true;
         }
     }
 }
