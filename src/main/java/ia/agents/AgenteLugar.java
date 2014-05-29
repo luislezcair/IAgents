@@ -12,10 +12,13 @@ import jade.content.lang.sl.SLCodec;
 import jade.content.onto.Ontology;
 import jade.content.onto.basic.Action;
 import jade.core.Agent;
+import jade.core.behaviours.Behaviour;
 import jade.domain.FIPAAgentManagement.*;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
-import jade.proto.ContractNetResponder;
+import jade.lang.acl.MessageTemplate;
+import jade.proto.SSIteratedContractNetResponder;
+import jade.proto.SSResponderDispatcher;
 
 @SuppressWarnings("unused")
 public class AgenteLugar extends Agent {
@@ -32,7 +35,16 @@ public class AgenteLugar extends Agent {
         DFRegisterer.register(this, "Lugar",
                               new Property("AgenciaAsociada", getAgencia()));
 
-        addBehaviour(new AgencyNegotiator(this));
+        MessageTemplate mt = MessageTemplate.and(
+            MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol
+                    .FIPA_ITERATED_CONTRACT_NET),
+            MessageTemplate.and(
+                MessageTemplate.MatchPerformative(ACLMessage.CFP),
+                MessageTemplate.and(
+                    MessageTemplate.MatchOntology(ontology.getName()),
+                    MessageTemplate.MatchLanguage(slCodec.getName()))));
+
+        addBehaviour(new AgencyResponderDispatcher(this, mt));
     }
 
     @Override
@@ -52,13 +64,27 @@ public class AgenteLugar extends Agent {
         return args[0].toString();
     }
 
+    /**
+     * Despachador de mensajes para manejar las respuestas en un
+     * iterated-contract-net
+     */
+    private class AgencyResponderDispatcher extends SSResponderDispatcher {
+        public AgencyResponderDispatcher(Agent a, MessageTemplate mt) {
+            super(a, mt);
+        }
+
+        @Override
+        protected Behaviour createResponder(ACLMessage initiationMsg) {
+            return new AgencyNegotiator(myAgent, initiationMsg);
+        }
+    }
+
     /** Implementación de un contract-net para manejar la interacción con las
      * agencias.
      */
-    private class AgencyNegotiator extends ContractNetResponder {
-        public AgencyNegotiator(Agent a) {
-            super(a, createMessageTemplate(
-                    FIPANames.InteractionProtocol.FIPA_CONTRACT_NET));
+    private class AgencyNegotiator extends SSIteratedContractNetResponder {
+        public AgencyNegotiator(Agent a, ACLMessage cfp) {
+            super(a, cfp);
         }
 
         @Override

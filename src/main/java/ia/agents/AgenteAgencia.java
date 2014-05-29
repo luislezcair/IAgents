@@ -131,7 +131,7 @@ public class AgenteAgencia extends Agent {
             cfpServicios.setOntology(ontology.getName());
             cfpServicios.setLanguage(slCodec.getName());
             cfpServicios.setProtocol(
-                    FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
+                    FIPANames.InteractionProtocol.FIPA_ITERATED_CONTRACT_NET);
 
             ConsultarAction consulta = new ConsultarAction();
             consulta.setPaquete(p);
