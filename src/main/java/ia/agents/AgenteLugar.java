@@ -44,7 +44,7 @@ public class AgenteLugar extends Agent {
                         MessageTemplate.MatchOntology(ontology.getName()),
                         MessageTemplate.MatchLanguage(slCodec.getName()))));
 
-        // El despachador crea un Respondedor cuando llega un CFP para
+        // El despachador crea un Responder cuando llega un CFP para
         // manejar cada conversación.
         addBehaviour(new SSResponderDispatcher(this, mt) {
             @Override
@@ -89,7 +89,7 @@ public class AgenteLugar extends Agent {
         @Override
         public boolean canOfferService(Paquete p) {
             // TODO: Verificar si este agente puede satisfacer el servicio.
-            // (e.g si tenemos capacidad, si la fecha coincide, etc.)
+            // (e.g si tenemos capacidad, si la fecha coincide, DESTINO)
             return true;
         }
     }

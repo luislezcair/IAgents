@@ -1,9 +1,9 @@
-package ia.agents.negotiation;
-
 /**
  * Created by IA - Grupo 3.
  * Part of IAgents
  */
+
+package ia.agents.negotiation;
 
 import ia.agents.ontology.ConsultarAction;
 import ia.agents.ontology.Paquete;
@@ -55,7 +55,6 @@ public abstract class AgencyNegotiator extends SSIteratedContractNetResponder {
             return null;
         }
 
-        // Creamos la respuesta
         ACLMessage reply = cfp.createReply();
 
         // Si no podemos ofrecer el servicio enviamos Refuse y terminamos
@@ -64,6 +63,7 @@ public abstract class AgencyNegotiator extends SSIteratedContractNetResponder {
             return reply;
         }
 
+        // Si podemos ofrecer el servicio creamos un PROPOSE
         reply.setPerformative(ACLMessage.PROPOSE);
         AgentAction agentAction = prepareResponseAction(p);
 

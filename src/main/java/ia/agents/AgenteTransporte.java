@@ -44,14 +44,13 @@ public class AgenteTransporte extends Agent {
                     MessageTemplate.MatchOntology(ontology.getName()),
                     MessageTemplate.MatchLanguage(slCodec.getName()))));
 
-        // El despachador crea un Respondedor cuando llega un CFP para
+        // El despachador crea un Responder cuando llega un CFP para
         // manejar cada conversación.
         addBehaviour(new SSResponderDispatcher(this, mt) {
             @Override
             protected Behaviour createResponder(ACLMessage initiationMsg) {
                 return new AgencyNegotiatorTransporte(myAgent, initiationMsg);
             }
-
         });
     }
 

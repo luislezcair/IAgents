@@ -9,13 +9,13 @@ import ia.agents.AgenteAgencia;
 
 import javax.swing.*;
 
-public class UIAgency {
+public class UIAgencia {
     private final AgenteAgencia agenteAgencia;
     private JPanel mainPanel;
     private JLabel labelAgentInfo;
     private JFrame mainFrame;
 
-    public UIAgency(AgenteAgencia a) {
+    public UIAgencia(AgenteAgencia a) {
         agenteAgencia = a;
 
         // Crea una ventana con el nombre del agente como título

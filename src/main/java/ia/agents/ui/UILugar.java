@@ -5,5 +5,5 @@
 
 package ia.agents.ui;
 
-public class UITransport {
+public class UILugar {
 }

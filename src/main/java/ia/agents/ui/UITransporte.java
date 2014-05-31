@@ -5,5 +5,5 @@
 
 package ia.agents.ui;
 
-public class UIPlace {
+public class UITransporte {
 }
