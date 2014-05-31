@@ -19,8 +19,8 @@ import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.proto.SSResponderDispatcher;
+import org.joda.time.DateTimeComparator;
 
-@SuppressWarnings("unused")
 public class AgenteTransporte extends Agent {
     private Codec slCodec = new SLCodec();
     private Ontology ontology = TurismoOntology.getInstance();
@@ -71,6 +71,18 @@ public class AgenteTransporte extends Agent {
     }
 
     /**
+     * Obtiene el alojamiento de los argumentos
+     * @return Alojamiento obtenido
+     */
+    private Transporte getTransporteArg() {
+        Object[] args = getArguments();
+        if(args == null || args.length < 2) {
+            return new Transporte();
+        }
+        return (Transporte)args[1];
+    }
+
+    /**
      * Implementamos un AgencyNegotiator para adecuarlo a Transportes.
      */
     private class AgencyNegotiatorTransporte extends AgencyNegotiator {
@@ -82,7 +94,7 @@ public class AgenteTransporte extends Agent {
         public AgentAction prepareResponseAction(Paquete p) {
             // TODO: crear un transporte con las características que sean
             // necesarias para satisfacer las necesidades del paquete.
-            Transporte t = new Transporte();
+            Transporte t = getTransporteArg();
             OfertarTransporteAction ota = new OfertarTransporteAction();
             ota.setTransporte(t);
             return ota;
@@ -90,9 +102,12 @@ public class AgenteTransporte extends Agent {
 
         @Override
         public boolean canOfferService(Paquete p) {
-            // TODO: Verificar si este agente puede satisfacer el servicio.
-            // (e.g si tenemos capacidad, si la fecha coincide, etc.)
-            return true;
+            Transporte t = getTransporteArg();
+
+            return t.getCapacidad() > p.getPersonas() &&
+                   t.getCiudad().equals(p.getDestino()) &&
+                   DateTimeComparator.getDateOnlyInstance().compare(
+                            t.getFecha(), p.getFecha()) <= 0;
         }
     }
 }

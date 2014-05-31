@@ -20,6 +20,7 @@ import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 import jade.proto.ContractNetInitiator;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -53,7 +54,7 @@ public class AgenteTurista extends Agent {
 
     @Override
     protected void takeDown() {
-        ui.dispose();
+        SwingUtilities.invokeLater(ui::dispose);
     }
 
     /**

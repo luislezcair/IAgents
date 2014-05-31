@@ -20,6 +20,18 @@ public class Transporte implements Concept {
     private double precioPorPersona;
     private int tipo;
 
+    public Transporte() { }
+
+    public Transporte(int capacidad, String ciudad, double descuento,
+                      Date fecha, double precioPorPersona, int tipo) {
+        this.capacidad = capacidad;
+        this.ciudad = ciudad;
+        this.descuento = descuento;
+        this.fecha = fecha;
+        this.precioPorPersona = precioPorPersona;
+        this.tipo = tipo;
+    }
+
     public int getCapacidad() {
         return capacidad;
     }
@@ -74,8 +86,11 @@ public class Transporte implements Concept {
      */
     @Override
     public String toString() {
-        return capacidad + "@" +
+        return "Transporte: " +
+               capacidad + "@" +
+               ciudad + "@" +
                descuento + "@" +
+               fecha + "@" +
                precioPorPersona + "@" +
                tipo;
     }

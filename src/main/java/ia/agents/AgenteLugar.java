@@ -19,8 +19,8 @@ import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.proto.SSResponderDispatcher;
+import org.joda.time.DateTimeComparator;
 
-@SuppressWarnings("unused")
 public class AgenteLugar extends Agent {
     private Codec slCodec = new SLCodec();
     private Ontology ontology = TurismoOntology.getInstance();
@@ -52,6 +52,7 @@ public class AgenteLugar extends Agent {
                 return new AgencyNegotiatorLugar(myAgent, initiationMsg);
             }
         });
+        System.out.println(getAlojamientoArg());
     }
 
     @Override
@@ -71,6 +72,18 @@ public class AgenteLugar extends Agent {
         return args[0].toString();
     }
 
+    /**
+     * Obtiene el alojamiento de los argumentos
+     * @return Alojamiento obtenido
+     */
+    private Alojamiento getAlojamientoArg() {
+        Object[] args = getArguments();
+        if(args == null || args.length < 2) {
+            return new Alojamiento();
+        }
+        return (Alojamiento)args[1];
+    }
+
     private class AgencyNegotiatorLugar extends AgencyNegotiator {
         private AgencyNegotiatorLugar(Agent a, ACLMessage cfp) {
             super(a, cfp);
@@ -80,17 +93,26 @@ public class AgenteLugar extends Agent {
         public AgentAction prepareResponseAction(Paquete p) {
             // TODO: crear un alojamiento con las características que sean
             // necesarias para satisfacer las necesidades del paquete.
-            Alojamiento a = new Alojamiento();
+            Alojamiento a = getAlojamientoArg();
             OfertarLugarAction of = new OfertarLugarAction();
             of.setAlojamiento(a);
             return of;
         }
 
+        /**
+         * Verificar si este agente puede satisfacer el servicio.
+         * (e.g si tenemos capacidad, si la fecha y el destino coinciden)
+         * @param p Paquete turístico
+         * @return true si se puede satisfacer, false en caso contrario
+         */
         @Override
         public boolean canOfferService(Paquete p) {
-            // TODO: Verificar si este agente puede satisfacer el servicio.
-            // (e.g si tenemos capacidad, si la fecha coincide, DESTINO)
-            return true;
+            Alojamiento a = getAlojamientoArg();
+
+            return a.getCapacidad() > p.getPersonas() &&
+                   a.getCiudad().equals(p.getDestino()) &&
+                   DateTimeComparator.getDateOnlyInstance().compare(
+                           a.getFecha(), p.getFecha()) <= 0;
         }
     }
 }
