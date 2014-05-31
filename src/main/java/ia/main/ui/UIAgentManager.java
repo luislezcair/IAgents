@@ -15,6 +15,7 @@ public class UIAgentManager {
     private JPanel mainPanel;
     private JButton buttonSalir;
     private JButton buttonTestAgents;
+    private JButton buttonRma;
 
     public UIAgentManager(AgentManager am) {
         manager = am;
@@ -25,6 +26,7 @@ public class UIAgentManager {
 
         buttonSalir.addActionListener(event -> manager.shutdown());
         buttonTestAgents.addActionListener(event -> manager.launchTestAgents());
+        buttonRma.addActionListener(event -> manager.launchRma());
     }
 
     public void show() {
