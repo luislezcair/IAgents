@@ -11,7 +11,12 @@ import javax.swing.*;
 
 public class UIAgency {
     private final AgenteAgencia agenteAgencia;
-    private JPanel mainPanel;
+    private JPanel agencyPanel;
+    private JComboBox comboAgencia;
+    private JButton buttonConsultar;
+    private JButton buttonSalir;
+    private JList listaLugares;
+    private JList listaTransportes;
     private JLabel labelAgentInfo;
     private JFrame mainFrame;
 
@@ -20,7 +25,7 @@ public class UIAgency {
 
         // Crea una ventana con el nombre del agente como título
         mainFrame = new JFrame(agenteAgencia.getLocalName());
-        mainFrame.getContentPane().add(mainPanel);
+        mainFrame.getContentPane().add(agencyPanel);
 
         labelAgentInfo.setText("Hola, soy " + agenteAgencia.getName() +
                 " y esta es mi interfaz");

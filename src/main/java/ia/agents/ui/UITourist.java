@@ -23,7 +23,7 @@ public class UITourist {
     private JComboBox comboFormaDePago;
     private JTextField textImporteMax;
     private JXDatePicker dateFecha;
-    private JPanel mainPanel;
+    private JPanel touristPanel;
     private JFrame mainWindow;
 
     private final AgenteTurista turista;
@@ -60,7 +60,7 @@ public class UITourist {
 
         // Crear una ventana principal, agrega el contenido y ajusta al tamaño
         mainWindow = new JFrame("Agente Turista");
-        mainWindow.getContentPane().add(mainPanel);
+        mainWindow.getContentPane().add(touristPanel);
         mainWindow.pack();
     }
 

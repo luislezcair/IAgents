@@ -12,12 +12,21 @@ import java.util.Date;
  */
 @SuppressWarnings("unused")
 public class Alojamiento {
+    private String nombre;
     private int capacidad;
     private String ciudad;
     private double descuento;
     private Date fecha;
     private double precioPorPersona;
     private int tipo;
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
 
     public int getCapacidad() {
         return capacidad;

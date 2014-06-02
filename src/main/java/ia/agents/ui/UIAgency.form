@@ -1,18 +1,104 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="ia.agents.ui.UIAgency">
-  <grid id="27dc6" binding="mainPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+  <grid id="27dc6" binding="agencyPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
     <constraints>
-      <xy x="20" y="20" width="185" height="99"/>
+      <xy x="20" y="20" width="401" height="290"/>
     </constraints>
     <properties/>
     <border type="none"/>
     <children>
-      <component id="f3d9c" class="javax.swing.JLabel" binding="labelAgentInfo">
+      <grid id="7be23" layout-manager="GridLayoutManager" row-count="3" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
         <constraints border-constraint="Center"/>
-        <properties>
-          <text value="Hola"/>
-        </properties>
-      </component>
+        <properties/>
+        <border type="none" title="Descripción del paquete"/>
+        <children>
+          <component id="578ef" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="&amp;Transportes asociados:"/>
+            </properties>
+          </component>
+          <component id="9bb2e" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="&amp;Lugares asociados:"/>
+            </properties>
+          </component>
+          <component id="9d2ce" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <labelFor value="93a49"/>
+              <text value="Nombre &amp;Agencia"/>
+            </properties>
+          </component>
+          <component id="93a49" class="javax.swing.JComboBox" binding="comboAgencia">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="1e069" class="javax.swing.JList" binding="listaLugares">
+            <constraints>
+              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="50"/>
+              </grid>
+            </constraints>
+            <properties>
+              <selectionBackground color="-3355444"/>
+              <selectionMode value="2"/>
+            </properties>
+          </component>
+          <component id="35021" class="javax.swing.JList" binding="listaTransportes">
+            <constraints>
+              <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="50"/>
+              </grid>
+            </constraints>
+            <properties>
+              <selectionBackground color="-3355444"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <grid id="b8a64" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints border-constraint="South"/>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="2801f" class="javax.swing.JButton" binding="buttonConsultar">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="&amp;Consultar"/>
+            </properties>
+          </component>
+          <hspacer id="b1ed">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+          </hspacer>
+          <component id="1e736" class="javax.swing.JButton" binding="buttonSalir">
+            <constraints>
+              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="&amp;Salir"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
     </children>
   </grid>
+  <inspectionSuppressions>
+    <suppress inspection="NoScrollPane" id="1e069"/>
+  </inspectionSuppressions>
 </form>

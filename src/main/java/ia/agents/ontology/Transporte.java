@@ -5,15 +5,45 @@
 
 package ia.agents.ontology;
 
+import java.util.Date;
+
 /**
  * Clase que representa a una unidad de transporte
  */
 @SuppressWarnings("unused")
 public class Transporte {
+
+    private String empresa;
+    private String ciudadDestino;
+    private Date fecha;
     private int capacidad;
     private double descuento;
     private double precioPorPersona;
     private int tipo;
+
+    public String getEmpresa() {
+        return empresa;
+    }
+
+    public void setEmpresa(String empresa) {
+        this.empresa = empresa;
+    }
+
+    public String getCiudadDestino() {
+        return ciudadDestino;
+    }
+
+    public void setCiudadDestino(String ciudadDestino) {
+        this.ciudadDestino = ciudadDestino;
+    }
+
+    public Date getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
+    }
 
     public int getCapacidad() {
         return capacidad;
