@@ -6,6 +6,7 @@
 package ia.agents;
 
 import ia.agents.negotiation.AgencyNegotiator;
+import ia.agents.negotiation.DiscountManager;
 import ia.agents.ontology.*;
 import ia.agents.util.DFRegisterer;
 import jade.content.AgentAction;
@@ -21,9 +22,14 @@ import jade.lang.acl.MessageTemplate;
 import jade.proto.SSResponderDispatcher;
 import org.joda.time.DateTimeComparator;
 
+import java.util.HashMap;
+
 public class AgenteTransporte extends Agent {
     private Codec slCodec = new SLCodec();
     private Ontology ontology = TurismoOntology.getInstance();
+
+    private HashMap<String, Transporte> ofertasPrevias = new HashMap<>();
+    private Transporte transporte;
 
     @Override
     protected void setup() {
@@ -52,6 +58,8 @@ public class AgenteTransporte extends Agent {
                 return new AgencyNegotiatorTransporte(myAgent, initiationMsg);
             }
         });
+
+        transporte = getTransporteArg();
     }
 
     protected void takeDown() {
@@ -94,20 +102,35 @@ public class AgenteTransporte extends Agent {
         public AgentAction prepareResponseAction(Paquete p) {
             // TODO: crear un transporte con las características que sean
             // necesarias para satisfacer las necesidades del paquete.
-            Transporte t = getTransporteArg();
-            OfertarTransporteAction ota = new OfertarTransporteAction();
-            ota.setTransporte(t);
-            return ota;
+            OfertarTransporteAction of = new OfertarTransporteAction();
+            String cid = getConversationId();
+            Transporte transp;
+
+            // Comprueba las ofertas previas para esta negociación y aumenta
+            // el descuento hasta un máximo. Si llega al máximo, esta es la
+            // oferta final
+            if(ofertasPrevias.containsKey(cid)) {
+                transp = ofertasPrevias.get(cid);
+                DiscountManager ds = transp.getDescuento();
+                ds.updateValue();
+                if(ds.isMax()) {
+                    of.setFinalOffer(true);
+                }
+            }
+            else {
+                transp = transporte;
+                ofertasPrevias.put(cid, new Transporte(transp));
+            }
+            of.setTransporte(transp);
+            return of;
         }
 
         @Override
         public boolean canOfferService(Paquete p) {
-            Transporte t = getTransporteArg();
-
-            return t.getCapacidad() > p.getPersonas() &&
-                   t.getCiudad().equals(p.getDestino()) &&
+            return transporte.getCapacidad() > p.getPersonas() &&
+                   transporte.getDestino().equalsIgnoreCase(p.getDestino()) &&
                    DateTimeComparator.getDateOnlyInstance().compare(
-                            t.getFecha(), p.getFecha()) <= 0;
+                            transporte.getFecha(), p.getFecha()) <= 0;
         }
     }
 }

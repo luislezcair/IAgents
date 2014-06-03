@@ -93,6 +93,20 @@ public class UITurista {
         mainWindow.dispose();
     }
 
+    public void showMessage(String msg) {
+        JOptionPane.showMessageDialog(mainWindow, msg, mainWindow.getTitle()
+                        + " - Error", JOptionPane.WARNING_MESSAGE);
+    }
+
+    public void setPaquete(Paquete p) {
+        textDestino.setText(p.getDestino());
+        spinnerDias.setValue(p.getDias());
+        spinnerPersonas.setValue(p.getPersonas());
+        dateFecha.setDate(p.getFecha());
+        comboFormaDePago.setSelectedIndex(p.getFormaDePago());
+        textImporteMax.setText(String.valueOf(p.getImporteMaxPorPersona()));
+    }
+
     private void createUIComponents() {
         listAgencies = new JList<>(new DefaultListModel<>());
     }

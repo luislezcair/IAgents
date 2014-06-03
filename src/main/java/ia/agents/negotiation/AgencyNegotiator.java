@@ -21,6 +21,8 @@ import jade.proto.SSIteratedContractNetResponder;
  * cada CFP recibido.
  */
 public abstract class AgencyNegotiator extends SSIteratedContractNetResponder {
+    private String cid;
+
     public AgencyNegotiator(Agent a, ACLMessage cfp) {
         super(a, cfp);
     }
@@ -31,7 +33,7 @@ public abstract class AgencyNegotiator extends SSIteratedContractNetResponder {
      * @param p Paquete turístico para preparar el servicio
      * @return La acción que se va a enviar a la Agencia
      */
-    public abstract AgentAction prepareResponseAction(Paquete p);
+    protected abstract AgentAction prepareResponseAction(Paquete p);
 
     /**
      * Verifica si podemos responder a este paquete. Si devuelve true se
@@ -40,7 +42,11 @@ public abstract class AgencyNegotiator extends SSIteratedContractNetResponder {
      * @param p Paquete turístico
      * @return true si podemos satisfacer el transporte. false en caso contrario
      */
-    public abstract boolean canOfferService(Paquete p);
+    protected abstract boolean canOfferService(Paquete p);
+
+    protected String getConversationId() {
+        return cid;
+    }
 
     @Override
     protected ACLMessage handleCfp(ACLMessage cfp) {
@@ -56,6 +62,7 @@ public abstract class AgencyNegotiator extends SSIteratedContractNetResponder {
         }
 
         ACLMessage reply = cfp.createReply();
+        cid = cfp.getConversationId();
 
         // Si no podemos ofrecer el servicio enviamos Refuse y terminamos
         if(!canOfferService(p)) {
@@ -72,6 +79,7 @@ public abstract class AgencyNegotiator extends SSIteratedContractNetResponder {
                     new Action(myAgent.getAID(), agentAction));
         } catch(Exception e) {
             System.out.println(e.getMessage());
+            e.printStackTrace();
             return null;
         }
 
