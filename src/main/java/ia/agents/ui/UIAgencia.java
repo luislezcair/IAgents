@@ -6,6 +6,7 @@
 package ia.agents.ui;
 
 import ia.agents.AgenteAgencia;
+import org.jdesktop.swingx.JXDatePicker;
 
 import javax.swing.*;
 
@@ -18,7 +19,13 @@ public class UIAgencia {
     private JList listaLugares;
     private JList listaTransportes;
     private JLabel labelAgentInfo;
+    private JPanel panelAgencia;
+    private JComboBox comboAgencias;
+    private JList listLugares;
+    private JList listTransportes;
     private JFrame mainFrame;
+    private JComboBox comboTipo;
+    private JList listAgencias;
 
     public UIAgencia(AgenteAgencia a) {
         agenteAgencia = a;
