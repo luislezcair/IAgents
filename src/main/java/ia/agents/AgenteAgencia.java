@@ -131,7 +131,7 @@ public class AgenteAgencia extends Agent {
             cfpServicios.setOntology(ontology.getName());
             cfpServicios.setLanguage(slCodec.getName());
             cfpServicios.setProtocol(
-                    FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
+                    FIPANames.InteractionProtocol.FIPA_ITERATED_CONTRACT_NET);
 
             ConsultarAction consulta = new ConsultarAction();
             consulta.setPaquete(p);
@@ -186,6 +186,7 @@ public class AgenteAgencia extends Agent {
                     }
 
                     // Si nos convence, aceptamos
+                    //TODO: enviar reject-proposals
                     ACLMessage accept = resp.createReply();
                     accept.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
                     acceptances.add(accept);
@@ -194,6 +195,14 @@ public class AgenteAgencia extends Agent {
                             "[AGENCIA] Rechazo recibido del Lugar o " +
                             "Transporte " + resp.getSender().getName());
                 }
+            }
+
+            // Si no aceptamos ninguna propuesta de los servicios,
+            // no podemos antender al turista y rechazamos su CFP.
+            if(acceptances.isEmpty()) {
+                ACLMessage refuse = new ACLMessage(ACLMessage.REFUSE);
+                String key = ((ContractNetResponder) parent).REPLY_KEY;
+                getDataStore().put(key, refuse);
             }
         }
 

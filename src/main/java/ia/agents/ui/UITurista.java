@@ -7,14 +7,17 @@ package ia.agents.ui;
 
 import ia.agents.AgenteTurista;
 import ia.agents.ontology.Paquete;
+import jade.core.AID;
 import org.jdesktop.swingx.JXDatePicker;
 
 import javax.swing.*;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Interfaz para el agente turista con un formulario para los datos del paquete
  */
-public class UITourist {
+public class UITurista {
     private JTextField textDestino;
     private JButton buttonConsultar;
     private JButton buttonSalir;
@@ -23,12 +26,13 @@ public class UITourist {
     private JComboBox comboFormaDePago;
     private JTextField textImporteMax;
     private JXDatePicker dateFecha;
-    private JPanel touristPanel;
+    private JPanel mainPanel;
+    private JList<String> listAgencies;
     private JFrame mainWindow;
 
     private final AgenteTurista turista;
 
-    public UITourist(AgenteTurista agente) {
+    public UITurista(AgenteTurista agente) {
         turista = agente;
 
         // Click en Consultar
@@ -58,10 +62,21 @@ public class UITourist {
         // Click en Salir. Elimina la interfaz, el agente sigue funcionando
         buttonSalir.addActionListener(event -> dispose());
 
+        dateFecha.setDate(new Date());
+
         // Crear una ventana principal, agrega el contenido y ajusta al tamaño
-        mainWindow = new JFrame("Agente Turista");
-        mainWindow.getContentPane().add(touristPanel);
+        mainWindow = new JFrame(agente.getName());
+        mainWindow.getContentPane().add(mainPanel);
         mainWindow.pack();
+    }
+
+    public void setAgenciesList(List<AID> agencies) {
+        DefaultListModel<String> model =
+                (DefaultListModel<String>)listAgencies.getModel();
+        model.clear();
+        for(AID aid : agencies) {
+            model.addElement(aid.getName());
+        }
     }
 
     /**
@@ -76,5 +91,9 @@ public class UITourist {
      */
     public void dispose() {
         mainWindow.dispose();
+    }
+
+    private void createUIComponents() {
+        listAgencies = new JList<>(new DefaultListModel<>());
     }
 }

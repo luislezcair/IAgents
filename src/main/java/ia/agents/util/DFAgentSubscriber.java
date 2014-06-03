@@ -31,13 +31,11 @@ public class DFAgentSubscriber extends SubscriptionInitiator {
         agents = subscribedAgents;
     }
 
-    protected void onRegister(DFAgentDescription dfad) {
-        agents.add(dfad.getName());
-    }
+    @SuppressWarnings("unused")
+    protected void onRegister(DFAgentDescription dfad) { }
 
-    protected void onDeregister(DFAgentDescription dfad) {
-        agents.remove(dfad.getName());
-    }
+    @SuppressWarnings("unused")
+    protected void onDeregister(DFAgentDescription dfad) { }
 
     @Override
     protected void handleInform(ACLMessage inform) {
@@ -48,8 +46,10 @@ public class DFAgentSubscriber extends SubscriptionInitiator {
             for(DFAgentDescription dfad : dfds) {
                 Iterator services = dfad.getAllServices();
                 if (services.hasNext()) {
+                    agents.add(dfad.getName());
                     onRegister(dfad);
                 } else {
+                    agents.remove(dfad.getName());
                     onDeregister(dfad);
                 }
             }

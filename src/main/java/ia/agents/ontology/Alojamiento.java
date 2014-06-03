@@ -5,14 +5,13 @@
 
 package ia.agents.ontology;
 
+import jade.content.Concept;
 import java.util.Date;
 
 /**
  * Clase que representa un lugar de alojamiento para los turistas
  */
-@SuppressWarnings("unused")
-public class Alojamiento {
-    private String nombre;
+public class Alojamiento implements Concept {
     private int capacidad;
     private String ciudad;
     private double descuento;
@@ -20,12 +19,16 @@ public class Alojamiento {
     private double precioPorPersona;
     private int tipo;
 
-    public String getNombre() {
-        return nombre;
-    }
+    public Alojamiento() { }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public Alojamiento(int capacidad, String ciudad, double descuento,
+                       Date fecha, double precioPorPersona, int tipo) {
+        this.capacidad = capacidad;
+        this.ciudad = ciudad;
+        this.descuento = descuento;
+        this.fecha = fecha;
+        this.precioPorPersona = precioPorPersona;
+        this.tipo = tipo;
     }
 
     public int getCapacidad() {
@@ -67,7 +70,11 @@ public class Alojamiento {
     public void setPrecioPorPersona(double precioPorPersona) {
         this.precioPorPersona = precioPorPersona;
     }
-
+/*
+    public double getPrecioTotal(int cantPersonas, int cantDias) {
+        return precioPorPersona*cantPersonas*cantDias*(1 - descuento);
+    }
+*/
     public int getTipo() {
         return tipo;
     }
@@ -82,8 +89,11 @@ public class Alojamiento {
      */
     @Override
     public String toString() {
-        return capacidad + "@" +
+        return "Alojamiento: " +
+               capacidad + "@" +
+               ciudad + "@" +
                descuento + "@" +
+               fecha + "@" +
                precioPorPersona + "@" +
                tipo;
     }

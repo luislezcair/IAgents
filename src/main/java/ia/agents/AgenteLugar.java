@@ -5,19 +5,22 @@
 
 package ia.agents;
 
+import ia.agents.negotiation.AgencyNegotiator;
 import ia.agents.ontology.*;
 import ia.agents.util.DFRegisterer;
+import jade.content.AgentAction;
 import jade.content.lang.Codec;
 import jade.content.lang.sl.SLCodec;
 import jade.content.onto.Ontology;
-import jade.content.onto.basic.Action;
 import jade.core.Agent;
+import jade.core.behaviours.Behaviour;
 import jade.domain.FIPAAgentManagement.*;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
-import jade.proto.ContractNetResponder;
+import jade.lang.acl.MessageTemplate;
+import jade.proto.SSResponderDispatcher;
+import org.joda.time.DateTimeComparator;
 
-@SuppressWarnings("unused")
 public class AgenteLugar extends Agent {
     private Codec slCodec = new SLCodec();
     private Ontology ontology = TurismoOntology.getInstance();
@@ -30,9 +33,26 @@ public class AgenteLugar extends Agent {
         getContentManager().registerOntology(ontology);
 
         DFRegisterer.register(this, "Lugar",
-                              new Property("AgenciaAsociada", getAgencia()));
+                new Property("AgenciaAsociada", getAgencia()));
 
-        addBehaviour(new AgencyNegotiator(this));
+        MessageTemplate mt = MessageTemplate.and(
+            MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol
+                        .FIPA_ITERATED_CONTRACT_NET),
+            MessageTemplate.and(
+                MessageTemplate.MatchPerformative(ACLMessage.CFP),
+                MessageTemplate.and(
+                        MessageTemplate.MatchOntology(ontology.getName()),
+                        MessageTemplate.MatchLanguage(slCodec.getName()))));
+
+        // El despachador crea un Responder cuando llega un CFP para
+        // manejar cada conversación.
+        addBehaviour(new SSResponderDispatcher(this, mt) {
+            @Override
+            protected Behaviour createResponder(ACLMessage initiationMsg) {
+                return new AgencyNegotiatorLugar(myAgent, initiationMsg);
+            }
+        });
+        System.out.println(getAlojamientoArg());
     }
 
     @Override
@@ -46,75 +66,53 @@ public class AgenteLugar extends Agent {
      */
     private String getAgencia() {
         Object[] args = getArguments();
-        if(args == null || args.length < 1) {
+        if (args == null || args.length < 1) {
             return "";
         }
         return args[0].toString();
     }
 
-    /** Implementación de un contract-net para manejar la interacción con las
-     * agencias.
+    /**
+     * Obtiene el alojamiento de los argumentos
+     * @return Alojamiento obtenido
      */
-    private class AgencyNegotiator extends ContractNetResponder {
-        public AgencyNegotiator(Agent a) {
-            super(a, createMessageTemplate(
-                    FIPANames.InteractionProtocol.FIPA_CONTRACT_NET));
+    private Alojamiento getAlojamientoArg() {
+        Object[] args = getArguments();
+        if(args == null || args.length < 2) {
+            return new Alojamiento();
+        }
+        return (Alojamiento)args[1];
+    }
+
+    private class AgencyNegotiatorLugar extends AgencyNegotiator {
+        private AgencyNegotiatorLugar(Agent a, ACLMessage cfp) {
+            super(a, cfp);
         }
 
         @Override
-        protected ACLMessage handleCfp(ACLMessage cfp) {
-            // Recibimos un CFP de una agencia.
-            Paquete p = new Paquete();
-            try {
-                Action a = (Action) getContentManager().extractContent(cfp);
-                ConsultarAction ca = (ConsultarAction) a.getAction();
-                p = ca.getPaquete();
-            } catch(Exception e) {
-                System.out.println(e.getMessage());
-                return null;
-            }
-
-            // TODO: Analizar paquete
-
-            // Creamos la respuesta
-            ACLMessage reply = cfp.createReply();
-            reply.setPerformative(ACLMessage.PROPOSE);
-
-            Alojamiento a = new Alojamiento();
+        public AgentAction prepareResponseAction(Paquete p) {
+            // TODO: crear un alojamiento con las características que sean
+            // necesarias para satisfacer las necesidades del paquete.
+            Alojamiento a = getAlojamientoArg();
             OfertarLugarAction of = new OfertarLugarAction();
             of.setAlojamiento(a);
-
-            try {
-                getContentManager().fillContent(reply,
-                        new Action(myAgent.getAID(), of));
-            } catch(Exception e) {
-                System.out.println(e.getMessage());
-                return null;
-            }
-
-            return reply;
+            return of;
         }
 
+        /**
+         * Verificar si este agente puede satisfacer el servicio.
+         * (e.g si tenemos capacidad, si la fecha y el destino coinciden)
+         * @param p Paquete turístico
+         * @return true si se puede satisfacer, false en caso contrario
+         */
         @Override
-        protected ACLMessage handleAcceptProposal(ACLMessage cfp,
-                                                  ACLMessage propose,
-                                                  ACLMessage accept)
-                                        throws FailureException {
-            System.out.println("[LUGAR] La agencia aceptó la propuesta");
+        public boolean canOfferService(Paquete p) {
+            Alojamiento a = getAlojamientoArg();
 
-            // FIPA: un accept_proposal se responde con Inform o Failure.
-            ACLMessage reply = accept.createReply();
-            reply.setPerformative(ACLMessage.INFORM);
-            return reply;
-        }
-
-        @Override
-        protected void handleRejectProposal(ACLMessage cfp,
-                                            ACLMessage propose,
-                                            ACLMessage reject) {
-
-            // FIPA: ante un reject termina la negociación.
-            System.out.println("[LUGAR] La agencia rechazó la propuesta");
+            return a.getCapacidad() > p.getPersonas() &&
+                   a.getCiudad().equals(p.getDestino()) &&
+                   DateTimeComparator.getDateOnlyInstance().compare(
+                           a.getFecha(), p.getFecha()) <= 0;
         }
     }
 }

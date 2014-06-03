@@ -5,10 +5,8 @@
 
 package ia.agents;
 
-import ia.agents.ontology.ConsultarAction;
-import ia.agents.ontology.Paquete;
-import ia.agents.ontology.TurismoOntology;
-import ia.agents.ui.UITourist;
+import ia.agents.ontology.*;
+import ia.agents.ui.UITurista;
 import ia.agents.util.DFAgentSubscriber;
 import jade.content.lang.Codec;
 import jade.content.lang.sl.SLCodec;
@@ -22,6 +20,7 @@ import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 import jade.proto.ContractNetInitiator;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -31,7 +30,7 @@ public class AgenteTurista extends Agent {
     private Ontology ontology = TurismoOntology.getInstance();
 
     private List<AID> agencias = new ArrayList<>();
-    private UITourist ui;
+    private UITurista ui;
 
     @Override
     protected void setup() {
@@ -40,7 +39,7 @@ public class AgenteTurista extends Agent {
 
         subscribeToDf();
 
-        ui = new UITourist(this);
+        ui = new UITurista(this);
         ui.show();
     }
 
@@ -50,12 +49,12 @@ public class AgenteTurista extends Agent {
         sd.setType("Agencia");
         dfad.addServices(sd);
 
-        addBehaviour(new DFAgentSubscriber(this, dfad, agencias));
+        addBehaviour(new DFAgenciasSubscriber(this, dfad, agencias));
     }
 
     @Override
     protected void takeDown() {
-        ui.dispose();
+        SwingUtilities.invokeLater(ui::dispose);
     }
 
     /**
@@ -63,6 +62,23 @@ public class AgenteTurista extends Agent {
      */
     public void sendCfp(Paquete p) {
         addBehaviour(new PackageNegotiator(this, p));
+    }
+
+    private class DFAgenciasSubscriber extends DFAgentSubscriber {
+        private DFAgenciasSubscriber(Agent a, DFAgentDescription dfad,
+                                     List<AID> subscribedAgents) {
+            super(a, dfad, subscribedAgents);
+        }
+
+        @Override
+        protected void onRegister(DFAgentDescription dfad) {
+            ui.setAgenciesList(agencias);
+        }
+
+        @Override
+        protected void onDeregister(DFAgentDescription dfad) {
+            ui.setAgenciesList(agencias);
+        }
     }
 
     /**
