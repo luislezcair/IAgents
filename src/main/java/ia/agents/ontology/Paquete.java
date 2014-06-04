@@ -20,6 +20,18 @@ public class Paquete implements Concept {
     private double importeMaxPorPersona;
     private int personas;
 
+    public Paquete() { }
+
+    public Paquete(String destino, int dias, Date fecha, int formaDePago,
+                   double importeMaxPorPersona, int personas) {
+        this.destino = destino;
+        this.dias = dias;
+        this.fecha = fecha;
+        this.formaDePago = formaDePago;
+        this.importeMaxPorPersona = importeMaxPorPersona;
+        this.personas = personas;
+    }
+
     public String getDestino() {
         return destino;
     }

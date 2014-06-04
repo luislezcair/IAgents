@@ -7,6 +7,9 @@ package ia.agents.ontology;
 
 import jade.content.Concept;
 
+/**
+ * Un paquete turístico compuesto por un Lugar de alojamiento y un Transporte
+ */
 public class PaqueteAgencia implements Concept {
     private Alojamiento alojamiento;
     private Transporte transporte;

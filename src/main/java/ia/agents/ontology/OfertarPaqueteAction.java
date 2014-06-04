@@ -7,11 +7,13 @@ package ia.agents.ontology;
 
 import jade.content.AgentAction;
 
-import java.util.List;
-
+/**
+ * Acción que realiza la Agencia al ofertar un paquete al Turista,
+ * compuesto por el Lugar y Transporte elegidos.
+ */
 public class OfertarPaqueteAction implements AgentAction {
     private Paquete paquete;
-    private List<PaqueteAgencia> paqueteAgencias;
+    private PaqueteAgencia paqueteAgencia;
 
     public Paquete getPaquete() {
         return paquete;
@@ -21,11 +23,11 @@ public class OfertarPaqueteAction implements AgentAction {
         this.paquete = paquete;
     }
 
-    public List<PaqueteAgencia> getPaqueteAgencias() {
-        return paqueteAgencias;
+    public PaqueteAgencia getPaqueteAgencia() {
+        return paqueteAgencia;
     }
 
-    public void setPaqueteAgencias(List<PaqueteAgencia> paqueteAgencias) {
-        this.paqueteAgencias = paqueteAgencias;
+    public void setPaqueteAgencia(PaqueteAgencia paqueteAgencia) {
+        this.paqueteAgencia = paqueteAgencia;
     }
 }

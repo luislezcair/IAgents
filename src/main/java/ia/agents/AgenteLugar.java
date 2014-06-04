@@ -6,6 +6,7 @@
 package ia.agents;
 
 import ia.agents.negotiation.AgencyNegotiator;
+import ia.agents.negotiation.DiscountManager;
 import ia.agents.ontology.*;
 import ia.agents.util.DFRegisterer;
 import jade.content.AgentAction;
@@ -21,9 +22,15 @@ import jade.lang.acl.MessageTemplate;
 import jade.proto.SSResponderDispatcher;
 import org.joda.time.DateTimeComparator;
 
+import java.util.HashMap;
+
 public class AgenteLugar extends Agent {
     private Codec slCodec = new SLCodec();
     private Ontology ontology = TurismoOntology.getInstance();
+
+    // Mapa de conversation-id -> Alojamiento
+    private HashMap<String, Alojamiento> ofertasPrevias = new HashMap<>();
+    private Alojamiento lugar;
 
     @Override
     protected void setup() {
@@ -52,7 +59,8 @@ public class AgenteLugar extends Agent {
                 return new AgencyNegotiatorLugar(myAgent, initiationMsg);
             }
         });
-        System.out.println(getAlojamientoArg());
+
+        lugar = getAlojamientoArg();
     }
 
     @Override
@@ -91,11 +99,26 @@ public class AgenteLugar extends Agent {
 
         @Override
         public AgentAction prepareResponseAction(Paquete p) {
-            // TODO: crear un alojamiento con las características que sean
-            // necesarias para satisfacer las necesidades del paquete.
-            Alojamiento a = getAlojamientoArg();
+            String cid = getConversationId();
+            Alojamiento alojamiento;
             OfertarLugarAction of = new OfertarLugarAction();
-            of.setAlojamiento(a);
+
+            // Comprueba las ofertas previas para esta negociación y aumenta
+            // el descuento hasta un máximo. Si llega al máximo, esta es la
+            // oferta final
+            if(ofertasPrevias.containsKey(cid)) {
+                alojamiento = ofertasPrevias.get(cid);
+                DiscountManager ds = alojamiento.getDescuento();
+                ds.updateValue();
+                if(ds.isMax()) {
+                    of.setFinalOffer(true);
+                }
+            }
+            else {
+                alojamiento = lugar;
+                ofertasPrevias.put(cid, new Alojamiento(lugar));
+            }
+            of.setAlojamiento(alojamiento);
             return of;
         }
 
@@ -107,12 +130,10 @@ public class AgenteLugar extends Agent {
          */
         @Override
         public boolean canOfferService(Paquete p) {
-            Alojamiento a = getAlojamientoArg();
-
-            return a.getCapacidad() > p.getPersonas() &&
-                   a.getCiudad().equals(p.getDestino()) &&
+            return lugar.getCapacidad() > p.getPersonas() &&
+                   lugar.getDestino().equalsIgnoreCase(p.getDestino()) &&
                    DateTimeComparator.getDateOnlyInstance().compare(
-                           a.getFecha(), p.getFecha()) <= 0;
+                           lugar.getFecha(), p.getFecha()) <= 0;
         }
     }
 }

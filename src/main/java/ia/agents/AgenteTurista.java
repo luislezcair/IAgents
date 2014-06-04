@@ -41,6 +41,8 @@ public class AgenteTurista extends Agent {
 
         ui = new UITurista(this);
         ui.show();
+
+        ui.setPaquete(getPaqueteArg());
     }
 
     private void subscribeToDf() {
@@ -62,6 +64,14 @@ public class AgenteTurista extends Agent {
      */
     public void sendCfp(Paquete p) {
         addBehaviour(new PackageNegotiator(this, p));
+    }
+
+    private Paquete getPaqueteArg() {
+        Object[] args = getArguments();
+        if (args == null || args.length < 1) {
+            return new Paquete();
+        }
+        return (Paquete)args[0];
     }
 
     private class DFAgenciasSubscriber extends DFAgentSubscriber {
@@ -146,6 +156,12 @@ public class AgenteTurista extends Agent {
                             "[TURISTA] Rechazo recibido de la agencia " +
                                         resp.getSender().getName());
                 }
+            }
+
+            // Todas las agencias respondieron REFUSE
+            if(acceptances.isEmpty()) {
+                ui.showMessage("No existe ninguna agencia que pueda " +
+                        "satisfacer los parámetros solicitados.");
             }
         }
     }
