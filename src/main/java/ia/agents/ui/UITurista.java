@@ -103,7 +103,11 @@ public class UITurista {
         spinnerDias.setValue(p.getDias());
         spinnerPersonas.setValue(p.getPersonas());
         dateFecha.setDate(p.getFecha());
-        comboFormaDePago.setSelectedIndex(p.getFormaDePago());
+        try {
+            comboFormaDePago.setSelectedIndex(p.getFormaDePago());
+        } catch(IllegalArgumentException e) {
+            comboFormaDePago.setSelectedIndex(-1);
+        }
         textImporteMax.setText(String.valueOf(p.getImporteMaxPorPersona()));
     }
 

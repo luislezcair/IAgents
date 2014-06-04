@@ -14,16 +14,13 @@ public class BestOfferManager {
     private boolean finalOffer;
 
     /**
-     * Comprueba si el servico t es mejor que el servicio actual
+     * Comprueba si otroServicio es mejor que el servicio actual
      * @param otroServicio Lugar o Transporte con el que se compara
      * @return true si es mejor, false si no es mejor
      */
     public boolean isBetter(ServicioAgencia otroServicio, Paquete p) {
-        if(servicio == null)
-            return true;
-
-        // TODO: analizar por mejor precio
-        return getPrecio(otroServicio, p) < getPrecio(servicio, p);
+        return servicio == null ||
+                getPrecio(otroServicio, p) < getPrecio(servicio, p);
     }
 
     public void setBetter(ServicioAgencia s) {

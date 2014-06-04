@@ -60,13 +60,13 @@ public class AgentManager {
                 123.0f, 0, new DiscountManager(0.1, 0.5, 0.1));
         Alojamiento lugar2 = new Alojamiento(20, "Corrientes", new Date(),
                 200.0f, 2, new DiscountManager(0.05, 0.3, 0.1));
-        Alojamiento lugar3 = new Alojamiento(15, "Córdoba", new Date(),
+        Alojamiento lugar3 = new Alojamiento(15, "Chaco", new Date(),
                 230.0f, 1, new DiscountManager(0.07, 0.4, 0.05));
-        Alojamiento lugar4 = new Alojamiento(9, "Rosario", new Date(), 100.0f,
+        Alojamiento lugar4 = new Alojamiento(9, "Chaco", new Date(), 100.0f,
                 0, new DiscountManager(0.05, 0.5, 0.08));
         Transporte transp1 = new Transporte(30, "Corrientes", new Date(),
                 120.0f, 0, new DiscountManager(0.08, 0.45, 0.05));
-        Transporte transp2 = new Transporte(20, "Chaco", new Date(), 120.0f,
+        Transporte transp2 = new Transporte(20, "Rosario", new Date(), 120.0f,
                 1, new DiscountManager(0.15, 0.6, 0.06));
 
         Object turista[] = {paquete};
@@ -84,22 +84,21 @@ public class AgentManager {
             //        "Turista2", "ia.agents.AgenteTurista", null).start();
             mainContainer.createNewAgent(
                     "Agencia86", "ia.agents.AgenteAgencia", null).start();
-            //mainContainer.createNewAgent(
-            //        "Agencia007", "ia.agents.AgenteAgencia", null).start();
+            mainContainer.createNewAgent(
+                    "Agencia007", "ia.agents.AgenteAgencia", null).start();
             mainContainer.createNewAgent(
                     "Lugar86", "ia.agents.AgenteLugar", lugar1_86).start();
             mainContainer.createNewAgent(
                     "Lugar2_86", "ia.agents.AgenteLugar", lugar2_86).start();
-            //mainContainer.createNewAgent(
-            //       "Lugar007", "ia.agents.AgenteLugar", lugar3_007).start();
-            //mainContainer.createNewAgent(
-            //        "Lugar2_007", "ia.agents.AgenteLugar",
-            // lugar4_007).start();
+            mainContainer.createNewAgent(
+                   "Lugar007", "ia.agents.AgenteLugar", lugar3_007).start();
+            mainContainer.createNewAgent(
+                    "Lugar2_007", "ia.agents.AgenteLugar", lugar4_007).start();
             mainContainer.createNewAgent(
                     "Transporte86", "ia.agents.AgenteTransporte", transp_86).start();
-            //mainContainer.createNewAgent(
-            //        "Transporte007", "ia.agents.AgenteTransporte",
-            //        transp_007).start();
+            mainContainer.createNewAgent(
+                    "Transporte007", "ia.agents.AgenteTransporte",
+                    transp_007).start();
         } catch (StaleProxyException e) {
             e.printStackTrace();
         }

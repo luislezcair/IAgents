@@ -186,7 +186,6 @@ public class AgenteAgencia extends Agent {
 
             // La agencia recibe las ofertas de los lugares y transportes y
             // decide cuál es la mejor.
-            //ACLMessage resp = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
             for(Object obj : responses) {
                 ACLMessage resp = (ACLMessage) obj;
 
@@ -206,7 +205,6 @@ public class AgenteAgencia extends Agent {
                     continue;
                 }
 
-                //ACLMessage accept = resp.createReply();
                 int performative = ACLMessage.FAILURE;
                 AID aid = action.getActor();
 
@@ -231,12 +229,6 @@ public class AgenteAgencia extends Agent {
                     System.out.println("[AGENCIA] Propuesta recibida " +
                             "del LUGAR " + action.getActor());
                     System.out.println(aloj);
-/*
-                    if(bestLugar != null) {
-                        bestOfferLugar.setBetter(bestLugar);
-                        bestOfferLugar.setFinalOffer(true);
-                        bestOfferLugar.setMejorAgente(agenteMejorLugar);
-                    } else*/
 
                     if(bestOfferLugar.isBetter(aloj, paquete)) {
                         if(bestOfferLugar.getBetter() != null) {
@@ -252,7 +244,6 @@ public class AgenteAgencia extends Agent {
                         bestOfferLugar.setFinalOffer(of.isFinalOffer());
                     } else {
                         performative = ACLMessage.CFP;
-                        //aid = action.getActor();
                     }
                 }
                 else if(concept instanceof OfertarTransporteAction) {
@@ -262,13 +253,7 @@ public class AgenteAgencia extends Agent {
                     System.out.println("[AGENCIA] Propuesta recibida " +
                             "del TRANSPORTE " + action.getActor());
                     System.out.println(transp);
-                    /*
-                    if(bestTransporte != null) {
-                        bestOfferTransp.setBetter(bestTransporte);
-                        bestOfferTransp.setMejorAgente(agenteMejorTransp);
-                        bestOfferTransp.setFinalOffer(true);
-                    } else
-*/
+
                     if(bestOfferTransp.isBetter(transp, paquete)) {
                         if(bestOfferTransp.getBetter() != null) {
                             if(bestOfferTransp.isFinalOffer()) {
@@ -283,7 +268,6 @@ public class AgenteAgencia extends Agent {
                         bestOfferTransp.setFinalOffer(of.isFinalOffer());
                     } else {
                         performative = ACLMessage.CFP;
-                        //aid = action.getActor();
                     }
                 }
 
@@ -292,7 +276,6 @@ public class AgenteAgencia extends Agent {
                 if(performative != ACLMessage.FAILURE) {
                     ACLMessage cfp = constructCfp();
                     cfp.setPerformative(performative);
-                    //cfp.addReceiver(action.getActor());
                     cfp.addReceiver(aid);
                     nextCfps.add(cfp);
                 }
@@ -301,12 +284,20 @@ public class AgenteAgencia extends Agent {
             System.out.println("Mejor lugar: " + bestOfferLugar.getBetter());
             System.out.println("Mejor transp: " + bestOfferTransp.getBetter());
 
-            if(/*bestOfferLugar.getBetter() != null &&
-               bestOfferTransp.getBetter() != null &&*/
-               bestOfferLugar.getPrecioTotalPorPersona(
+            if(bestOfferLugar.getBetter() == null ||
+               bestOfferTransp.getBetter() == null) {
+                // No encontramos ningún lugar o ningún transporte que pueda
+                // satisfacer el pedido del turista. Se lo rechaza.
+                ACLMessage refuse = new ACLMessage(ACLMessage.REFUSE);
+                String key = ((ContractNetResponder) parent).REPLY_KEY;
+                getDataStore().put(key, refuse);
+            }
+            else if(bestOfferLugar.getPrecioTotalPorPersona(
                     bestOfferTransp.getBetter(), paquete) <
                             paquete.getImporteMaxPorPersona()) {
 
+                // El mejor lugar y el mejor transporte de esta tanda están
+                // por debajo del precio máximo. Se acepta esta oferta.
                 bestLugar = (Alojamiento)bestOfferLugar.getBetter();
                 bestTransporte = (Transporte)bestOfferTransp.getBetter();
 
@@ -319,8 +310,13 @@ public class AgenteAgencia extends Agent {
                         .getPrecioTotalPorPersona(bestOfferTransp.getBetter(),
                                 paquete));
             } else {
+                // El mejor lugar y el mejor transporte superan el precio
+                // máximo, así que volvemos a enviarles CFPs para que mejoren
+                // su oferta.
                 ACLMessage cfp = constructCfp();
 
+                // Si es la oferta final del lugar, me quedo con este lugar y
+                // no le enviamos nuevos CFPs.
                 if(!bestOfferLugar.isFinalOffer())
                     cfp.addReceiver(bestOfferLugar.getMejorAgente());
                 else {
@@ -328,6 +324,8 @@ public class AgenteAgencia extends Agent {
                     agenteMejorLugar = bestOfferLugar.getMejorAgente();
                 }
 
+                // Si es la oferta final del transporte, me quedo con este
+                // transporte y no le enviamos nuevos CFPs
                 if(!bestOfferTransp.isFinalOffer())
                     cfp.addReceiver(bestOfferTransp.getMejorAgente());
                 else {
@@ -338,6 +336,9 @@ public class AgenteAgencia extends Agent {
                 if(!nextCfps.contains(cfp))
                     nextCfps.add(cfp);
 
+                // Si fue la oferta final de ambos no puedo satisfacer el
+                // pedido del turista. Rechazo los dos servicios y rechazo la
+                // propuesta del turista.
                 if(bestOfferLugar.isFinalOffer() &&
                         bestOfferTransp.isFinalOffer()) {
                     cfp.setPerformative(ACLMessage.REJECT_PROPOSAL);
@@ -347,14 +348,11 @@ public class AgenteAgencia extends Agent {
                     bestLugar = null;
                     bestTransporte = null;
 
-                    // mejorar esta mierda, todo este método es una mierda
+                    // mejorar esta mierda, este método entero es una mierda
                     ACLMessage refuse = new ACLMessage(ACLMessage.REFUSE);
                     String key = ((ContractNetResponder) parent).REPLY_KEY;
                     getDataStore().put(key, refuse);
                 }
-
-                /*if(!nextCfps.contains(cfp))
-                    nextCfps.add(cfp);*/
             }
 
             if(!acceptances.isEmpty())
