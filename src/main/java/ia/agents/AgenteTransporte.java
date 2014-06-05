@@ -95,7 +95,7 @@ public class AgenteTransporte extends Agent {
      */
     private class AgencyNegotiatorTransporte extends AgencyNegotiator {
         private AgencyNegotiatorTransporte(Agent a, ACLMessage cfp) {
-            super(a, cfp);
+            super(a, cfp, ofertasPrevias);
         }
 
         @Override
@@ -113,9 +113,9 @@ public class AgenteTransporte extends Agent {
                 transp = ofertasPrevias.get(cid);
                 DiscountManager ds = transp.getDescuento();
                 ds.updateValue();
-                if(ds.isMax()) {
-                    of.setFinalOffer(true);
-                }
+//                if(ds.isMax()) {
+//                    of.setFinalOffer(true);
+//                }
             }
             else {
                 transp = transporte;

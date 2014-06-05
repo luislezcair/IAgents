@@ -7,12 +7,15 @@ package ia.agents.negotiation;
 
 import ia.agents.ontology.ConsultarAction;
 import ia.agents.ontology.Paquete;
+import ia.agents.ontology.ServicioAgencia;
 import jade.content.AgentAction;
 import jade.content.onto.basic.Action;
 import jade.core.Agent;
 import jade.domain.FIPAAgentManagement.FailureException;
 import jade.lang.acl.ACLMessage;
 import jade.proto.SSIteratedContractNetResponder;
+
+import java.util.Map;
 
 /**
  * Tanto Lugar como Transporte negocian con las Agencias de manera similar,
@@ -22,9 +25,12 @@ import jade.proto.SSIteratedContractNetResponder;
  */
 public abstract class AgencyNegotiator extends SSIteratedContractNetResponder {
     private String cid;
+    private Map<String, ? extends ServicioAgencia> ofertasPrevias;
 
-    public AgencyNegotiator(Agent a, ACLMessage cfp) {
+    public AgencyNegotiator(Agent a, ACLMessage cfp,
+                       Map<String, ? extends ServicioAgencia> ofertasPrevias) {
         super(a, cfp);
+        this.ofertasPrevias = ofertasPrevias;
     }
 
     /**
@@ -94,6 +100,9 @@ public abstract class AgencyNegotiator extends SSIteratedContractNetResponder {
         System.out.println(myAgent.getLocalName() + ": La agencia aceptó la " +
                 "propuesta");
 
+        if(ofertasPrevias.containsKey(cid))
+            ofertasPrevias.remove(cid);
+
         // FIPA: un accept_proposal se responde con Inform o Failure.
         ACLMessage reply = accept.createReply();
         reply.setPerformative(ACLMessage.INFORM);
@@ -104,6 +113,9 @@ public abstract class AgencyNegotiator extends SSIteratedContractNetResponder {
     protected void handleRejectProposal(ACLMessage cfp,
                                         ACLMessage propose,
                                         ACLMessage reject) {
+
+        if(ofertasPrevias.containsKey(cid))
+            ofertasPrevias.remove(cid);
 
         // FIPA: ante un reject termina la negociación.
         System.out.println(myAgent.getLocalName() + ": La agencia rechazó " +

@@ -12,9 +12,9 @@ import ia.agents.ontology.Transporte;
 import ia.main.ui.UIAgentManager;
 import jade.core.*;
 import jade.core.Runtime;
+import jade.wrapper.*;
 import jade.wrapper.AgentContainer;
-import jade.wrapper.AgentController;
-import jade.wrapper.StaleProxyException;
+import jade.wrapper.AgentState;
 
 import java.util.Date;
 
@@ -22,6 +22,7 @@ public class AgentManager {
     Runtime rt;
     AgentContainer mainContainer;
     AgentController rma;
+    AgentController sniffer;
     UIAgentManager ui;
     boolean testAgentsLaunched;
 
@@ -45,6 +46,16 @@ public class AgentManager {
             rma = mainContainer.createNewAgent(
                     "rma", "jade.tools.rma.rma", null);
             rma.start();
+        } catch(StaleProxyException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void launchSniffer() {
+        try {
+            sniffer = mainContainer.createNewAgent("sniffer",
+                    "jade.tools.sniffer.Sniffer", null);
+            sniffer.start();
         } catch(StaleProxyException e) {
             e.printStackTrace();
         }
@@ -109,17 +120,23 @@ public class AgentManager {
         ui.dispose();
         rt.setCloseVM(true);
 
-        if(rma != null) {
-            try {
-                rma.kill();
-            } catch (StaleProxyException e) {
-                e.printStackTrace();
-            }
-        }
+        killAgent(rma);
+        killAgent(sniffer);
+
         try {
             mainContainer.kill();
         } catch (StaleProxyException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void killAgent(AgentController ac) {
+        try {
+            if (ac != null) {
+                ac.kill();
+            }
+        } catch( StaleProxyException e) {
+            //e.printStackTrace();
         }
     }
 }

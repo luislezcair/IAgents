@@ -94,7 +94,7 @@ public class AgenteLugar extends Agent {
 
     private class AgencyNegotiatorLugar extends AgencyNegotiator {
         private AgencyNegotiatorLugar(Agent a, ACLMessage cfp) {
-            super(a, cfp);
+            super(a, cfp, ofertasPrevias);
         }
 
         @Override
@@ -110,9 +110,9 @@ public class AgenteLugar extends Agent {
                 alojamiento = ofertasPrevias.get(cid);
                 DiscountManager ds = alojamiento.getDescuento();
                 ds.updateValue();
-                if(ds.isMax()) {
-                    of.setFinalOffer(true);
-                }
+                //if(ds.isMax()) {
+                //    of.setFinalOffer(true);
+                //}
             }
             else {
                 alojamiento = lugar;
