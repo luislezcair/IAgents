@@ -12,16 +12,7 @@ import jade.content.AgentAction;
  * compuesto por el Lugar y Transporte elegidos.
  */
 public class OfertarPaqueteAction implements AgentAction {
-    private Paquete paquete;
     private PaqueteAgencia paqueteAgencia;
-
-    public Paquete getPaquete() {
-        return paquete;
-    }
-
-    public void setPaquete(Paquete paquete) {
-        this.paquete = paquete;
-    }
 
     public PaqueteAgencia getPaqueteAgencia() {
         return paqueteAgencia;

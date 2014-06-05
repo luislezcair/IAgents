@@ -93,6 +93,30 @@ public class ServicioAgencia implements Concept {
     }
 
     /**
+     * Calcula el precio de este servicio para el total de personas y el
+     * total de días con el descuento actual incluido
+     * @param p Paquete para el que se calcula el precio
+     * @return Precio total de este servicio
+     */
+    public double getPrecio(Paquete p) {
+        return getPrecioPorPersona()*p.getPersonas()*p.getDias()*
+                (1.0 - getDescuento().getValue());
+    }
+
+    /**
+     * Comprueba si este servicio es mejor que otro
+     * @param otro ServicioAgencia con el que se compara
+     * @return true si es mejor, false si no es mejor
+     */
+    public boolean isBetter(ServicioAgencia otro, Paquete p) {
+        return getPrecio(p) < otro.getPrecio(p);
+    }
+
+    public boolean isFinalOffer() {
+        return ds.isMax();
+    }
+
+    /**
      * Versión serializada de un servicio
      * @return Cadena con los atributos separados por '@'
      */

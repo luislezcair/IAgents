@@ -13,6 +13,7 @@ import jade.content.Concept;
 public class PaqueteAgencia implements Concept {
     private Alojamiento alojamiento;
     private Transporte transporte;
+    private Paquete paquete;
 
     public Alojamiento getAlojamiento() {
         return alojamiento;
@@ -28,5 +29,21 @@ public class PaqueteAgencia implements Concept {
 
     public void setTransporte(Transporte transporte) {
         this.transporte = transporte;
+    }
+
+    public Paquete getPaquete() {
+        return paquete;
+    }
+
+    public void setPaquete(Paquete paquete) {
+        this.paquete = paquete;
+    }
+
+    public double getPrecioTotal() {
+        return alojamiento.getPrecio(paquete) + transporte.getPrecio(paquete);
+    }
+
+    public double getPrecioPorPersona() {
+        return getPrecioTotal() / (paquete.getPersonas() * paquete.getDias());
     }
 }

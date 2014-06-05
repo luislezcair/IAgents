@@ -1,59 +1,118 @@
-package ia.agents.negotiation;
-
-import ia.agents.ontology.Paquete;
-import ia.agents.ontology.ServicioAgencia;
-import jade.core.AID;
-
 /**
  * Created by IA - Grupo 3.
  * Part of IAgents
  */
+
+package ia.agents.negotiation;
+
+import ia.agents.ontology.*;
+import jade.core.AID;
+
 public class BestOfferManager {
-    private ServicioAgencia servicio;
-    private AID mejorAgente;
-    private boolean finalOffer;
+    private PaqueteAgencia pa = new PaqueteAgencia();
+    private AID agenteLugar;
+    private AID agenteTransporte;
+
+    private boolean validTransporte = false;
+    private boolean validAlojamiento = false;
+
+    public BestOfferManager(Paquete p) {
+        pa.setPaquete(p);
+    }
+
+    public void setMejor(Alojamiento a, AID mejorAgente) {
+        pa.setAlojamiento(a);
+        agenteLugar = mejorAgente;
+        validAlojamiento = true;
+    }
+
+    public void setMejor(Transporte t, AID mejorAgente) {
+        pa.setTransporte(t);
+        agenteTransporte = mejorAgente;
+        validTransporte = true;
+    }
+
+    public void setMejorAlojamiento(BestOfferManager oferta) {
+        pa.setAlojamiento(oferta.getAlojamiento());
+        agenteLugar = oferta.getAgenteLugar();
+        validAlojamiento = true;
+    }
+
+    public void setMejorTransporte(BestOfferManager oferta) {
+        pa.setTransporte(oferta.getTransporte());
+        agenteTransporte = oferta.getAgenteTransporte();
+        validTransporte = true;
+    }
+
+    public boolean esMejor(Alojamiento a) {
+        return validAlojamiento &&
+                pa.getAlojamiento().isBetter(a, pa.getPaquete());
+    }
+
+    public boolean esMejor(Transporte t) {
+        return validTransporte &&
+                pa.getTransporte().isBetter(t, pa.getPaquete());
+    }
+
+    public AID getAgenteLugar() {
+        return agenteLugar;
+    }
+
+    public AID getAgenteTransporte() {
+        return agenteTransporte;
+    }
+
+    public boolean isValidTransporte() {
+        return validTransporte;
+    }
+
+    public boolean isValidAlojamiento() {
+        return validAlojamiento;
+    }
 
     /**
-     * Comprueba si otroServicio es mejor que el servicio actual
-     * @param otroServicio Lugar o Transporte con el que se compara
-     * @return true si es mejor, false si no es mejor
+     * Hace que esta oferta sea inválida a partir de ahora.
      */
-    public boolean isBetter(ServicioAgencia otroServicio, Paquete p) {
-        return servicio == null ||
-                getPrecio(otroServicio, p) < getPrecio(servicio, p);
+    public void setInvalid() {
+        validAlojamiento = validTransporte = false;
     }
 
-    public void setBetter(ServicioAgencia s) {
-        servicio = s;
+    /**
+     * @return Devuelve true si esta oferta es válida. Una oferta es válida si
+     * tiene un lugar y un transporte. Si faltan uno o los dos, ya no es válida.
+     */
+    public boolean isValidOffer() {
+        return validTransporte && validAlojamiento;
     }
 
-    public boolean isFinalOffer() {
-        return finalOffer;
+    /**
+     * @return Devuelve true si la oferta satisface las condiciones del paquete
+     */
+    public boolean satisfacePaquete() {
+        return pa.getPrecioPorPersona() <
+                pa.getPaquete().getImporteMaxPorPersona();
     }
 
-    public void setFinalOffer(boolean finalOffer) {
-        this.finalOffer = finalOffer;
+    /**
+     * @return Devuelve el Paquete de esta oferta (Lugar y Transporte).
+     */
+    public PaqueteAgencia getPaqueteAgencia() {
+        return pa;
     }
 
-    public ServicioAgencia getBetter() {
-        return servicio;
+    /**
+     * Método de conveniencia para acortar las llamadas
+     * @return Alojamiento de esta oferta
+     */
+    public Alojamiento getAlojamiento() {
+        return pa.getAlojamiento();
     }
 
-    public AID getMejorAgente() {
-        return mejorAgente;
-    }
-
-    public void setMejorAgente(AID mejorAgente) {
-        this.mejorAgente = mejorAgente;
-    }
-
-    public double getPrecio(ServicioAgencia s, Paquete p) {
-        return s.getPrecioPorPersona()*p.getPersonas()*p.getDias()*
-               (1-s.getDescuento().getValue());
-    }
-
-    public double getPrecioTotalPorPersona(ServicioAgencia otro, Paquete p) {
-        return (getPrecio(otro, p) + getPrecio(servicio, p)) /
-                (p.getDias() * p.getPersonas());
+    /**
+     * Método de conveniencia para acortar las llamadas
+     * @return Transporte de esta oferta
+     */
+    public Transporte getTransporte() {
+        return pa.getTransporte();
     }
 }
