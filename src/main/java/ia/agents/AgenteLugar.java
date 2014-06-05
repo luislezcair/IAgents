@@ -110,9 +110,6 @@ public class AgenteLugar extends Agent {
                 alojamiento = ofertasPrevias.get(cid);
                 DiscountManager ds = alojamiento.getDescuento();
                 ds.updateValue();
-                //if(ds.isMax()) {
-                //    of.setFinalOffer(true);
-                //}
             }
             else {
                 alojamiento = lugar;

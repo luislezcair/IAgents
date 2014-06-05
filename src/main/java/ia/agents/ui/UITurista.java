@@ -22,7 +22,7 @@ import java.util.List;
 public class UITurista {
     private JTextField textDestino;
     private JButton buttonConsultar;
-    private JButton buttonSalir;
+    private JButton buttonOcultar;
     private JSpinner spinnerDias;
     private JSpinner spinnerPersonas;
     private String[] formaPago = {"Efectivo","Tarjeta"};
@@ -80,7 +80,7 @@ public class UITurista {
         });
 
         // Click en Salir. Elimina la interfaz, el agente sigue funcionando
-        buttonSalir.addActionListener(event -> dispose());
+        buttonOcultar.addActionListener(event -> dispose());
 
         dateFecha.setDate(new Date());
 

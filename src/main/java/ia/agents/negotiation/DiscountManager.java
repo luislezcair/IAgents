@@ -1,8 +1,13 @@
-package ia.agents.negotiation;
-
 /**
  * Created by IA - Grupo 3.
  * Part of IAgents
+ */
+package ia.agents.negotiation;
+
+/**
+ * Clase que maneja el descuento de un servicio. A cada nueva propuesta que
+ * recibe el servicio, le suma una cantidad step al descuento actual (value)
+ * hasta llegar al máximo max. En este caso, es una oferta final.
  */
 public class DiscountManager {
     private double max;

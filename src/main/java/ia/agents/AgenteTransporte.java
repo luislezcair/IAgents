@@ -113,9 +113,6 @@ public class AgenteTransporte extends Agent {
                 transp = ofertasPrevias.get(cid);
                 DiscountManager ds = transp.getDescuento();
                 ds.updateValue();
-//                if(ds.isMax()) {
-//                    of.setFinalOffer(true);
-//                }
             }
             else {
                 transp = transporte;

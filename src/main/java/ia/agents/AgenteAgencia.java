@@ -204,6 +204,8 @@ public class AgenteAgencia extends Agent {
                 int performative = ACLMessage.FAILURE;
                 AID aid = action.getActor();
 
+                // Tomamos la mejor oferta de la iteración anterior para
+                // compararla con las que llegan en esta nueva iteración.
                 if(mejorOferta.isValidAlojamiento())
                     ofertaActual.setMejorAlojamiento(mejorOferta);
 

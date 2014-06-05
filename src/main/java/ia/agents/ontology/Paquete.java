@@ -86,7 +86,8 @@ public class Paquete implements Concept {
      */
     @Override
     public String toString() {
-        return destino + "@" +
+        return "Paquete: " +
+               destino + "@" +
                dias + "@" +
                fecha + "@" +
                formaDePago + "@" +

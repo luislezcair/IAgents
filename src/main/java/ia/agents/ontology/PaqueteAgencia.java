@@ -46,4 +46,15 @@ public class PaqueteAgencia implements Concept {
     public double getPrecioPorPersona() {
         return getPrecioTotal() / (paquete.getPersonas() * paquete.getDias());
     }
+
+    public boolean isBetter(PaqueteAgencia otro) {
+        return getPrecioTotal() < otro.getPrecioTotal();
+    }
+
+    @Override
+    public String toString() {
+        return alojamiento.toString() + "\n" +
+               transporte.toString() + "\n" +
+               paquete.toString();
+    }
 }

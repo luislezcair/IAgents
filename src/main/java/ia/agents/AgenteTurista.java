@@ -97,6 +97,8 @@ public class AgenteTurista extends Agent {
      */
     private class PackageNegotiator extends ContractNetInitiator {
         private Paquete paquete;
+        private String cid;
+        private PaqueteAgencia ofertaAgencia;
 
         public PackageNegotiator(Agent a, Paquete p) {
             super(a, null);
@@ -111,9 +113,14 @@ public class AgenteTurista extends Agent {
                 cfp.addReceiver(aid);
             }
 
+            // Generamos un nuevo conversation-id para esta negociación
+            cid = myAgent.getName() + System.currentTimeMillis() + "_" +
+                    String.valueOf((int)(Math.random()*100.0));
+
             cfp.setLanguage(slCodec.getName());
             cfp.setOntology(ontology.getName());
             cfp.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
+            cfp.setConversationId(cid);
 
             ConsultarAction ca = new ConsultarAction();
             ca.setPaquete(paquete);
@@ -132,30 +139,66 @@ public class AgenteTurista extends Agent {
             return v;
         }
 
+        // TODO: mostrar todas las ofertas y la mejor.
         @Override
         @SuppressWarnings("unchecked")
         protected void handleAllResponses(Vector responses,
                                           Vector acceptances) {
+            PaqueteAgencia mejorOferta = null;
+            AID mejorAgente = null;
+
             // El turista decide el mejor entre todos los paquetes
             // recibidos de las agencias.
             for(Object obj : responses) {
                 ACLMessage resp = (ACLMessage) obj;
-                if(resp.getPerformative() == ACLMessage.PROPOSE) {
-                    // Procesar la respuesta recibida de una agencia,
-                    // decidir cuál es la mejor.
-                    System.out.println(
-                            "[TURISTA] Propuesta recibida de la agencia " +
-                                    resp.getSender().getName());
+                PaqueteAgencia pa;
 
-                    // Si nos conviene este paquete, respondemos accept
-                    ACLMessage accept = resp.createReply();
-                    accept.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
-                    acceptances.add(accept);
-                } else {
+                if(resp.getPerformative() != ACLMessage.PROPOSE) {
                     System.out.println(
                             "[TURISTA] Rechazo recibido de la agencia " +
-                                        resp.getSender().getName());
+                                    resp.getSender().getName());
+                    continue;
                 }
+
+                // Procesar la respuesta recibida de una agencia,
+                // decidir cuál es la mejor.
+                System.out.println(
+                        "[TURISTA] Propuesta recibida de la agencia " +
+                                resp.getSender().getName());
+
+                Action action;
+                try {
+                    action = (Action) getContentManager().extractContent(resp);
+                    OfertarPaqueteAction of =
+                            (OfertarPaqueteAction) action.getAction();
+                    pa = of.getPaqueteAgencia();
+                } catch(Exception e) {
+                    e.printStackTrace();
+                    continue;
+                }
+
+                ACLMessage reject;
+
+                // Si es mejor que la actual, se la toma como mejor,
+                // y se rechaza la anterior. Si no es mejor se la rechaza.
+                if(mejorOferta == null || pa.isBetter(mejorOferta)) {
+                    reject = createMessage(
+                            ACLMessage.REJECT_PROPOSAL, mejorAgente);
+                    mejorOferta = pa;
+                    mejorAgente = action.getActor();
+                } else {
+                    reject = resp.createReply();
+                    reject.setPerformative(ACLMessage.REJECT_PROPOSAL);
+                }
+                acceptances.add(reject);
+            }
+
+            // Aceptamos la mejor oferta.
+            if(mejorOferta != null) {
+                acceptances.add(
+                        createMessage(ACLMessage.ACCEPT_PROPOSAL, mejorAgente));
+                ofertaAgencia = mejorOferta;
+                System.out.println("MEJOR: " + mejorOferta);
             }
 
             // Todas las agencias respondieron REFUSE
@@ -163,6 +206,33 @@ public class AgenteTurista extends Agent {
                 ui.showMessage("No existe ninguna agencia que pueda " +
                         "satisfacer los parámetros solicitados.");
             }
+        }
+
+        @Override
+        protected void handleAllResultNotifications(Vector resultNotif) {
+            for(Object obj : resultNotif) {
+                ACLMessage resp = (ACLMessage) obj;
+                if(resp.getPerformative() == ACLMessage.INFORM) {
+                    System.out.println("[TURISTA] INFORM de la agencia " +
+                            resp.getSender().getName());
+                } else {
+                    System.out.println("[TURISTA] FAILURE de la agencia " +
+                            resp.getSender().getName());
+                }
+            }
+        }
+
+        /**
+         * Crea un mensaje con el conversation-id actual
+         * @param performative Tipo de mensaje a crear.
+         * @param receiver receptor del mensaje
+         * @return Mensaje creado con performative y receptor asignados.
+         */
+        private ACLMessage createMessage(int performative, AID receiver) {
+            ACLMessage msg = new ACLMessage(performative);
+            msg.addReceiver(receiver);
+            msg.setConversationId(cid);
+            return msg;
         }
     }
 }

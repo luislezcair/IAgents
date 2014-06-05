@@ -14,7 +14,6 @@ import jade.core.*;
 import jade.core.Runtime;
 import jade.wrapper.*;
 import jade.wrapper.AgentContainer;
-import jade.wrapper.AgentState;
 
 import java.util.Date;
 
@@ -67,20 +66,22 @@ public class AgentManager {
 
         Paquete paquete = new Paquete("Corrientes", 5, new Date(), -1, 1000.0,
                 5);
+        Paquete paquete2 = new Paquete("Chaco", 6, new Date(), -1, 200.0, 7);
         Alojamiento lugar1 = new Alojamiento(10, "Corrientes", new Date(),
                 123.0f, 0, new DiscountManager(0.1, 0.5, 0.1));
         Alojamiento lugar2 = new Alojamiento(20, "Corrientes", new Date(),
                 200.0f, 2, new DiscountManager(0.05, 0.3, 0.1));
-        Alojamiento lugar3 = new Alojamiento(15, "Chaco", new Date(),
+        Alojamiento lugar3 = new Alojamiento(15, "Corrientes", new Date(),
                 230.0f, 1, new DiscountManager(0.07, 0.4, 0.05));
-        Alojamiento lugar4 = new Alojamiento(9, "Chaco", new Date(), 100.0f,
-                0, new DiscountManager(0.05, 0.5, 0.08));
+        Alojamiento lugar4 = new Alojamiento(9, "Corrientes", new Date(),
+                100.0f, 0, new DiscountManager(0.05, 0.5, 0.08));
         Transporte transp1 = new Transporte(30, "Corrientes", new Date(),
                 120.0f, 0, new DiscountManager(0.08, 0.45, 0.05));
-        Transporte transp2 = new Transporte(20, "Rosario", new Date(), 120.0f,
-                1, new DiscountManager(0.15, 0.6, 0.06));
+        Transporte transp2 = new Transporte(20, "Corrientes", new Date(),
+                120.0f, 1, new DiscountManager(0.15, 0.6, 0.06));
 
         Object turista[] = {paquete};
+        Object turista2[] = {paquete2};
         Object lugar1_86[] = {"Agencia86", lugar1};
         Object lugar2_86[] = {"Agencia86", lugar2};
         Object lugar3_007[] = {"Agencia007", lugar3};
@@ -91,8 +92,8 @@ public class AgentManager {
         try {
             mainContainer.createNewAgent(
                     "Turista1", "ia.agents.AgenteTurista", turista).start();
-            //mainContainer.createNewAgent(
-            //        "Turista2", "ia.agents.AgenteTurista", null).start();
+            mainContainer.createNewAgent(
+                    "Turista2", "ia.agents.AgenteTurista", turista2).start();
             mainContainer.createNewAgent(
                     "Agencia86", "ia.agents.AgenteAgencia", null).start();
             mainContainer.createNewAgent(
