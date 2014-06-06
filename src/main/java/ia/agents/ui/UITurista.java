@@ -11,8 +11,10 @@ import jade.core.AID;
 import org.jdesktop.swingx.JXDatePicker;
 
 import javax.swing.*;
+import java.awt.event.ComponentAdapter;
 import java.util.Date;
 import java.util.List;
+
 
 /**
  * Interfaz para el agente turista con un formulario para los datos del paquete
@@ -23,6 +25,7 @@ public class UITurista {
     private JButton buttonSalir;
     private JSpinner spinnerDias;
     private JSpinner spinnerPersonas;
+    private String[] formaPago = {"Efectivo","Tarjeta"};
     private JComboBox comboFormaDePago;
     private JTextField textImporteMax;
     private JXDatePicker dateFecha;
@@ -40,9 +43,20 @@ public class UITurista {
             // Carga los datos del paquete y envía un CFP a las agencias
             Paquete p = new Paquete();
 
-            p.setDestino(textDestino.getText());
-            p.setDias((Integer)spinnerDias.getValue());
+            if(textDestino.getText().isEmpty())
+                {this.showMessage("Por favor ingrese un destino");}
+            else
+                {p.setDestino(textDestino.getText());}
+
+
+            if ((Integer)spinnerDias.getValue()<=0){
+                this.showMessage("Por favor ingrese una cantidad válida de días");
+            }
+            else{p.setDias((Integer)spinnerDias.getValue());}
+
+
             p.setFecha(dateFecha.getDate());
+
             p.setFormaDePago(comboFormaDePago.getSelectedIndex());
 
             // En vez de devolver cero, Javita se quiere pasar de listo
@@ -54,8 +68,14 @@ public class UITurista {
             }
             p.setImporteMaxPorPersona(importe);
 
-            p.setPersonas((Integer)spinnerPersonas.getValue());
+            if ((Integer)spinnerPersonas.getValue()<=0){
+                this.showMessage("Por favor ingrese una cantidad válida de personas");
+            }
+            else{p.setPersonas((Integer) spinnerPersonas.getValue());}
 
+
+
+            if((textDestino.getText().trim().length()!=0)&& ((Integer)spinnerDias.getValue()>0) && ((Integer)spinnerPersonas.getValue()>0) )
             turista.sendCfp(p);
         });
 
@@ -68,6 +88,8 @@ public class UITurista {
         mainWindow = new JFrame(agente.getName());
         mainWindow.getContentPane().add(panelTurista);
         mainWindow.pack();
+        spinnerPersonas.addComponentListener(new ComponentAdapter() {
+        });
     }
 
     public void setAgenciesList(List<AID> agencies) {
@@ -112,6 +134,10 @@ public class UITurista {
     }
 
     private void createUIComponents() {
+
         listAgencies = new JList<>(new DefaultListModel<>());
+        spinnerDias = new JSpinner(new SpinnerNumberModel(0,0,99,1));
+        spinnerPersonas = new JSpinner(new SpinnerNumberModel(0,0,99,1));
+        comboFormaDePago = new JComboBox(formaPago);
     }
 }

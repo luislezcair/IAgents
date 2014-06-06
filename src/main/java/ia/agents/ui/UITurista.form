@@ -42,7 +42,7 @@
               <text value="C&amp;antidad de días:"/>
             </properties>
           </component>
-          <component id="187c8" class="javax.swing.JSpinner" binding="spinnerDias">
+          <component id="187c8" class="javax.swing.JSpinner" binding="spinnerDias" custom-create="true">
             <constraints>
               <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -59,7 +59,7 @@
               <text value="Cantidad de &amp;personas:"/>
             </properties>
           </component>
-          <component id="b106" class="javax.swing.JSpinner" binding="spinnerPersonas">
+          <component id="b106" class="javax.swing.JSpinner" binding="spinnerPersonas" custom-create="true">
             <constraints>
               <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -83,7 +83,7 @@
               <text value="&amp;Importe máximo por persona:"/>
             </properties>
           </component>
-          <component id="23cdf" class="javax.swing.JComboBox" binding="comboFormaDePago">
+          <component id="23cdf" class="javax.swing.JComboBox" binding="comboFormaDePago" custom-create="true">
             <constraints>
               <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
