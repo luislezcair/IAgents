@@ -1,51 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="ia.main.ui.UIAgentManager">
-  <grid id="27dc6" binding="mainPanel" layout-manager="GridLayoutManager" row-count="1" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+  <grid id="27dc6" binding="mainPanel" layout-manager="GridLayoutManager" row-count="3" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="20" width="697" height="400"/>
+      <xy x="20" y="20" width="682" height="137"/>
     </constraints>
     <properties/>
     <border type="none"/>
     <children>
-      <component id="f808b" class="javax.swing.JButton" binding="buttonSalir">
+      <component id="7fd2b" class="javax.swing.JButton" binding="buttonTurista">
         <constraints>
-          <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="&amp;Salir"/>
+          <text value="Crear Turista"/>
         </properties>
       </component>
-      <component id="a885d" class="javax.swing.JButton" binding="buttonTestAgents">
+      <component id="13d8b" class="javax.swing.JButton" binding="buttonAgencia">
         <constraints>
-          <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="&amp;Iniciar agentes de prueba"/>
+          <text value="Crear Agencia"/>
         </properties>
       </component>
-      <component id="e1e0f" class="javax.swing.JButton" binding="buttonRma">
+      <component id="dd790" class="javax.swing.JButton" binding="buttonLugar">
         <constraints>
           <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Ejecutar JADE &amp;RMA"/>
+          <text value="Crear Lugar"/>
+        </properties>
+      </component>
+      <component id="8cdb0" class="javax.swing.JButton" binding="buttonTransporte">
+        <constraints>
+          <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Crear Transporte"/>
         </properties>
       </component>
       <component id="5cc4b" class="javax.swing.JButton" binding="buttonSniffer">
         <constraints>
-          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="1" column="0" row-span="2" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="Ejecutar agente Sni&amp;ffer"/>
         </properties>
       </component>
-      <component id="8cdb0" class="javax.swing.JButton" binding="buttonTransporte">
+      <component id="e1e0f" class="javax.swing.JButton" binding="buttonRma">
         <constraints>
-          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="1" column="1" row-span="2" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Crear Transporte"/>
+          <text value="Ejecutar JADE &amp;RMA"/>
+        </properties>
+      </component>
+      <component id="a885d" class="javax.swing.JButton" binding="buttonTestAgents">
+        <constraints>
+          <grid row="1" column="2" row-span="2" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="&amp;Iniciar agentes de prueba"/>
+        </properties>
+      </component>
+      <component id="f808b" class="javax.swing.JButton" binding="buttonSalir">
+        <constraints>
+          <grid row="1" column="3" row-span="2" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="&amp;Salir"/>
         </properties>
       </component>
     </children>

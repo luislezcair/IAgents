@@ -31,9 +31,8 @@ public class UITransporte {
     private JRadioButton avionRadioButton;
     private JRadioButton colectivoRadioButton;
     private JRadioButton otrosRadioButton;
-    private JTextField textNombreAgente;
-    private JComboBox comboAgencias;
-    private DefaultComboBoxModel<String> comboAgenciasModel;
+    private JComboBox<String> comboAgencias;
+    //private DefaultComboBoxModel<String> comboAgenciasModel;
     private JFrame mainWindow;
 
     public UITransporte() {
@@ -111,7 +110,7 @@ public class UITransporte {
         buttonOcultar.addActionListener(event -> dispose());
 
         // Crear una ventana principal, agrega el contenido y ajusta al tamaño
-        mainWindow = new JFrame();
+        mainWindow = new JFrame("Crear agente Transporte");
         mainWindow.getContentPane().add(panelTransporte);
         mainWindow.pack();
     }
@@ -135,10 +134,16 @@ public class UITransporte {
                 + " - Error", JOptionPane.WARNING_MESSAGE);
     }
 
+    /**
+     * Carga el comboBox con la lista de agencias.
+     * @param agencias Lista de agencias registradas en el DF.
+     */
     public void setAgencias(List<AID> agencias) {
-        comboAgenciasModel.removeAllElements();
+        DefaultComboBoxModel<String> model =
+                (DefaultComboBoxModel<String>) comboAgencias.getModel();
+        model.removeAllElements();
         for(AID aid : agencias) {
-            comboAgenciasModel.addElement(aid.getName());
+            model.addElement(aid.getName());
         }
     }
 
@@ -155,7 +160,6 @@ public class UITransporte {
             comboCategoria = new JComboBox<>(otros);
         }
 */
-        comboAgenciasModel = new DefaultComboBoxModel<>();
-        comboAgencias = new JComboBox<>(comboAgenciasModel);
+        comboAgencias = new JComboBox<>(new DefaultComboBoxModel<>());
     }
 }

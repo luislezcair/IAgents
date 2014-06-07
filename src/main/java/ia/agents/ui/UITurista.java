@@ -24,7 +24,7 @@ public class UITurista {
     private JButton buttonOcultar;
     private JSpinner spinnerDias;
     private JSpinner spinnerPersonas;
-    private String[] formaPago = {"Efectivo","Tarjeta"};
+    private String[] formaPago = {"Efectivo", "Tarjeta"};
     private JComboBox comboFormaDePago;
     private JTextField textImporteMax;
     private JXDatePicker dateFecha;
@@ -42,17 +42,22 @@ public class UITurista {
             // Carga los datos del paquete y envía un CFP a las agencias
             Paquete p = new Paquete();
 
-            if(textDestino.getText().isEmpty())
-                {this.showMessage("Por favor ingrese un destino");}
-            else
-                {p.setDestino(textDestino.getText());}
-
-
-            if ((Integer)spinnerDias.getValue()<=0){
-                this.showMessage("Por favor ingrese una cantidad válida de días");
+            String destino = textDestino.getText();
+            if(destino.isEmpty()) {
+                showMessage("Por favor ingrese un destino.");
+                return;
             }
-            else{p.setDias((Integer)spinnerDias.getValue());}
+            else
+                p.setDestino(destino);
 
+
+            int dias = (int) spinnerDias.getValue();
+            if (dias <= 0) {
+                showMessage("Por favor ingrese una cantidad válida de días.");
+                return;
+            }
+            else
+                p.setDias(dias);
 
             p.setFecha(dateFecha.getDate());
 
@@ -67,14 +72,14 @@ public class UITurista {
             }
             p.setImporteMaxPorPersona(importe);
 
-            if ((Integer)spinnerPersonas.getValue()<=0){
+            int personas = (int) spinnerPersonas.getValue();
+            if (personas <= 0) {
                 this.showMessage("Por favor ingrese una cantidad válida de personas");
+                return;
             }
-            else{p.setPersonas((Integer) spinnerPersonas.getValue());}
+            else
+                p.setPersonas(dias);
 
-
-
-            if((textDestino.getText().trim().length()!=0)&& ((Integer)spinnerDias.getValue()>0) && ((Integer)spinnerPersonas.getValue()>0) )
             turista.sendCfp(p);
         });
 
@@ -134,8 +139,8 @@ public class UITurista {
 
     private void createUIComponents() {
         listAgencies = new JList<>(new DefaultListModel<>());
-        spinnerDias = new JSpinner(new SpinnerNumberModel(1,1,99,1));
-        spinnerPersonas = new JSpinner(new SpinnerNumberModel(1,1,99,1));
+        spinnerDias = new JSpinner(new SpinnerNumberModel(1, 1, 99, 1));
+        spinnerPersonas = new JSpinner(new SpinnerNumberModel(1, 1, 99, 1));
         comboFormaDePago = new JComboBox<>(formaPago);
     }
 }

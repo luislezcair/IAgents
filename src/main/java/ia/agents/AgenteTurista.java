@@ -68,7 +68,7 @@ public class AgenteTurista extends Agent {
 
     private Paquete getPaqueteArg() {
         Object[] args = getArguments();
-        if (args == null || args.length < 1) {
+        if (args == null || args.length < 1 || args[0] == null) {
             return new Paquete();
         }
         return (Paquete)args[0];

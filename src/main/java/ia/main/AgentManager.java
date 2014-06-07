@@ -9,7 +9,6 @@ import ia.agents.negotiation.DiscountManager;
 import ia.agents.ontology.Alojamiento;
 import ia.agents.ontology.Paquete;
 import ia.agents.ontology.Transporte;
-import ia.agents.ui.UITransporte;
 import ia.agents.util.DFAgentSubscriber;
 import ia.main.ui.UIAgentManager;
 import jade.core.*;
@@ -108,31 +107,17 @@ public class AgentManager extends Agent {
         Object transp_86[] = {"Agencia86@IAMainPlatform", transp1};
         Object transp_007[] = {"Agencia007@IAMainPlatform", transp2};
 
-        try {
-            mainContainer.createNewAgent(
-                    "Turista1", "ia.agents.AgenteTurista", turista).start();
-            mainContainer.createNewAgent(
-                    "Turista2", "ia.agents.AgenteTurista", turista2).start();
-            mainContainer.createNewAgent(
-                    "Agencia86", "ia.agents.AgenteAgencia", null).start();
-            mainContainer.createNewAgent(
-                    "Agencia007", "ia.agents.AgenteAgencia", null).start();
-            mainContainer.createNewAgent(
-                    "Lugar86", "ia.agents.AgenteLugar", lugar1_86).start();
-            mainContainer.createNewAgent(
-                    "Lugar2_86", "ia.agents.AgenteLugar", lugar2_86).start();
-            mainContainer.createNewAgent(
-                   "Lugar007", "ia.agents.AgenteLugar", lugar3_007).start();
-            mainContainer.createNewAgent(
-                    "Lugar2_007", "ia.agents.AgenteLugar", lugar4_007).start();
-            mainContainer.createNewAgent(
-                    "Transporte86", "ia.agents.AgenteTransporte", transp_86).start();
-            mainContainer.createNewAgent(
-                    "Transporte007", "ia.agents.AgenteTransporte",
-                    transp_007).start();
-        } catch (StaleProxyException e) {
-            e.printStackTrace();
-        }
+        createAgent("Turista1", "ia.agents.AgenteTurista", turista);
+        createAgent("Turista2", "ia.agents.AgenteTurista", turista2);
+        createAgent("Agencia86", "ia.agents.AgenteAgencia", null);
+        createAgent("Agencia007", "ia.agents.AgenteAgencia", null);
+        createAgent("Lugar86", "ia.agents.AgenteLugar", lugar1_86);
+        createAgent("Lugar2_86", "ia.agents.AgenteLugar", lugar2_86);
+        createAgent("Lugar007", "ia.agents.AgenteLugar", lugar3_007);
+        createAgent("Lugar2_007", "ia.agents.AgenteLugar", lugar4_007);
+        createAgent("Transporte86", "ia.agents.AgenteTransporte", transp_86);
+        createAgent("Transporte007", "ia.agents.AgenteTransporte", transp_007);
+
         testAgentsLaunched = true;
     }
 
@@ -166,9 +151,20 @@ public class AgentManager extends Agent {
         }
     }
 
-    public void createAgent() {
-        UITransporte uiTransporte = new UITransporte();
-        uiTransporte.setAgencias(agencias);
-        uiTransporte.show();
+    public List<AID> getAgencias() {
+        return agencias;
+    }
+
+    /**
+     * Crea un agente de la clase clase asociado a la agencia agencia
+     * @param clase Clase del agente que se va a crear
+     * @param params Agencia a la que se va a asociar
+     */
+    public void createAgent(String nombre, String clase, Object[] params) {
+        try {
+            mainContainer.createNewAgent(nombre, clase, params).start();
+        } catch (StaleProxyException e) {
+            e.printStackTrace();
+        }
     }
 }

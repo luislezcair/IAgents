@@ -8,6 +8,7 @@ package ia.agents;
 import ia.agents.negotiation.AgencyNegotiator;
 import ia.agents.negotiation.DiscountManager;
 import ia.agents.ontology.*;
+import ia.agents.ui.UILugar;
 import ia.agents.util.DFRegisterer;
 import jade.content.AgentAction;
 import jade.content.lang.Codec;
@@ -27,6 +28,7 @@ import java.util.HashMap;
 public class AgenteLugar extends Agent {
     private Codec slCodec = new SLCodec();
     private Ontology ontology = TurismoOntology.getInstance();
+    private UILugar ui;
 
     // Mapa de conversation-id -> Alojamiento
     private HashMap<String, Alojamiento> ofertasPrevias = new HashMap<>();
@@ -34,8 +36,6 @@ public class AgenteLugar extends Agent {
 
     @Override
     protected void setup() {
-        // TODO: Crear y mostrar la interfaz
-
         getContentManager().registerLanguage(slCodec);
         getContentManager().registerOntology(ontology);
 
@@ -61,6 +61,13 @@ public class AgenteLugar extends Agent {
         });
 
         lugar = getAlojamientoArg();
+
+        // Si no recibimos un alojamiento como parámetro,
+        // creamos y mostramos la interfaz para que se ingrese uno.
+        if(lugar == null) {
+            lugar = new Alojamiento();
+            ui = new UILugar(this);
+        }
     }
 
     @Override
@@ -87,9 +94,13 @@ public class AgenteLugar extends Agent {
     private Alojamiento getAlojamientoArg() {
         Object[] args = getArguments();
         if(args == null || args.length < 2) {
-            return new Alojamiento();
+            return null;
         }
         return (Alojamiento)args[1];
+    }
+
+    public Alojamiento getAlojamiento() {
+        return lugar;
     }
 
     private class AgencyNegotiatorLugar extends AgencyNegotiator {

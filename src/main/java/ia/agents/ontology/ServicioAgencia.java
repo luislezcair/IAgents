@@ -23,7 +23,9 @@ public class ServicioAgencia implements Concept {
 
     private DiscountManager ds;
 
-    public ServicioAgencia() { }
+    public ServicioAgencia() {
+        ds = new DiscountManager();
+    }
 
     public ServicioAgencia(int capacidad, String destino, Date fecha,
                        double precioPorPersona, int tipo, DiscountManager ds) {
