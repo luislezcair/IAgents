@@ -6,39 +6,44 @@
 package ia.agents.ui;
 
 import ia.agents.AgenteAgencia;
-import org.jdesktop.swingx.JXDatePicker;
-
+import jade.core.AID;
 import javax.swing.*;
+import javax.swing.tree.DefaultTreeModel;
+import java.util.List;
 
 public class UIAgencia {
-    private final AgenteAgencia agenteAgencia;
-    private JPanel agencyPanel;
-    private JComboBox comboAgencia;
-    private JButton buttonConsultar;
-    private JButton buttonSalir;
-    private JList listaLugares;
-    private JList listaTransportes;
-    private JLabel labelAgentInfo;
     private JPanel panelAgencia;
-    private JComboBox comboAgencias;
-    private JList listLugares;
-    private JList listTransportes;
-    private JFrame mainFrame;
-    private JComboBox comboTipo;
-    private JList listAgencias;
+    private JButton buttonOcultar;
+    private JList<String> listServicios;
+    private JLabel labelAgencia;
+    private JFrame mainWindow;
+    private JScrollPane pane;
 
-    public UIAgencia(AgenteAgencia a) {
-        agenteAgencia = a;
+    public UIAgencia(AgenteAgencia agente) {
+        labelAgencia.setText(agente.getName());
 
-        // Crea una ventana con el nombre del agente como título
-        mainFrame = new JFrame(agenteAgencia.getLocalName());
-        mainFrame.getContentPane().add(agencyPanel);
+        buttonOcultar.addActionListener(e -> mainWindow.dispose());
 
-        labelAgentInfo.setText("Hola, soy " + agenteAgencia.getName() +
-                " y esta es mi interfaz");
+        // Crea una ventana con el nombre del agente como título y la muestra
+        mainWindow = new JFrame("Agencia " + agente.getName());
+        mainWindow.getContentPane().add(panelAgencia);
+        mainWindow.pack();
+        mainWindow.setVisible(true);
     }
 
-    public void showUi() {
-        mainFrame.setVisible(true);
+    public void setServicios(List<AID> servicios) {
+        DefaultListModel<String> model =
+
+                (DefaultListModel<String>) listServicios.getModel();
+        model.clear();
+        for(AID aid : servicios) {
+            model.addElement(aid.getName());
+        }
+    }
+
+    private void createUIComponents() {
+        listServicios = new JList<>(new DefaultListModel<>());
+        pane = new JScrollPane(listServicios);
+        //pane.setViewportView(listServicios);
     }
 }

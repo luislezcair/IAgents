@@ -5,9 +5,9 @@
 
 package ia.agents;
 
-//import ia.agents.ui.UIAgency;
 import ia.agents.negotiation.BestOfferManager;
 import ia.agents.ontology.*;
+import ia.agents.ui.UIAgencia;
 import ia.agents.util.*;
 
 import jade.content.Concept;
@@ -28,17 +28,13 @@ import java.util.List;
 import java.util.Vector;
 
 public class AgenteAgencia extends Agent {
-    //private UIAgency ui;
     private Codec slCodec = new SLCodec();
     private Ontology ontology = TurismoOntology.getInstance();
     private List<AID> servicios = new ArrayList<>();
+    private UIAgencia ui;
 
     @Override
     protected void setup() {
-        // Crear y mostrar la interfaz
-        /*
-        ui = new UIAgency(this);
-        ui.setupUi();*/
         getContentManager().registerLanguage(slCodec);
         getContentManager().registerOntology(ontology);
 
@@ -49,6 +45,9 @@ public class AgenteAgencia extends Agent {
         TouristNegotiator touristNegotiator = new TouristNegotiator(this);
         touristNegotiator.registerHandleCfp(new TravelNegotiator(this));
         addBehaviour(touristNegotiator);
+
+        // Crear y mostrar la interfaz
+        ui = new UIAgencia(this);
     }
 
     @Override
@@ -62,7 +61,24 @@ public class AgenteAgencia extends Agent {
         sd.addProperties(new Property("AgenciaAsociada", getName()));
         dfad.addServices(sd);
 
-        addBehaviour(new DFAgentSubscriber(this, dfad, servicios));
+        addBehaviour(new ServicesSubscriber(this, dfad, servicios));
+    }
+
+    private class ServicesSubscriber extends DFAgentSubscriber {
+        private ServicesSubscriber(Agent a, DFAgentDescription dfad, List<AID>
+                subscribedAgents) {
+            super(a, dfad, subscribedAgents);
+        }
+
+        @Override
+        protected void onRegister(DFAgentDescription dfad) {
+            ui.setServicios(servicios);
+        }
+
+        @Override
+        protected void onDeregister(DFAgentDescription dfad) {
+            ui.setServicios(servicios);
+        }
     }
 
     /**
