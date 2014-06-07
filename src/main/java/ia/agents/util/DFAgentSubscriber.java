@@ -31,10 +31,8 @@ public class DFAgentSubscriber extends SubscriptionInitiator {
         agents = subscribedAgents;
     }
 
-    @SuppressWarnings("unused")
     protected void onRegister(DFAgentDescription dfad) { }
 
-    @SuppressWarnings("unused")
     protected void onDeregister(DFAgentDescription dfad) { }
 
     @Override

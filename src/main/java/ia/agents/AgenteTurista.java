@@ -99,6 +99,7 @@ public class AgenteTurista extends Agent {
         private Paquete paquete;
         private String cid;
         private PaqueteAgencia ofertaAgencia;
+        private List<PaqueteAgencia> ofertas = new ArrayList<>();
 
         public PackageNegotiator(Agent a, Paquete p) {
             super(a, null);
@@ -172,6 +173,7 @@ public class AgenteTurista extends Agent {
                     OfertarPaqueteAction of =
                             (OfertarPaqueteAction) action.getAction();
                     pa = of.getPaqueteAgencia();
+                    ofertas.add(pa);
                 } catch(Exception e) {
                     e.printStackTrace();
                     continue;
@@ -215,6 +217,9 @@ public class AgenteTurista extends Agent {
                 if(resp.getPerformative() == ACLMessage.INFORM) {
                     System.out.println("[TURISTA] INFORM de la agencia " +
                             resp.getSender().getName());
+
+                    // Ordenamos la lista de ofertas por precio
+                    ofertas.sort((p1, p2) -> p1.compareTo(p2));
                 } else {
                     System.out.println("[TURISTA] FAILURE de la agencia " +
                             resp.getSender().getName());
@@ -232,6 +237,9 @@ public class AgenteTurista extends Agent {
             ACLMessage msg = new ACLMessage(performative);
             msg.addReceiver(receiver);
             msg.setConversationId(cid);
+            msg.setProtocol(FIPANames.InteractionProtocol.FIPA_CONTRACT_NET);
+            msg.setOntology(ontology.getName());
+            msg.setLanguage(slCodec.getName());
             return msg;
         }
     }

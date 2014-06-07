@@ -59,7 +59,7 @@ public class AgenteAgencia extends Agent {
     private void subscribeToDf() {
         DFAgentDescription dfad = new DFAgentDescription();
         ServiceDescription sd = new ServiceDescription();
-        sd.addProperties(new Property("AgenciaAsociada", getLocalName()));
+        sd.addProperties(new Property("AgenciaAsociada", getName()));
         dfad.addServices(sd);
 
         addBehaviour(new DFAgentSubscriber(this, dfad, servicios));

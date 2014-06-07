@@ -8,6 +8,8 @@ package ia.main.ui;
 import ia.main.AgentManager;
 
 import javax.swing.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class UIAgentManager {
     private AgentManager manager;
@@ -17,6 +19,7 @@ public class UIAgentManager {
     private JButton buttonTestAgents;
     private JButton buttonRma;
     private JButton buttonSniffer;
+    private JButton buttonTransporte;
 
     public UIAgentManager(AgentManager am) {
         manager = am;
@@ -25,10 +28,20 @@ public class UIAgentManager {
         mainWindow.getContentPane().add(mainPanel);
         mainWindow.pack();
 
+        // Al cerrar la ventana terminamos la aplicación
+        mainWindow.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                am.shutdown();
+            }
+        });
+
         buttonSalir.addActionListener(event -> manager.shutdown());
         buttonTestAgents.addActionListener(event -> manager.launchTestAgents());
         buttonRma.addActionListener(event -> manager.launchRma());
         buttonSniffer.addActionListener(event -> manager.launchSniffer());
+
+        buttonTransporte.addActionListener(event -> manager.createAgent());
     }
 
     public void show() {

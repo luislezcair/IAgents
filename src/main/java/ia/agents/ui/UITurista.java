@@ -15,7 +15,6 @@ import java.awt.event.ComponentAdapter;
 import java.util.Date;
 import java.util.List;
 
-
 /**
  * Interfaz para el agente turista con un formulario para los datos del paquete
  */
@@ -134,10 +133,9 @@ public class UITurista {
     }
 
     private void createUIComponents() {
-
         listAgencies = new JList<>(new DefaultListModel<>());
-        spinnerDias = new JSpinner(new SpinnerNumberModel(0,0,99,1));
-        spinnerPersonas = new JSpinner(new SpinnerNumberModel(0,0,99,1));
-        comboFormaDePago = new JComboBox(formaPago);
+        spinnerDias = new JSpinner(new SpinnerNumberModel(1,1,99,1));
+        spinnerPersonas = new JSpinner(new SpinnerNumberModel(1,1,99,1));
+        comboFormaDePago = new JComboBox<>(formaPago);
     }
 }

@@ -7,19 +7,21 @@ package ia.agents.ui;
 
 import ia.agents.negotiation.DiscountManager;
 import ia.agents.ontology.Transporte;
+import jade.core.AID;
 import org.jdesktop.swingx.JXDatePicker;
 
 import javax.swing.*;
+import java.util.List;
 
 public class UITransporte {
     private JPanel panelTransporte;
     private JButton buttonCT;
-    private JButton buttonSalir;
+    private JButton buttonOcultar;
     private JTextField textCiudad;
     private JXDatePicker dateFecha;
-    private String[] catColectivos = {"Suite Premium","Cama","Semi-Cama",};
-    private String[] catAviones = {"Primera Clase","Clase Turista"};
-    private String[] otros = {"Combi","Ferrocarril"};
+    private String[] catColectivos = {"Suite Premium", "Cama", "Semi-Cama"};
+    private String[] catAviones = {"Primera Clase", "Clase Turista"};
+    private String[] otros = {"Combi", "Ferrocarril"};
     private JComboBox comboCategoria;
     private JSpinner spinnerCapacidad;
     private JTextField textDescuentoIni;
@@ -29,11 +31,12 @@ public class UITransporte {
     private JRadioButton avionRadioButton;
     private JRadioButton colectivoRadioButton;
     private JRadioButton otrosRadioButton;
+    private JTextField textNombreAgente;
+    private JComboBox comboAgencias;
+    private DefaultComboBoxModel<String> comboAgenciasModel;
     private JFrame mainWindow;
 
-
     public UITransporte() {
-
         // Click en Crear Lugar
         buttonCT.addActionListener(event -> {
             // Crea un nuevo lugars
@@ -102,20 +105,15 @@ public class UITransporte {
                 }
                 transp.setPrecioPorPersona(importe);
             }
-
         });
 
         // Click en Salir. Elimina la interfaz, el agente sigue funcionando
-        buttonSalir.addActionListener(event -> dispose());
-
-        //dateFecha.setDate(new Date());
+        buttonOcultar.addActionListener(event -> dispose());
 
         // Crear una ventana principal, agrega el contenido y ajusta al tamaño
         mainWindow = new JFrame();
         mainWindow.getContentPane().add(panelTransporte);
         mainWindow.pack();
-        //spinnerPersonas.addComponentListener(new ComponentAdapter() {
-        //});
     }
 
     /**
@@ -137,17 +135,27 @@ public class UITransporte {
                 + " - Error", JOptionPane.WARNING_MESSAGE);
     }
 
+    public void setAgencias(List<AID> agencias) {
+        comboAgenciasModel.removeAllElements();
+        for(AID aid : agencias) {
+            comboAgenciasModel.addElement(aid.getName());
+        }
+    }
+
     private void createUIComponents() {
         spinnerCapacidad = new JSpinner(new SpinnerNumberModel(0, 0, 500, 1));
-
+/*
         if (avionRadioButton.isSelected()) {
-            comboCategoria = new JComboBox(catAviones);
+            comboCategoria = new JComboBox<>(catAviones);
         }
         else if (colectivoRadioButton.isSelected()){
-            comboCategoria = new JComboBox(catColectivos);
+            comboCategoria = new JComboBox<>(catColectivos);
         }
         else if (otrosRadioButton.isSelected()){
-            comboCategoria = new JComboBox(otros);
+            comboCategoria = new JComboBox<>(otros);
         }
+*/
+        comboAgenciasModel = new DefaultComboBoxModel<>();
+        comboAgencias = new JComboBox<>(comboAgenciasModel);
     }
 }

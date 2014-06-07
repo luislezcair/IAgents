@@ -9,37 +9,53 @@ import ia.agents.negotiation.DiscountManager;
 import ia.agents.ontology.Alojamiento;
 import ia.agents.ontology.Paquete;
 import ia.agents.ontology.Transporte;
+import ia.agents.ui.UITransporte;
+import ia.agents.util.DFAgentSubscriber;
 import ia.main.ui.UIAgentManager;
 import jade.core.*;
 import jade.core.Runtime;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.wrapper.*;
 import jade.wrapper.AgentContainer;
 
+import javax.swing.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-public class AgentManager {
-    Runtime rt;
+public class AgentManager extends Agent {
+    List<AID> agencias = new ArrayList<>();
     AgentContainer mainContainer;
     AgentController rma;
     AgentController sniffer;
     UIAgentManager ui;
     boolean testAgentsLaunched;
 
-    public AgentManager() {
+    @Override
+    protected void setup() {
         ui = new UIAgentManager(this);
         ui.show();
 
-        rt = Runtime.instance();
+        Runtime rt = Runtime.instance();
+
+        // Hace que el programa termine cuando el último container se cierre
+        rt.setCloseVM(true);
+
+        mainContainer = (AgentContainer) getArguments()[0];
+
+        // Se suscribe al DF para obtener la lista de agencias registradas
+        DFAgentDescription dfad = new DFAgentDescription();
+        ServiceDescription sd = new ServiceDescription();
+        sd.setType("Agencia");
+        dfad.addServices(sd);
+
+        addBehaviour(new DFAgentSubscriber(this, dfad, agencias));
     }
 
-    public void launchRuntime() {
-        Profile profile = new ProfileImpl();
-        profile.setParameter(Profile.PLATFORM_ID, "IAMainPlatform");
-        profile.setParameter(Profile.CONTAINER_NAME, "IAMainContainer");
-
-        mainContainer = rt.createMainContainer(profile);
-    }
-
+    /**
+     * Ejecuta el agente RMA
+     */
     public void launchRma() {
         try {
             rma = mainContainer.createNewAgent(
@@ -50,6 +66,9 @@ public class AgentManager {
         }
     }
 
+    /**
+     * Ejecuta el agente Sniffer
+     */
     public void launchSniffer() {
         try {
             sniffer = mainContainer.createNewAgent("sniffer",
@@ -82,12 +101,12 @@ public class AgentManager {
 
         Object turista[] = {paquete};
         Object turista2[] = {paquete2};
-        Object lugar1_86[] = {"Agencia86", lugar1};
-        Object lugar2_86[] = {"Agencia86", lugar2};
-        Object lugar3_007[] = {"Agencia007", lugar3};
-        Object lugar4_007[] = {"Agencia007", lugar4};
-        Object transp_86[] = {"Agencia86", transp1};
-        Object transp_007[] = {"Agencia007", transp2};
+        Object lugar1_86[] = {"Agencia86@IAMainPlatform", lugar1};
+        Object lugar2_86[] = {"Agencia86@IAMainPlatform", lugar2};
+        Object lugar3_007[] = {"Agencia007@IAMainPlatform", lugar3};
+        Object lugar4_007[] = {"Agencia007@IAMainPlatform", lugar4};
+        Object transp_86[] = {"Agencia86@IAMainPlatform", transp1};
+        Object transp_007[] = {"Agencia007@IAMainPlatform", transp2};
 
         try {
             mainContainer.createNewAgent(
@@ -117,9 +136,11 @@ public class AgentManager {
         testAgentsLaunched = true;
     }
 
+    /**
+     * Contrata sicarios para matar los agentes rma, sniffer y el main container
+     */
     public void shutdown() {
-        ui.dispose();
-        rt.setCloseVM(true);
+        SwingUtilities.invokeLater(ui::dispose);
 
         killAgent(rma);
         killAgent(sniffer);
@@ -131,6 +152,10 @@ public class AgentManager {
         }
     }
 
+    /**
+     * Mata a un agente
+     * @param ac Agente al que se va a matar
+     */
     private void killAgent(AgentController ac) {
         try {
             if (ac != null) {
@@ -139,5 +164,11 @@ public class AgentManager {
         } catch( StaleProxyException e) {
             //e.printStackTrace();
         }
+    }
+
+    public void createAgent() {
+        UITransporte uiTransporte = new UITransporte();
+        uiTransporte.setAgencias(agencias);
+        uiTransporte.show();
     }
 }

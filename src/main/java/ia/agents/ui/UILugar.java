@@ -13,12 +13,16 @@ import javax.swing.*;
 
 public class UILugar {
     private JButton buttonCL;
-    private JButton buttonSalir;
+    private JButton buttonOcultar;
     private JTextField textCiudad;
     private JSpinner spinnerCapacidad;
-    private String[] catHotel = {"Hotel 5 Estrellas(*****)","Hotel 4 Estrellas(****)","Hotel 3 Estrellas(***)","Hotel 2 Estrellas(**)","Hotel 1 Estrella(*)"};
-    private String[] catHostel = {"Premium","Estándar"};
-    private String[] catCasaAlq = {"Premium","Estándar"};
+    private String[] catHotel = {"Hotel 5 Estrellas (*****)",
+                                 "Hotel 4 Estrellas (****)",
+                                 "Hotel 3 Estrellas (***)",
+                                 "Hotel 2 Estrellas (**)",
+                                 "Hotel 1 Estrella (*)"};
+    private String[] catHostel = {"Premium", "Estándar"};
+    private String[] catCasaAlq = {"Premium", "Estándar"};
     private JComboBox comboTipo;
     private JXDatePicker dateFecha;
     private JTextField textDescuentoIni;
@@ -32,23 +36,26 @@ public class UILugar {
     private JFrame mainWindow;
 
     public UILugar() {
-
         // Click en Crear Lugar
         buttonCL.addActionListener(event -> {
-            // Crea un nuevo lugars
+            // Crea un nuevo lugar
             Alojamiento aloj = new Alojamiento();
             DiscountManager descuento = new DiscountManager();
 
-            if (textCiudad.getText().isEmpty()) {
-                this.showMessage("Por favor ingrese la ciudad donde se ubica el alojamiento");
+            String ciudad = textCiudad.getText();
+            if (ciudad.isEmpty()) {
+                this.showMessage(
+                   "Por favor ingrese la ciudad donde se ubica el alojamiento");
             } else {
-                aloj.setDestino(textCiudad.getText());
+                aloj.setDestino(ciudad);
             }
 
-            if ((Integer) spinnerCapacidad.getValue() <= 0) {
-                this.showMessage("Por favor ingrese una capacidad máxima válida");
+            int capacidad = (int)spinnerCapacidad.getValue();
+            if(capacidad <= 0) {
+                this.showMessage(
+                        "Por favor ingrese una capacidad máxima válida");
             } else {
-                aloj.setCapacidad((Integer) spinnerCapacidad.getValue());
+                aloj.setCapacidad(capacidad);
             }
 
             aloj.setFecha(dateFecha.getDate());
@@ -80,7 +87,8 @@ public class UILugar {
 
             double incDesc;
             if (textIncDescuento.getText().isEmpty()) {
-                this.showMessage("Por favor ingrese la variación del descuento");
+                this.showMessage(
+                        "Por favor ingrese la variación del descuento");
             } else {
                 try {
                     incDesc = Double.valueOf(textIncDescuento.getText());
@@ -101,20 +109,15 @@ public class UILugar {
                 }
                 aloj.setPrecioPorPersona(importe);
             }
-
         });
 
         // Click en Salir. Elimina la interfaz, el agente sigue funcionando
-        buttonSalir.addActionListener(event -> dispose());
-
-        //dateFecha.setDate(new Date());
+        buttonOcultar.addActionListener(event -> dispose());
 
         // Crear una ventana principal, agrega el contenido y ajusta al tamaño
         mainWindow = new JFrame() ;
         mainWindow.getContentPane().add(panelLugar);
         mainWindow.pack();
-        //spinnerPersonas.addComponentListener(new ComponentAdapter() {
-        //});
     }
 
     /**
@@ -139,12 +142,11 @@ public class UILugar {
     private void createUIComponents() {
         spinnerCapacidad = new JSpinner(new SpinnerNumberModel(0, 0, 1000, 1));
         if (hotelRadioButton.isSelected()) {
-            comboTipo = new JComboBox(catHotel);
-        }else if (hostelRadioButton.isSelected()){
-            comboTipo = new JComboBox(catHostel);
-        }else if (casaDeAlquilerRadioButton.isSelected()){
-            comboTipo = new JComboBox(catCasaAlq);
+            comboTipo = new JComboBox<>(catHotel);
+        } else if (hostelRadioButton.isSelected()) {
+            comboTipo = new JComboBox<>(catHostel);
+        } else if (casaDeAlquilerRadioButton.isSelected()) {
+            comboTipo = new JComboBox<>(catCasaAlq);
         }
     }
-
 }

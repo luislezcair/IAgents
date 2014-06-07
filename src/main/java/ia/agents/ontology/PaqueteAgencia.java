@@ -51,6 +51,10 @@ public class PaqueteAgencia implements Concept {
         return getPrecioTotal() < otro.getPrecioTotal();
     }
 
+    public int compareTo(PaqueteAgencia otro) {
+        return isBetter(otro) ? -1 : 1;
+    }
+
     @Override
     public String toString() {
         return alojamiento.toString() + "\n" +
