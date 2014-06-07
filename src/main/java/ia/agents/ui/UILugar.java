@@ -118,10 +118,12 @@ public class UILugar {
             descuento.setValue(descIni);
             descuento.setMax(descMax);
             descuento.setStep(incDesc);
+
+            mainWindow.dispose();
         });
 
         // Click en Salir. Elimina la interfaz, el agente sigue funcionando
-        buttonOcultar.addActionListener(event -> dispose());
+        buttonOcultar.addActionListener(event -> mainWindow.dispose());
 
         // Click en los radio-buttons
         hotelRadioButton.addActionListener(
@@ -150,13 +152,6 @@ public class UILugar {
         textDescuentoIni.setText(String.valueOf(d.getValue()));
         textDescuentoMax.setText(String.valueOf(d.getMax()));
         textIncDescuento.setText(String.valueOf(d.getStep()));
-    }
-
-    /**
-     * Destruye la UI y libera recursos
-     */
-    public void dispose() {
-        mainWindow.dispose();
     }
 
     public void showMessage(String msg) {

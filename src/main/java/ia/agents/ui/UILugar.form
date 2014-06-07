@@ -236,4 +236,12 @@
       </grid>
     </children>
   </grid>
+  <buttonGroups>
+    <group name="Tipos">
+      <member id="5b9b3"/>
+      <member id="5b9b3"/>
+      <member id="151f"/>
+      <member id="75e4c"/>
+    </group>
+  </buttonGroups>
 </form>

@@ -8,6 +8,7 @@ package ia.agents;
 import ia.agents.negotiation.AgencyNegotiator;
 import ia.agents.negotiation.DiscountManager;
 import ia.agents.ontology.*;
+import ia.agents.ui.UITransporte;
 import ia.agents.util.DFRegisterer;
 import jade.content.AgentAction;
 import jade.content.lang.Codec;
@@ -33,8 +34,6 @@ public class AgenteTransporte extends Agent {
 
     @Override
     protected void setup() {
-        // TODO: Crear y mostrar la interfaz
-
         getContentManager().registerLanguage(slCodec);
         getContentManager().registerOntology(ontology);
 
@@ -60,6 +59,13 @@ public class AgenteTransporte extends Agent {
         });
 
         transporte = getTransporteArg();
+
+        // Si no recibimos un transporte como parámetro, creamos y mostramos
+        // la interfaz para que se ingrese uno.
+        if(transporte == null) {
+            transporte = new Transporte();
+            new UITransporte(this);
+        }
     }
 
     protected void takeDown() {
@@ -72,7 +78,7 @@ public class AgenteTransporte extends Agent {
      */
     private String getAgencia() {
         Object[] args = getArguments();
-        if(args == null || args.length < 1) {
+        if(args == null || args.length < 1 || args[0] == null) {
             return "";
         }
         return args[0].toString();
@@ -85,9 +91,13 @@ public class AgenteTransporte extends Agent {
     private Transporte getTransporteArg() {
         Object[] args = getArguments();
         if(args == null || args.length < 2) {
-            return new Transporte();
+            return null;
         }
         return (Transporte)args[1];
+    }
+
+    public Transporte getTransporte() {
+        return transporte;
     }
 
     /**
@@ -100,8 +110,6 @@ public class AgenteTransporte extends Agent {
 
         @Override
         public AgentAction prepareResponseAction(Paquete p) {
-            // TODO: crear un transporte con las características que sean
-            // necesarias para satisfacer las necesidades del paquete.
             OfertarTransporteAction of = new OfertarTransporteAction();
             String cid = getConversationId();
             Transporte transp;

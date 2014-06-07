@@ -28,7 +28,6 @@ import java.util.HashMap;
 public class AgenteLugar extends Agent {
     private Codec slCodec = new SLCodec();
     private Ontology ontology = TurismoOntology.getInstance();
-    private UILugar ui;
 
     // Mapa de conversation-id -> Alojamiento
     private HashMap<String, Alojamiento> ofertasPrevias = new HashMap<>();
@@ -66,7 +65,7 @@ public class AgenteLugar extends Agent {
         // creamos y mostramos la interfaz para que se ingrese uno.
         if(lugar == null) {
             lugar = new Alojamiento();
-            ui = new UILugar(this);
+            new UILugar(this);
         }
     }
 
@@ -81,7 +80,7 @@ public class AgenteLugar extends Agent {
      */
     private String getAgencia() {
         Object[] args = getArguments();
-        if (args == null || args.length < 1) {
+        if (args == null || args.length < 1 || args[0] == null) {
             return "";
         }
         return args[0].toString();

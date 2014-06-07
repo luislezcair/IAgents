@@ -5,13 +5,12 @@
 
 package ia.agents.ui;
 
+import ia.agents.AgenteTransporte;
 import ia.agents.negotiation.DiscountManager;
 import ia.agents.ontology.Transporte;
-import jade.core.AID;
 import org.jdesktop.swingx.JXDatePicker;
 
 import javax.swing.*;
-import java.util.List;
 
 public class UITransporte {
     private JPanel panelTransporte;
@@ -22,7 +21,10 @@ public class UITransporte {
     private String[] catColectivos = {"Suite Premium", "Cama", "Semi-Cama"};
     private String[] catAviones = {"Primera Clase", "Clase Turista"};
     private String[] otros = {"Combi", "Ferrocarril"};
-    private JComboBox comboCategoria;
+    private DefaultComboBoxModel<String> colectivosModel;
+    private DefaultComboBoxModel<String> avionesModel;
+    private DefaultComboBoxModel<String> otrosModel;
+    private JComboBox<String> comboCategoria;
     private JSpinner spinnerCapacidad;
     private JTextField textDescuentoIni;
     private JTextField textPrecioPP;
@@ -31,102 +33,125 @@ public class UITransporte {
     private JRadioButton avionRadioButton;
     private JRadioButton colectivoRadioButton;
     private JRadioButton otrosRadioButton;
-    private JComboBox<String> comboAgencias;
-    //private DefaultComboBoxModel<String> comboAgenciasModel;
     private JFrame mainWindow;
 
-    public UITransporte() {
+    public UITransporte(AgenteTransporte agente) {
         // Click en Crear Lugar
         buttonCT.addActionListener(event -> {
-            // Crea un nuevo lugars
-            Transporte transp = new Transporte();
-            DiscountManager descuento = new DiscountManager();
+            // Obtiene el transporte del agente para establecer los valores
+            // de los atributos.
+            Transporte transp = agente.getTransporte();
+            DiscountManager descuento = transp.getDescuento();
 
-            if (textCiudad.getText().isEmpty()) {
-                this.showMessage("Por favor ingrese la ciudad destino donde se dirije");
-            } else {
-                transp.setDestino(textCiudad.getText());
+            String ciudad = textCiudad.getText();
+            if (ciudad.isEmpty()) {
+                this.showMessage(
+                        "Por favor ingrese la ciudad destino donde se dirije.");
+                return;
             }
 
-            if ((Integer) spinnerCapacidad.getValue() <= 0) {
-                this.showMessage("Por favor ingrese una capacidad máxima válida");
-            } else {
-                transp.setCapacidad((Integer) spinnerCapacidad.getValue());
+            int capacidad = (int) spinnerCapacidad.getValue();
+            if (capacidad <= 0) {
+                this.showMessage(
+                        "Por favor ingrese una capacidad máxima válida.");
+                return;
             }
-
-            transp.setFecha(dateFecha.getDate());
-            transp.setTipo(comboCategoria.getSelectedIndex());
 
             double descIni;
-            if (textDescuentoIni.getText().isEmpty()) {
-                this.showMessage("Por favor ingrese un descuento inicial");
+            String descuentoInicial = textDescuentoIni.getText();
+            if (descuentoInicial.isEmpty()) {
+                this.showMessage("Por favor ingrese un descuento inicial.");
+                return;
             } else {
                 try {
-                    descIni = Double.valueOf(textDescuentoIni.getText());
+                    descIni = Double.valueOf(descuentoInicial);
                 } catch (NumberFormatException excepcionInutil) {
                     descIni = 0.0d;
                 }
-                descuento.setValue(descIni);
             }
 
             double descMax;
-            if (textDescuentoMax.getText().isEmpty()) {
-                this.showMessage("Por favor ingrese un descuento máximo");
+            String descMaximo = textDescuentoMax.getText();
+            if (descMaximo.isEmpty()) {
+                this.showMessage("Por favor ingrese un descuento máximo.");
+                return;
             } else {
                 try {
-                    descMax = Double.valueOf(textDescuentoMax.getText());
+                    descMax = Double.valueOf(descMaximo);
                 } catch (NumberFormatException excepcionInutil) {
                     descMax = 0.0d;
                 }
-                descuento.setMax(descMax);
             }
 
             double incDesc;
-            if (textIncDescuento.getText().isEmpty()) {
-                this.showMessage("Por favor ingrese la variación del descuento");
+            String strIncDesc = textIncDescuento.getText();
+            if (strIncDesc.isEmpty()) {
+                this.showMessage(
+                        "Por favor ingrese la variación del descuento.");
+                return;
             } else {
                 try {
-                    incDesc = Double.valueOf(textIncDescuento.getText());
+                    incDesc = Double.valueOf(strIncDesc);
                 } catch (NumberFormatException excepcionInutil) {
                     incDesc = 0.0d;
                 }
-                descuento.setStep(incDesc);
             }
 
             double importe;
-            if (textPrecioPP.getText().isEmpty()) {
-                this.showMessage("Por favor ingrese el precio por persona");
+            String strImporte = textPrecioPP.getText();
+            if (strImporte.isEmpty()) {
+                this.showMessage("Por favor ingrese el precio por persona.");
+                return;
             } else {
                 try {
-                    importe = Double.valueOf(textPrecioPP.getText());
+                    importe = Double.valueOf(strImporte);
                 } catch (NumberFormatException excepcionInutil) {
                     importe = 0.0d;
                 }
-                transp.setPrecioPorPersona(importe);
             }
+
+            transp.setDestino(ciudad);
+            transp.setCapacidad(capacidad);
+            transp.setFecha(dateFecha.getDate());
+            transp.setTipo(comboCategoria.getSelectedIndex());
+            descuento.setValue(descIni);
+            descuento.setMax(descMax);
+            descuento.setStep(incDesc);
+            transp.setPrecioPorPersona(importe);
+
+            mainWindow.dispose();
         });
 
         // Click en Salir. Elimina la interfaz, el agente sigue funcionando
-        buttonOcultar.addActionListener(event -> dispose());
+        buttonOcultar.addActionListener(event -> mainWindow.dispose());
+
+        // Click en los radio-buttons
+        avionRadioButton.addActionListener(
+                e -> comboCategoria.setModel(avionesModel));
+        colectivoRadioButton.addActionListener(
+                e -> comboCategoria.setModel(colectivosModel));
+        otrosRadioButton.addActionListener(
+                e -> comboCategoria.setModel(otrosModel));
 
         // Crear una ventana principal, agrega el contenido y ajusta al tamaño
         mainWindow = new JFrame("Crear agente Transporte");
         mainWindow.getContentPane().add(panelTransporte);
         mainWindow.pack();
-    }
-
-    /**
-     * Muestra la ventana principal
-     */
-    public void show() {
         mainWindow.setVisible(true);
+
+        setTransporte(agente.getTransporte());
     }
 
-    /**
-     * Destruye la UI y libera recursos
-     */
-    public void dispose() {
-        mainWindow.dispose();
+    private void setTransporte(Transporte t) {
+        DiscountManager d = t.getDescuento();
+
+        textCiudad.setText(t.getDestino());
+        spinnerCapacidad.setValue(t.getCapacidad());
+        dateFecha.setDate(t.getFecha());
+
+        textDescuentoIni.setText(String.valueOf(d.getValue()));
+        textDescuentoMax.setText(String.valueOf(d.getMax()));
+        textIncDescuento.setText(String.valueOf(d.getStep()));
     }
 
     public void showMessage(String msg) {
@@ -134,32 +159,11 @@ public class UITransporte {
                 + " - Error", JOptionPane.WARNING_MESSAGE);
     }
 
-    /**
-     * Carga el comboBox con la lista de agencias.
-     * @param agencias Lista de agencias registradas en el DF.
-     */
-    public void setAgencias(List<AID> agencias) {
-        DefaultComboBoxModel<String> model =
-                (DefaultComboBoxModel<String>) comboAgencias.getModel();
-        model.removeAllElements();
-        for(AID aid : agencias) {
-            model.addElement(aid.getName());
-        }
-    }
-
     private void createUIComponents() {
         spinnerCapacidad = new JSpinner(new SpinnerNumberModel(0, 0, 500, 1));
-/*
-        if (avionRadioButton.isSelected()) {
-            comboCategoria = new JComboBox<>(catAviones);
-        }
-        else if (colectivoRadioButton.isSelected()){
-            comboCategoria = new JComboBox<>(catColectivos);
-        }
-        else if (otrosRadioButton.isSelected()){
-            comboCategoria = new JComboBox<>(otros);
-        }
-*/
-        comboAgencias = new JComboBox<>(new DefaultComboBoxModel<>());
+
+        avionesModel = new DefaultComboBoxModel<>(catAviones);
+        colectivosModel = new DefaultComboBoxModel<>(catColectivos);
+        otrosModel = new DefaultComboBoxModel<>(otros);
     }
 }
