@@ -10,6 +10,7 @@ import ia.agents.negotiation.DiscountManager;
 import ia.agents.ontology.*;
 import ia.agents.ui.UILugar;
 import ia.agents.util.DFRegisterer;
+import ia.agents.util.Util;
 import jade.content.AgentAction;
 import jade.content.lang.Codec;
 import jade.content.lang.sl.SLCodec;
@@ -40,8 +41,11 @@ public class AgenteLugar extends Agent {
         getContentManager().registerLanguage(slCodec);
         getContentManager().registerOntology(ontology);
 
+        // Obtiene la lista de agencias de los argumentos y crea propiedades
+        // para registrarse en el DF y asociarse con esas agencias
         List<Property> properties = new ArrayList<>();
-        getAgencias().forEach(
+        List<String> agencias = Util.getAgencias(getArguments());
+        agencias.forEach(
                 x -> properties.add(new Property("AgenciaAsociada", x)));
 
         DFRegisterer.register(this, "Lugar", properties);
@@ -64,7 +68,7 @@ public class AgenteLugar extends Agent {
             }
         });
 
-        lugar = getAlojamientoArg();
+        lugar = (Alojamiento) Util.getServicio(getArguments());
 
         // Si no recibimos un alojamiento como parámetro,
         // creamos y mostramos la interfaz para que se ingrese uno.
@@ -79,36 +83,6 @@ public class AgenteLugar extends Agent {
         DFRegisterer.deregister(this);
     }
 
-    /**
-     * Obtiene el nombre de la agencia de la lista de argumentos
-     * @return Nombre de la agencia
-     */
-    private List<String> getAgencias() {
-        Object[] args = getArguments();
-        if (args == null || args.length < 1 || args[0] == null ||
-                !(args[0] instanceof List<?>)) {
-            return new ArrayList<>();
-        }
-
-        // Convierte la lista que viene como argumento a una lista de strings
-        // para evitar unchecked warnings
-        List<?> argList = (List<?>) args[0];
-        List<String> agencias = new ArrayList<>();
-        argList.forEach(x -> agencias.add((String) x));
-        return agencias;
-    }
-
-    /**
-     * Obtiene el alojamiento de los argumentos
-     * @return Alojamiento obtenido
-     */
-    private Alojamiento getAlojamientoArg() {
-        Object[] args = getArguments();
-        if(args == null || args.length < 2) {
-            return null;
-        }
-        return (Alojamiento)args[1];
-    }
 
     public Alojamiento getAlojamiento() {
         return lugar;
