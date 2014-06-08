@@ -23,7 +23,9 @@ import jade.lang.acl.MessageTemplate;
 import jade.proto.SSResponderDispatcher;
 import org.joda.time.DateTimeComparator;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class AgenteLugar extends Agent {
     private Codec slCodec = new SLCodec();
@@ -38,8 +40,11 @@ public class AgenteLugar extends Agent {
         getContentManager().registerLanguage(slCodec);
         getContentManager().registerOntology(ontology);
 
-        DFRegisterer.register(this, "Lugar",
-                new Property("AgenciaAsociada", getAgencia()));
+        List<Property> properties = new ArrayList<>();
+        getAgencias().forEach(
+                x -> properties.add(new Property("AgenciaAsociada", x)));
+
+        DFRegisterer.register(this, "Lugar", properties);
 
         MessageTemplate mt = MessageTemplate.and(
             MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol
@@ -78,12 +83,19 @@ public class AgenteLugar extends Agent {
      * Obtiene el nombre de la agencia de la lista de argumentos
      * @return Nombre de la agencia
      */
-    private String getAgencia() {
+    private List<String> getAgencias() {
         Object[] args = getArguments();
-        if (args == null || args.length < 1 || args[0] == null) {
-            return "";
+        if (args == null || args.length < 1 || args[0] == null ||
+                !(args[0] instanceof List<?>)) {
+            return new ArrayList<>();
         }
-        return args[0].toString();
+
+        // Convierte la lista que viene como argumento a una lista de strings
+        // para evitar unchecked warnings
+        List<?> argList = (List<?>) args[0];
+        List<String> agencias = new ArrayList<>();
+        argList.forEach(x -> agencias.add((String) x));
+        return agencias;
     }
 
     /**

@@ -5,11 +5,15 @@
 
 package ia.agents.util;
 
+import ia.agents.ontology.TurismoOntology;
+import jade.content.lang.sl.SLCodec;
 import jade.core.Agent;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.*;
 import jade.domain.FIPAException;
+
+import java.util.List;
 
 /**
  * Clase con métodos estáticos para facilitar el registro y deregistro de
@@ -17,19 +21,26 @@ import jade.domain.FIPAException;
  */
 public class DFRegisterer {
     public static void register(Agent agent, String serviceType,
-                            Property property) {
+                            List<Property> properties) {
         agent.addBehaviour(new OneShotBehaviour() {
             @Override
             public void action() {
+                String language = new SLCodec().getName();
+                String ontology = TurismoOntology.getInstance().getName();
+
                 DFAgentDescription ad = new DFAgentDescription();
                 ad.setName(agent.getAID());
+                ad.addLanguages(language);
+                ad.addOntologies(ontology);
 
                 ServiceDescription sd = new ServiceDescription();
                 sd.setType(serviceType);
                 sd.setName(serviceType + "-" + agent.getLocalName());
+                sd.addOntologies(ontology);
+                sd.addLanguages(language);
 
-                if(property != null)
-                    sd.addProperties(property);
+                if(properties != null && !properties.isEmpty())
+                    properties.forEach(sd::addProperties);
 
                 ad.addServices(sd);
 

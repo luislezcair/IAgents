@@ -309,6 +309,12 @@ public class AgenteAgencia extends Agent {
                 accept.addReceiver(mejorOferta.getAgenteTransporte());
                 acceptances.add(accept);
 
+                // Rechazo el resto de las propuestas
+                nextCfps.forEach(x -> {
+                    x.setPerformative(ACLMessage.REJECT_PROPOSAL);
+                    acceptances.add(x);
+                });
+
                 System.out.println("Precio total: " + mejorOferta
                         .getPaqueteAgencia().getPrecioPorPersona());
             } else {

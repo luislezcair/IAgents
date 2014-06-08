@@ -125,14 +125,23 @@ public class AgentManager extends Agent {
         Transporte transp2 = new Transporte(20, "Corrientes", new Date(),
                 120.0f, 1, new DiscountManager(0.15, 0.6, 0.06));
 
+        List<String> lugar1Agencias = new ArrayList<>();
+        List<String> lugar2Agencias = new ArrayList<>();
+        List<String> lugar3Agencias = new ArrayList<>();
+
+        lugar1Agencias.add("Agencia86@IAMainPlatform");
+        lugar1Agencias.add("Agencia007@IAMainPlatform");
+        lugar2Agencias.add("Agencia86@IAMainPlatform");
+        lugar3Agencias.add("Agencia007@IAMainPlatform");
+
         Object turista[] = {paquete};
         Object turista2[] = {paquete2};
-        Object lugar1_86[] = {"Agencia86@IAMainPlatform", lugar1};
-        Object lugar2_86[] = {"Agencia86@IAMainPlatform", lugar2};
-        Object lugar3_007[] = {"Agencia007@IAMainPlatform", lugar3};
-        Object lugar4_007[] = {"Agencia007@IAMainPlatform", lugar4};
-        Object transp_86[] = {"Agencia86@IAMainPlatform", transp1};
-        Object transp_007[] = {"Agencia007@IAMainPlatform", transp2};
+        Object lugar1_86[] = {lugar1Agencias, lugar1};
+        Object lugar2_86[] = {lugar2Agencias, lugar2};
+        Object lugar3_007[] = {lugar3Agencias, lugar3};
+        Object lugar4_007[] = {lugar3Agencias, lugar4};
+        Object transp_86[] = {lugar2Agencias, transp1};
+        Object transp_007[] = {lugar3Agencias, transp2};
 
         createAgent("Turista1", "ia.agents.AgenteTurista", turista, turistasContainer);
         createAgent("Turista2", "ia.agents.AgenteTurista", turista2, turistasContainer);
