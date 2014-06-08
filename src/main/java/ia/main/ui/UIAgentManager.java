@@ -45,19 +45,20 @@ public class UIAgentManager {
 
         buttonTransporte.addActionListener(event ->
                 new UiCreateAgent(manager, "Transporte",
-                        "ia.agents.AgenteTransporte", true));
+                        "ia.agents.AgenteTransporte", true,
+                        am.getContainerTransportes()));
 
         buttonLugar.addActionListener(event ->
                 new UiCreateAgent(manager, "Lugar", "ia.agents.AgenteLugar",
-                        true));
+                        true, am.getContainerLugares()));
 
         buttonAgencia.addActionListener(event ->
-                new UiCreateAgent(manager, "Agencia",
-                        "ia.agents.AgenteAgencia", false));
+                new UiCreateAgent(manager, "Agencia", "ia.agents.AgenteAgencia",
+                        false, am.getContainerAgencias()));
 
         buttonTurista.addActionListener(event ->
-                new UiCreateAgent(manager, "Turista",
-                        "ia.agents.AgenteTurista", false));
+                new UiCreateAgent(manager, "Turista", "ia.agents.AgenteTurista",
+                        false, am.getContainerTuristas()));
     }
 
     public void show() {

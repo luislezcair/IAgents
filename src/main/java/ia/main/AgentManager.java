@@ -17,7 +17,6 @@ import jade.core.Runtime;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.wrapper.*;
-import jade.wrapper.AgentContainer;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -27,20 +26,32 @@ import java.util.List;
 public class AgentManager extends Agent {
     List<AID> agencias = new ArrayList<>();
     List<UiCreateAgent> subscriptors = new ArrayList<>();
-    AgentContainer mainContainer;
     AgentController rma;
     AgentController sniffer;
     UIAgentManager ui;
     boolean testAgentsLaunched;
+    Runtime rt;
+
+    // Containers:
+    ContainerController mainContainer;
+    ContainerController turistasContainer;
+    ContainerController agenciasContainer;
+    ContainerController lugaresContainer;
+    ContainerController transportesContainer;
 
     @Override
     protected void setup() {
-        Runtime rt = Runtime.instance();
+        rt = Runtime.instance();
 
         // Hace que el programa termine cuando el último container se cierre
         rt.setCloseVM(true);
 
-        mainContainer = (AgentContainer) getArguments()[0];
+        mainContainer = (ContainerController) getArguments()[0];
+
+        turistasContainer = createContainer("Turistas");
+        agenciasContainer = createContainer("Agencias");
+        lugaresContainer = createContainer("Lugares");
+        transportesContainer = createContainer("Transportes");
 
         // Se suscribe al DF para obtener la lista de agencias registradas
         DFAgentDescription dfad = new DFAgentDescription();
@@ -54,30 +65,44 @@ public class AgentManager extends Agent {
         addBehaviour(new AgenciasSubscriber(this, dfad, agencias));
     }
 
+
+    /**
+     * Crea y devuelve un contenedor con el nombre name
+     */
+    public ContainerController createContainer(String name) {
+        Profile profile = new ProfileImpl();
+        profile.setParameter(Profile.CONTAINER_NAME, name);
+        return rt.createAgentContainer(profile);
+    }
+
+    public ContainerController getContainerTuristas() {
+        return turistasContainer;
+    }
+
+    public ContainerController getContainerAgencias() {
+        return agenciasContainer;
+    }
+
+    public ContainerController getContainerLugares() {
+        return lugaresContainer;
+    }
+
+    public ContainerController getContainerTransportes() {
+        return transportesContainer;
+    }
+
     /**
      * Ejecuta el agente RMA
      */
     public void launchRma() {
-        try {
-            rma = mainContainer.createNewAgent(
-                    "rma", "jade.tools.rma.rma", null);
-            rma.start();
-        } catch(StaleProxyException e) {
-            e.printStackTrace();
-        }
+        createAgent("rma", "jade.tools.rma.rma", null, mainContainer);
     }
 
     /**
      * Ejecuta el agente Sniffer
      */
     public void launchSniffer() {
-        try {
-            sniffer = mainContainer.createNewAgent("sniffer",
-                    "jade.tools.sniffer.Sniffer", null);
-            sniffer.start();
-        } catch(StaleProxyException e) {
-            e.printStackTrace();
-        }
+        createAgent("sniffer", "jade.tools.sniffer.Sniffer", null, mainContainer);
     }
 
     public void launchTestAgents() {
@@ -109,16 +134,16 @@ public class AgentManager extends Agent {
         Object transp_86[] = {"Agencia86@IAMainPlatform", transp1};
         Object transp_007[] = {"Agencia007@IAMainPlatform", transp2};
 
-        createAgent("Turista1", "ia.agents.AgenteTurista", turista);
-        createAgent("Turista2", "ia.agents.AgenteTurista", turista2);
-        createAgent("Agencia86", "ia.agents.AgenteAgencia", null);
-        createAgent("Agencia007", "ia.agents.AgenteAgencia", null);
-        createAgent("Lugar86", "ia.agents.AgenteLugar", lugar1_86);
-        createAgent("Lugar2_86", "ia.agents.AgenteLugar", lugar2_86);
-        createAgent("Lugar007", "ia.agents.AgenteLugar", lugar3_007);
-        createAgent("Lugar2_007", "ia.agents.AgenteLugar", lugar4_007);
-        createAgent("Transporte86", "ia.agents.AgenteTransporte", transp_86);
-        createAgent("Transporte007", "ia.agents.AgenteTransporte", transp_007);
+        createAgent("Turista1", "ia.agents.AgenteTurista", turista, turistasContainer);
+        createAgent("Turista2", "ia.agents.AgenteTurista", turista2, turistasContainer);
+        createAgent("Agencia86", "ia.agents.AgenteAgencia", null, agenciasContainer);
+        createAgent("Agencia007", "ia.agents.AgenteAgencia", null, agenciasContainer);
+        createAgent("Lugar86", "ia.agents.AgenteLugar", lugar1_86, lugaresContainer);
+        createAgent("Lugar2_86", "ia.agents.AgenteLugar", lugar2_86, lugaresContainer);
+        createAgent("Lugar007", "ia.agents.AgenteLugar", lugar3_007, lugaresContainer);
+        createAgent("Lugar2_007", "ia.agents.AgenteLugar", lugar4_007, lugaresContainer);
+        createAgent("Transporte86", "ia.agents.AgenteTransporte", transp_86, transportesContainer);
+        createAgent("Transporte007", "ia.agents.AgenteTransporte", transp_007, transportesContainer);
 
         testAgentsLaunched = true;
     }
@@ -133,6 +158,10 @@ public class AgentManager extends Agent {
         killAgent(sniffer);
 
         try {
+            turistasContainer.kill();
+            agenciasContainer.kill();
+            lugaresContainer.kill();
+            transportesContainer.kill();
             mainContainer.kill();
         } catch (StaleProxyException e) {
             e.printStackTrace();
@@ -155,12 +184,15 @@ public class AgentManager extends Agent {
 
     /**
      * Crea un agente de la clase clase asociado a la agencia agencia
+     * @param nombre Nombre cualquiera para el agente
      * @param clase Clase del agente que se va a crear
      * @param params Agencia a la que se va a asociar
+     * @param cc Contenedor en el que se va a crear el agente
      */
-    public void createAgent(String nombre, String clase, Object[] params) {
+    public void createAgent(String nombre, String clase, Object[] params,
+                            ContainerController cc) {
         try {
-            mainContainer.createNewAgent(nombre, clase, params).start();
+            cc.createNewAgent(nombre, clase, params).start();
         } catch (StaleProxyException e) {
             e.printStackTrace();
         }

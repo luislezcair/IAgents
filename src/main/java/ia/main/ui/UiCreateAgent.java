@@ -2,6 +2,7 @@ package ia.main.ui;
 
 import ia.main.AgentManager;
 import jade.core.AID;
+import jade.wrapper.ContainerController;
 
 import javax.swing.*;
 import java.util.List;
@@ -21,7 +22,7 @@ public class UiCreateAgent {
     private JFrame window;
 
     public UiCreateAgent(AgentManager am, String tipoAgente, String claseAgente,
-                         boolean hasAgency) {
+                         boolean hasAgency, ContainerController cc) {
         labelAgencia.setVisible(hasAgency);
         comboAgencias.setVisible(hasAgency);
 
@@ -35,7 +36,7 @@ public class UiCreateAgent {
                 e -> {window.dispose(); am.unregisterSubscriber(this);});
         buttonCrearAgente.addActionListener(e -> {
             Object[] params = {comboAgencias.getModel().getSelectedItem()};
-            am.createAgent(textNombreAgente.getText(), claseAgente, params);
+            am.createAgent(textNombreAgente.getText(), claseAgente, params, cc);
             window.dispose();});
 
         panelCreateAgent.setBorder(
