@@ -1,3 +1,8 @@
+/**
+ * Created by IA - Grupo 3.
+ * Part of IAgents
+ */
+
 package ia.main.ui;
 
 import ia.main.AgentManager;
@@ -7,24 +12,20 @@ import jade.wrapper.ContainerController;
 import javax.swing.*;
 import java.util.List;
 
-/**
- * Created by IA - Grupo 3.
- * Part of IAgents
- */
 public class UiCreateAgent {
     private JPanel mainPanel;
     private JButton buttonCancelar;
     private JButton buttonCrearAgente;
     private JTextField textNombreAgente;
-    private JComboBox<String> comboAgencias;
     private JLabel labelAgencia;
     private JPanel panelCreateAgent;
+    private JList<String> listAgencias;
     private JFrame window;
 
     public UiCreateAgent(AgentManager am, String tipoAgente, String claseAgente,
                          boolean hasAgency, ContainerController cc) {
         labelAgencia.setVisible(hasAgency);
-        comboAgencias.setVisible(hasAgency);
+        listAgencias.setVisible(hasAgency);
 
         window = new JFrame("Crear agente " + tipoAgente);
         window.getContentPane().add(mainPanel);
@@ -35,7 +36,7 @@ public class UiCreateAgent {
         buttonCancelar.addActionListener(
                 e -> {window.dispose(); am.unregisterSubscriber(this);});
         buttonCrearAgente.addActionListener(e -> {
-            Object[] params = {comboAgencias.getModel().getSelectedItem()};
+            Object[] params = { listAgencias.getSelectedValuesList() };
             am.createAgent(textNombreAgente.getText(), claseAgente, params, cc);
             window.dispose();});
 
@@ -52,8 +53,8 @@ public class UiCreateAgent {
      * @param agencias Lista de agencias registradas en el DF.
      */
     public void setAgencias(List<AID> agencias) {
-        DefaultComboBoxModel<String> model =
-                (DefaultComboBoxModel<String>) comboAgencias.getModel();
+        DefaultListModel<String> model =
+                (DefaultListModel<String>) listAgencias.getModel();
         model.removeAllElements();
         for(AID aid : agencias) {
             model.addElement(aid.getName());
@@ -64,6 +65,6 @@ public class UiCreateAgent {
     }
 
     private void createUIComponents() {
-        comboAgencias = new JComboBox<>(new DefaultComboBoxModel<>());
+        listAgencias = new JList<>(new DefaultListModel<>());
     }
 }
