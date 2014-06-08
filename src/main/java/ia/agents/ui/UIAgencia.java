@@ -8,7 +8,6 @@ package ia.agents.ui;
 import ia.agents.AgenteAgencia;
 import jade.core.AID;
 import javax.swing.*;
-import javax.swing.tree.DefaultTreeModel;
 import java.util.List;
 
 public class UIAgencia {
@@ -17,7 +16,6 @@ public class UIAgencia {
     private JList<String> listServicios;
     private JLabel labelAgencia;
     private JFrame mainWindow;
-    private JScrollPane pane;
 
     public UIAgencia(AgenteAgencia agente) {
         labelAgencia.setText(agente.getName());
@@ -33,7 +31,6 @@ public class UIAgencia {
 
     public void setServicios(List<AID> servicios) {
         DefaultListModel<String> model =
-
                 (DefaultListModel<String>) listServicios.getModel();
         model.clear();
         for(AID aid : servicios) {
@@ -43,7 +40,5 @@ public class UIAgencia {
 
     private void createUIComponents() {
         listServicios = new JList<>(new DefaultListModel<>());
-        pane = new JScrollPane(listServicios);
-        //pane.setViewportView(listServicios);
     }
 }

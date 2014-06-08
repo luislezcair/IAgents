@@ -11,6 +11,7 @@ import ia.agents.ontology.Paquete;
 import ia.agents.ontology.Transporte;
 import ia.agents.util.DFAgentSubscriber;
 import ia.main.ui.UIAgentManager;
+import ia.main.ui.UiCreateAgent;
 import jade.core.*;
 import jade.core.Runtime;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
@@ -25,6 +26,7 @@ import java.util.List;
 
 public class AgentManager extends Agent {
     List<AID> agencias = new ArrayList<>();
+    List<UiCreateAgent> subscriptors = new ArrayList<>();
     AgentContainer mainContainer;
     AgentController rma;
     AgentController sniffer;
@@ -33,9 +35,6 @@ public class AgentManager extends Agent {
 
     @Override
     protected void setup() {
-        ui = new UIAgentManager(this);
-        ui.show();
-
         Runtime rt = Runtime.instance();
 
         // Hace que el programa termine cuando el último container se cierre
@@ -49,7 +48,10 @@ public class AgentManager extends Agent {
         sd.setType("Agencia");
         dfad.addServices(sd);
 
-        addBehaviour(new DFAgentSubscriber(this, dfad, agencias));
+        ui = new UIAgentManager(this);
+        ui.show();
+
+        addBehaviour(new AgenciasSubscriber(this, dfad, agencias));
     }
 
     /**
@@ -151,10 +153,6 @@ public class AgentManager extends Agent {
         }
     }
 
-    public List<AID> getAgencias() {
-        return agencias;
-    }
-
     /**
      * Crea un agente de la clase clase asociado a la agencia agencia
      * @param clase Clase del agente que se va a crear
@@ -165,6 +163,39 @@ public class AgentManager extends Agent {
             mainContainer.createNewAgent(nombre, clase, params).start();
         } catch (StaleProxyException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Implementación de una especie de Oberserver para que se actualice la
+     * interfaz de crear agente cuando aparezcan nuevas agencias en el DF.
+     * @param ui Interfaz crear agente.
+     */
+    public void registerSubscriber(UiCreateAgent ui) {
+        subscriptors.add(ui);
+        ui.setAgencias(agencias);
+    }
+
+    public void unregisterSubscriber(UiCreateAgent ui) {
+        subscriptors.remove(ui);
+    }
+
+    private class AgenciasSubscriber extends DFAgentSubscriber {
+        private AgenciasSubscriber(Agent a, DFAgentDescription dfad,
+                                   List<AID> subscribedAgents) {
+            super(a, dfad, subscribedAgents);
+        }
+
+        @Override
+        protected void onRegister(DFAgentDescription dfad) {
+            for(UiCreateAgent ui : subscriptors) {
+                ui.setAgencias(agencias);
+            }
+        }
+
+        @Override
+        protected void onDeregister(DFAgentDescription dfad) {
+            onRegister(dfad);
         }
     }
 }

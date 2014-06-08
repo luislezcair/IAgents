@@ -22,10 +22,6 @@ public class UiCreateAgent {
 
     public UiCreateAgent(AgentManager am, String tipoAgente, String claseAgente,
                          boolean hasAgency) {
-        if(hasAgency) {
-            setAgencias(am.getAgencias());
-        }
-
         labelAgencia.setVisible(hasAgency);
         comboAgencias.setVisible(hasAgency);
 
@@ -35,7 +31,8 @@ public class UiCreateAgent {
         window.pack();
         window.setVisible(true);
 
-        buttonCancelar.addActionListener(e -> window.dispose());
+        buttonCancelar.addActionListener(
+                e -> {window.dispose(); am.unregisterSubscriber(this);});
         buttonCrearAgente.addActionListener(e -> {
             Object[] params = {comboAgencias.getModel().getSelectedItem()};
             am.createAgent(textNombreAgente.getText(), claseAgente, params);
@@ -43,19 +40,26 @@ public class UiCreateAgent {
 
         panelCreateAgent.setBorder(
                BorderFactory.createTitledBorder("Crear agente " + tipoAgente));
+
+        if(hasAgency) {
+            am.registerSubscriber(this);
+        }
     }
 
     /**
      * Carga el comboBox con la lista de agencias.
      * @param agencias Lista de agencias registradas en el DF.
      */
-    private void setAgencias(List<AID> agencias) {
+    public void setAgencias(List<AID> agencias) {
         DefaultComboBoxModel<String> model =
                 (DefaultComboBoxModel<String>) comboAgencias.getModel();
         model.removeAllElements();
         for(AID aid : agencias) {
             model.addElement(aid.getName());
         }
+
+        // Actualiza la ventana para reajustarse al contenido
+        SwingUtilities.invokeLater(window::pack);
     }
 
     private void createUIComponents() {
