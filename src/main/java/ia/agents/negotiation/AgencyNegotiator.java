@@ -24,8 +24,8 @@ import java.util.Map;
  * cada CFP recibido.
  */
 public abstract class AgencyNegotiator extends SSIteratedContractNetResponder {
+    private final Map<String, ? extends ServicioAgencia> ofertasPrevias;
     private String cid;
-    private Map<String, ? extends ServicioAgencia> ofertasPrevias;
 
     public AgencyNegotiator(Agent a, ACLMessage cfp,
                        Map<String, ? extends ServicioAgencia> ofertasPrevias) {
@@ -36,10 +36,9 @@ public abstract class AgencyNegotiator extends SSIteratedContractNetResponder {
     /**
      * Prepara la respuesta que se va a enviar a la Agencia con el servicio
      * correspondiente
-     * @param p Paquete turístico para preparar el servicio
      * @return La acción que se va a enviar a la Agencia
      */
-    protected abstract AgentAction prepareResponseAction(Paquete p);
+    protected abstract AgentAction prepareResponseAction();
 
     /**
      * Verifica si podemos responder a este paquete. Si devuelve true se
@@ -78,7 +77,7 @@ public abstract class AgencyNegotiator extends SSIteratedContractNetResponder {
 
         // Si podemos ofrecer el servicio creamos un PROPOSE
         reply.setPerformative(ACLMessage.PROPOSE);
-        AgentAction agentAction = prepareResponseAction(p);
+        AgentAction agentAction = prepareResponseAction();
 
         try {
             myAgent.getContentManager().fillContent(reply,

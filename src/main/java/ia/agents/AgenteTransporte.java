@@ -28,10 +28,10 @@ import java.util.HashMap;
 import java.util.List;
 
 public class AgenteTransporte extends Agent {
-    private Codec slCodec = new SLCodec();
-    private Ontology ontology = TurismoOntology.getInstance();
+    private final Codec slCodec = new SLCodec();
+    private final Ontology ontology = TurismoOntology.getInstance();
 
-    private HashMap<String, Transporte> ofertasPrevias = new HashMap<>();
+    private final HashMap<String, Transporte> ofertasPrevias = new HashMap<>();
     private Transporte transporte;
 
     @Override
@@ -116,12 +116,12 @@ public class AgenteTransporte extends Agent {
      * Implementamos un AgencyNegotiator para adecuarlo a Transportes.
      */
     private class AgencyNegotiatorTransporte extends AgencyNegotiator {
-        private AgencyNegotiatorTransporte(Agent a, ACLMessage cfp) {
+        public AgencyNegotiatorTransporte(Agent a, ACLMessage cfp) {
             super(a, cfp, ofertasPrevias);
         }
 
         @Override
-        public AgentAction prepareResponseAction(Paquete p) {
+        public AgentAction prepareResponseAction() {
             OfertarTransporteAction of = new OfertarTransporteAction();
             String cid = getConversationId();
             Transporte transp;

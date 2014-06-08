@@ -9,7 +9,7 @@ import ia.agents.ontology.*;
 import jade.core.AID;
 
 public class BestOfferManager {
-    private PaqueteAgencia pa = new PaqueteAgencia();
+    private final PaqueteAgencia pa = new PaqueteAgencia();
     private AID agenteLugar;
     private AID agenteTransporte;
 

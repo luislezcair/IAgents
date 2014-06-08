@@ -24,20 +24,20 @@ import java.util.Date;
 import java.util.List;
 
 public class AgentManager extends Agent {
-    List<AID> agencias = new ArrayList<>();
-    List<UiCreateAgent> subscriptors = new ArrayList<>();
-    AgentController rma;
-    AgentController sniffer;
-    UIAgentManager ui;
-    boolean testAgentsLaunched;
-    Runtime rt;
+    private final List<AID> agencias = new ArrayList<>();
+    private final List<UiCreateAgent> subscriptors = new ArrayList<>();
+    private AgentController rma;
+    private AgentController sniffer;
+    private UIAgentManager ui;
+    private boolean testAgentsLaunched;
+    private Runtime rt;
 
     // Containers:
-    ContainerController mainContainer;
-    ContainerController turistasContainer;
-    ContainerController agenciasContainer;
-    ContainerController lugaresContainer;
-    ContainerController transportesContainer;
+    private ContainerController mainContainer;
+    private ContainerController turistasContainer;
+    private ContainerController agenciasContainer;
+    private ContainerController lugaresContainer;
+    private ContainerController transportesContainer;
 
     @Override
     protected void setup() {
@@ -69,7 +69,7 @@ public class AgentManager extends Agent {
     /**
      * Crea y devuelve un contenedor con el nombre name
      */
-    public ContainerController createContainer(String name) {
+    private ContainerController createContainer(String name) {
         Profile profile = new ProfileImpl();
         profile.setParameter(Profile.CONTAINER_NAME, name);
         return rt.createAgentContainer(profile);
@@ -95,14 +95,15 @@ public class AgentManager extends Agent {
      * Ejecuta el agente RMA
      */
     public void launchRma() {
-        createAgent("rma", "jade.tools.rma.rma", null, mainContainer);
+        rma = createAgent("rma", "jade.tools.rma.rma", null, mainContainer);
     }
 
     /**
      * Ejecuta el agente Sniffer
      */
     public void launchSniffer() {
-        createAgent("sniffer", "jade.tools.sniffer.Sniffer", null, mainContainer);
+        sniffer = createAgent("sniffer", "jade.tools.sniffer.Sniffer", null,
+                mainContainer);
     }
 
     public void launchTestAgents() {
@@ -198,13 +199,16 @@ public class AgentManager extends Agent {
      * @param params Agencia a la que se va a asociar
      * @param cc Contenedor en el que se va a crear el agente
      */
-    public void createAgent(String nombre, String clase, Object[] params,
-                            ContainerController cc) {
+    public AgentController createAgent(String nombre, String clase,
+                                     Object[] params, ContainerController cc) {
+        AgentController ac = null;
         try {
-            cc.createNewAgent(nombre, clase, params).start();
+            ac = cc.createNewAgent(nombre, clase, params);
+            ac.start();
         } catch (StaleProxyException e) {
             e.printStackTrace();
         }
+        return ac;
     }
 
     /**
@@ -222,7 +226,7 @@ public class AgentManager extends Agent {
     }
 
     private class AgenciasSubscriber extends DFAgentSubscriber {
-        private AgenciasSubscriber(Agent a, DFAgentDescription dfad,
+        public AgenciasSubscriber(Agent a, DFAgentDescription dfad,
                                    List<AID> subscribedAgents) {
             super(a, dfad, subscribedAgents);
         }

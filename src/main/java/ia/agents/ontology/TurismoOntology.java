@@ -11,7 +11,7 @@ public class TurismoOntology extends BeanOntology {
     private static final String ONTOLOGY_NAME = "turismo-ontology";
 
     // Implementación del patrón Singleton
-    private static Ontology instance = new TurismoOntology();
+    private static final Ontology instance = new TurismoOntology();
 
     public static Ontology getInstance() {
         return instance;

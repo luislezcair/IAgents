@@ -11,8 +11,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class UIAgentManager {
-    private AgentManager manager;
-    private JFrame mainWindow;
+    private final AgentManager manager;
+    private final JFrame mainWindow;
     private JPanel mainPanel;
     private JButton buttonSalir;
     private JButton buttonTestAgents;

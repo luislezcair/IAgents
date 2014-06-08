@@ -28,11 +28,11 @@ import java.util.HashMap;
 import java.util.List;
 
 public class AgenteLugar extends Agent {
-    private Codec slCodec = new SLCodec();
-    private Ontology ontology = TurismoOntology.getInstance();
+    private final Codec slCodec = new SLCodec();
+    private final Ontology ontology = TurismoOntology.getInstance();
 
     // Mapa de conversation-id -> Alojamiento
-    private HashMap<String, Alojamiento> ofertasPrevias = new HashMap<>();
+    private final HashMap<String, Alojamiento> ofertasPrevias = new HashMap<>();
     private Alojamiento lugar;
 
     @Override
@@ -115,12 +115,12 @@ public class AgenteLugar extends Agent {
     }
 
     private class AgencyNegotiatorLugar extends AgencyNegotiator {
-        private AgencyNegotiatorLugar(Agent a, ACLMessage cfp) {
+        public AgencyNegotiatorLugar(Agent a, ACLMessage cfp) {
             super(a, cfp, ofertasPrevias);
         }
 
         @Override
-        public AgentAction prepareResponseAction(Paquete p) {
+        public AgentAction prepareResponseAction() {
             String cid = getConversationId();
             Alojamiento alojamiento;
             OfertarLugarAction of = new OfertarLugarAction();

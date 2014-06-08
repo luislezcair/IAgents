@@ -11,7 +11,6 @@ import jade.core.AID;
 import org.jdesktop.swingx.JXDatePicker;
 
 import javax.swing.*;
-import java.awt.event.ComponentAdapter;
 import java.util.Date;
 import java.util.List;
 
@@ -24,13 +23,13 @@ public class UITurista {
     private JButton buttonOcultar;
     private JSpinner spinnerDias;
     private JSpinner spinnerPersonas;
-    private String[] formaPago = {"Efectivo", "Tarjeta"};
+    private final String[] formaPago = {"Efectivo", "Tarjeta"};
     private JComboBox comboFormaDePago;
     private JTextField textImporteMax;
     private JXDatePicker dateFecha;
     private JPanel panelTurista;
     private JList<String> listAgencies;
-    private JFrame mainWindow;
+    private final JFrame mainWindow;
 
     private final AgenteTurista turista;
 
@@ -92,8 +91,6 @@ public class UITurista {
         mainWindow = new JFrame(agente.getName());
         mainWindow.getContentPane().add(panelTurista);
         mainWindow.pack();
-        spinnerPersonas.addComponentListener(new ComponentAdapter() {
-        });
     }
 
     public void setAgenciesList(List<AID> agencies) {

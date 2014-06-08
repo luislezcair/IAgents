@@ -21,13 +21,13 @@ public class UILugar {
     private JButton buttonOcultar;
     private JTextField textCiudad;
     private JSpinner spinnerCapacidad;
-    private String[] catHotel = {"Hotel 5 Estrellas (*****)",
+    private final String[] catHotel = {"Hotel 5 Estrellas (*****)",
                                  "Hotel 4 Estrellas (****)",
                                  "Hotel 3 Estrellas (***)",
                                  "Hotel 2 Estrellas (**)",
                                  "Hotel 1 Estrella (*)"};
-    private String[] catHostel = {"Premium", "Estándar"};
-    private String[] catCasaAlq = {"Premium", "Estándar"};
+    private final String[] catHostel = {"Premium", "Estándar"};
+    private final String[] catCasaAlq = {"Premium", "Estándar"};
     private DefaultComboBoxModel<String> catHotelModel;
     private DefaultComboBoxModel<String> catHostelModel;
     private DefaultComboBoxModel<String> catCasaAlqModel;
@@ -43,7 +43,7 @@ public class UILugar {
     private JRadioButton casaDeAlquilerRadioButton;
     private JButton buttonGenerar;
     private JFrame mainWindow;
-    private Random random = new Random();
+    private final Random random = new Random();
 
     public UILugar(AgenteLugar agente) {
         // Click en Crear Lugar
@@ -130,7 +130,10 @@ public class UILugar {
 
         // Click en Salir. Elimina la interfaz, el agente sigue funcionando
         buttonOcultar.addActionListener(event -> mainWindow.dispose());
-        buttonGenerar.addActionListener(event -> generateValues());
+        buttonGenerar.addActionListener(event -> {
+            generateValues();
+            textCiudad.requestFocus();
+        });
 
         // Click en los radio-buttons
         hotelRadioButton.addActionListener(
@@ -161,7 +164,7 @@ public class UILugar {
         textIncDescuento.setText(String.valueOf(d.getStep()));
     }
 
-    public void showMessage(String msg) {
+    private void showMessage(String msg) {
         JOptionPane.showMessageDialog(mainWindow, msg, mainWindow.getTitle()
                 + " - Error", JOptionPane.WARNING_MESSAGE);
     }

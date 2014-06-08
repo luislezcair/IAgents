@@ -13,7 +13,7 @@
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Crear Turista"/>
+          <text value="Crear T&amp;urista"/>
         </properties>
       </component>
       <component id="13d8b" class="javax.swing.JButton" binding="buttonAgencia">
@@ -21,7 +21,7 @@
           <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Crear Agencia"/>
+          <text value="Crear &amp;Agencia"/>
         </properties>
       </component>
       <component id="dd790" class="javax.swing.JButton" binding="buttonLugar">
@@ -29,7 +29,7 @@
           <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Crear Lugar"/>
+          <text value="Crear &amp;Lugar"/>
         </properties>
       </component>
       <component id="8cdb0" class="javax.swing.JButton" binding="buttonTransporte">
@@ -37,7 +37,7 @@
           <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Crear Transporte"/>
+          <text value="Crear &amp;Transporte"/>
         </properties>
       </component>
       <component id="5cc4b" class="javax.swing.JButton" binding="buttonSniffer">

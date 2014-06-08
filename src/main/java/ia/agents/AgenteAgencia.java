@@ -28,9 +28,9 @@ import java.util.List;
 import java.util.Vector;
 
 public class AgenteAgencia extends Agent {
-    private Codec slCodec = new SLCodec();
-    private Ontology ontology = TurismoOntology.getInstance();
-    private List<AID> servicios = new ArrayList<>();
+    private final Codec slCodec = new SLCodec();
+    private final Ontology ontology = TurismoOntology.getInstance();
+    private final List<AID> servicios = new ArrayList<>();
     private UIAgencia ui;
 
     @Override
@@ -65,7 +65,7 @@ public class AgenteAgencia extends Agent {
     }
 
     private class ServicesSubscriber extends DFAgentSubscriber {
-        private ServicesSubscriber(Agent a, DFAgentDescription dfad, List<AID>
+        public ServicesSubscriber(Agent a, DFAgentDescription dfad, List<AID>
                 subscribedAgents) {
             super(a, dfad, subscribedAgents);
         }

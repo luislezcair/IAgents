@@ -26,10 +26,10 @@ import java.util.List;
 import java.util.Vector;
 
 public class AgenteTurista extends Agent {
-    private Codec slCodec = new SLCodec();
-    private Ontology ontology = TurismoOntology.getInstance();
+    private final Codec slCodec = new SLCodec();
+    private final Ontology ontology = TurismoOntology.getInstance();
 
-    private List<AID> agencias = new ArrayList<>();
+    private final List<AID> agencias = new ArrayList<>();
     private UITurista ui;
 
     @Override
@@ -76,7 +76,7 @@ public class AgenteTurista extends Agent {
     }
 
     private class DFAgenciasSubscriber extends DFAgentSubscriber {
-        private DFAgenciasSubscriber(Agent a, DFAgentDescription dfad,
+        public DFAgenciasSubscriber(Agent a, DFAgentDescription dfad,
                                      List<AID> subscribedAgents) {
             super(a, dfad, subscribedAgents);
         }
@@ -97,10 +97,9 @@ public class AgenteTurista extends Agent {
      * agencias.
      */
     private class PackageNegotiator extends ContractNetInitiator {
-        private Paquete paquete;
+        private final Paquete paquete;
+        private final List<PaqueteAgencia> ofertas = new ArrayList<>();
         private String cid;
-        private PaqueteAgencia ofertaAgencia;
-        private List<PaqueteAgencia> ofertas = new ArrayList<>();
 
         public PackageNegotiator(Agent a, Paquete p) {
             super(a, null);
@@ -200,8 +199,7 @@ public class AgenteTurista extends Agent {
             if(mejorOferta != null) {
                 acceptances.add(
                         createMessage(ACLMessage.ACCEPT_PROPOSAL, mejorAgente));
-                ofertaAgencia = mejorOferta;
-                System.out.println("MEJOR: " + mejorOferta);
+                System.out.println("[TURISTA] MEJOR: " + mejorOferta);
             }
 
             // Todas las agencias respondieron REFUSE
@@ -220,7 +218,7 @@ public class AgenteTurista extends Agent {
                             resp.getSender().getName());
 
                     // Ordenamos la lista de ofertas por precio
-                    ofertas.sort((p1, p2) -> p1.compareTo(p2));
+                    ofertas.sort((o1, o2) -> o1.compareTo(o2));
                 } else {
                     System.out.println("[TURISTA] FAILURE de la agencia " +
                             resp.getSender().getName());

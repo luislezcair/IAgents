@@ -12,7 +12,7 @@ import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
 import jade.wrapper.StaleProxyException;
 
-public class Main {
+class Main {
     public static void main(String[] args) {
         Profile profile = new ProfileImpl();
         profile.setParameter(Profile.PLATFORM_ID, "IAMainPlatform");

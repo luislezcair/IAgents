@@ -22,7 +22,7 @@ import java.util.List;
  * actualizada de estos agentes.
  */
 public class DFAgentSubscriber extends SubscriptionInitiator {
-    private List<AID> agents;
+    private final List<AID> agents;
 
     public DFAgentSubscriber(Agent a, DFAgentDescription dfad,
                              List<AID> subscribedAgents) {

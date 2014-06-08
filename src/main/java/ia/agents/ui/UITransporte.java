@@ -22,9 +22,10 @@ public class UITransporte {
     private JButton buttonOcultar;
     private JTextField textCiudad;
     private JXDatePicker dateFecha;
-    private String[] catColectivos = {"Suite Premium", "Cama", "Semi-Cama"};
-    private String[] catAviones = {"Primera Clase", "Clase Turista"};
-    private String[] otros = {"Combi", "Ferrocarril"};
+    private final String[] catColectivos = {"Suite Premium", "Cama",
+            "Semi-Cama"};
+    private final String[] catAviones = {"Primera Clase", "Clase Turista"};
+    private final String[] otros = {"Combi", "Ferrocarril"};
     private DefaultComboBoxModel<String> colectivosModel;
     private DefaultComboBoxModel<String> avionesModel;
     private DefaultComboBoxModel<String> otrosModel;
@@ -39,7 +40,7 @@ public class UITransporte {
     private JRadioButton otrosRadioButton;
     private JButton buttonGenerar;
     private JFrame mainWindow;
-    private Random random = new Random();
+    private final Random random = new Random();
 
     public UITransporte(AgenteTransporte agente) {
         // Click en Crear Lugar
@@ -130,7 +131,10 @@ public class UITransporte {
 
         // Click en Salir. Elimina la interfaz, el agente sigue funcionando
         buttonOcultar.addActionListener(event -> mainWindow.dispose());
-        buttonGenerar.addActionListener(event -> generateValues());
+        buttonGenerar.addActionListener(event -> {
+            generateValues();
+            textCiudad.requestFocus();
+        });
 
         // Click en los radio-buttons
         avionRadioButton.addActionListener(
@@ -161,7 +165,7 @@ public class UITransporte {
         textIncDescuento.setText(String.valueOf(d.getStep()));
     }
 
-    public void showMessage(String msg) {
+    private void showMessage(String msg) {
         JOptionPane.showMessageDialog(mainWindow, msg, mainWindow.getTitle()
                 + " - Error", JOptionPane.WARNING_MESSAGE);
     }

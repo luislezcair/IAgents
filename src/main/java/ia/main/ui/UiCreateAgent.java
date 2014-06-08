@@ -21,12 +21,11 @@ public class UiCreateAgent {
     private JPanel panelCreateAgent;
     private JList<String> listAgencias;
     private JScrollPane paneAgencia;
-    private JFrame window;
+    private final JFrame window;
 
     public UiCreateAgent(AgentManager am, String tipoAgente, String claseAgente,
                          boolean hasAgency, ContainerController cc) {
         labelAgencia.setVisible(hasAgency);
-        //listAgencias.setVisible(hasAgency);
         paneAgencia.setVisible(hasAgency);
 
         window = new JFrame("Crear agente " + tipoAgente);
