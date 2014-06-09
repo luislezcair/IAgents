@@ -12,6 +12,13 @@ import java.util.Date;
  * Clase que representa un lugar de alojamiento para los turistas
  */
 public class Alojamiento extends ServicioAgencia {
+    private static final String[] tipos = {
+            "Hotel", "Hostel", "Casa de alquiler"};
+
+    public static final int TIPO_HOTEL = 0;
+    public static final int TIPO_HOSTEL = 1;
+    public static final int TIPO_CASA_ALQ = 2;
+
     public Alojamiento() { }
 
     public Alojamiento(int capacidad, String destino, Date fecha,
@@ -21,6 +28,19 @@ public class Alojamiento extends ServicioAgencia {
 
     public Alojamiento(Alojamiento other) {
         super(other);
+    }
+
+    public static String[] getTipos() {
+        return tipos;
+    }
+
+    @Override
+    public void setTipo(int tipo) {
+        int last = tipos.length - 1;
+        if(tipo > last)
+            super.setTipo(last);
+        else
+            super.setTipo(tipo);
     }
 
     @Override

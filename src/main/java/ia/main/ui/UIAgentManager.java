@@ -30,6 +30,9 @@ public class UIAgentManager {
         mainWindow.getContentPane().add(mainPanel);
         mainWindow.pack();
 
+        // Coloca la ventana en el centro de la pantalla
+        mainWindow.setLocationRelativeTo(null);
+
         // Al cerrar la ventana terminamos la aplicación
         mainWindow.addWindowListener(new WindowAdapter() {
             @Override

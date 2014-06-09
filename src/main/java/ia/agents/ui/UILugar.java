@@ -114,10 +114,19 @@ public class UILugar {
                 }
             }
 
+            int tipo;
+            if(hotelRadioButton.isSelected()) {
+                tipo = 0;
+            } else if(hostelRadioButton.isSelected()) {
+                tipo = 1;
+            } else {
+                tipo = 2;
+            }
+
             aloj.setDestino(ciudad);
             aloj.setCapacidad(capacidad);
             aloj.setFecha(dateFecha.getDate());
-            aloj.setTipo(comboTipo.getSelectedIndex());
+            aloj.setTipo(tipo);
             aloj.setPrecioPorPersona(importe);
             descuento.setValue(descIni);
             descuento.setMax(descMax);

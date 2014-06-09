@@ -40,10 +40,8 @@ public class AgenteTurista extends Agent {
 
         subscribeToDf();
 
-        SwingUtilities.invokeLater( () -> {
-            ui = new UITurista(this);
-            ui.setPaquete(getPaqueteArg());
-        });
+        SwingUtilities.invokeLater(
+                () -> ui = new UITurista(this, getPaqueteArg()));
     }
 
     private void subscribeToDf() {

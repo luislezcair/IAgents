@@ -21,17 +21,22 @@ public class UiCreateAgent {
     private JPanel panelCreateAgent;
     private JList<String> listAgencias;
     private JScrollPane paneAgencia;
+    private JLabel labelHelp;
     private final JFrame window;
 
     public UiCreateAgent(AgentManager am, String tipoAgente, String claseAgente,
                          boolean hasAgency, ContainerController cc) {
         labelAgencia.setVisible(hasAgency);
         paneAgencia.setVisible(hasAgency);
+        labelHelp.setVisible(hasAgency);
 
         window = new JFrame("Crear agente " + tipoAgente);
         window.getContentPane().add(mainPanel);
         window.getRootPane().setDefaultButton(buttonCrearAgente);
         window.pack();
+
+        // Coloca la ventana en el centro de la pantalla
+        window.setLocationRelativeTo(null);
         window.setVisible(true);
 
         buttonCancelar.addActionListener(

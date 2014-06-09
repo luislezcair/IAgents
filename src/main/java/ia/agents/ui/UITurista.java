@@ -11,7 +11,6 @@ import jade.core.AID;
 import org.jdesktop.swingx.JXDatePicker;
 
 import javax.swing.*;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -23,7 +22,6 @@ public class UITurista {
     private JButton buttonOcultar;
     private JSpinner spinnerDias;
     private JSpinner spinnerPersonas;
-    private final String[] formaPago = {"Efectivo", "Tarjeta"};
     private JComboBox comboFormaDePago;
     private JTextField textImporteMax;
     private JXDatePicker dateFecha;
@@ -33,7 +31,7 @@ public class UITurista {
 
     private final AgenteTurista turista;
 
-    public UITurista(AgenteTurista agente) {
+    public UITurista(AgenteTurista agente, Paquete paquete) {
         turista = agente;
 
         // Click en Consultar
@@ -85,11 +83,14 @@ public class UITurista {
         // Click en Salir. Elimina la interfaz, el agente sigue funcionando
         buttonOcultar.addActionListener(event -> dispose());
 
-        dateFecha.setDate(new Date());
+        setPaquete(paquete);
+
+        textDestino.requestFocus();
 
         // Crear una ventana principal, agrega el contenido y ajusta al tamaño
         mainWindow = new JFrame(agente.getName());
         mainWindow.getContentPane().add(panelTurista);
+        mainWindow.getRootPane().setDefaultButton(buttonConsultar);
         mainWindow.pack();
         mainWindow.setVisible(true);
     }
@@ -115,7 +116,7 @@ public class UITurista {
                         + " - Error", JOptionPane.WARNING_MESSAGE);
     }
 
-    public void setPaquete(Paquete p) {
+    private void setPaquete(Paquete p) {
         textDestino.setText(p.getDestino());
         spinnerDias.setValue(p.getDias());
         spinnerPersonas.setValue(p.getPersonas());
@@ -132,6 +133,6 @@ public class UITurista {
         listAgencies = new JList<>(new DefaultListModel<>());
         spinnerDias = new JSpinner(new SpinnerNumberModel(1, 1, 99, 1));
         spinnerPersonas = new JSpinner(new SpinnerNumberModel(1, 1, 99, 1));
-        comboFormaDePago = new JComboBox<>(formaPago);
+        comboFormaDePago = new JComboBox<>(Paquete.getFormasDePago());
     }
 }

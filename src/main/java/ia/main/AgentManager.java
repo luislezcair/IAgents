@@ -110,21 +110,28 @@ public class AgentManager extends Agent {
         if(testAgentsLaunched)
             return;
 
-        Paquete paquete = new Paquete("Corrientes", 5, new Date(), -1, 1000.0,
-                5);
-        Paquete paquete2 = new Paquete("Chaco", 6, new Date(), -1, 200.0, 7);
+        Paquete paquete = new Paquete("Corrientes", 5, new Date(),
+                Paquete.PAGO_EFECTIVO, 1000.0, 5);
+        Paquete paquete2 = new Paquete("Chaco", 6, new Date(),
+                Paquete.PAGO_TARJETA, 200.0, 7);
         Alojamiento lugar1 = new Alojamiento(10, "Corrientes", new Date(),
-                123.0f, 0, new DiscountManager(0.1, 0.5, 0.1));
+                123.0f, Alojamiento.TIPO_CASA_ALQ,
+                new DiscountManager(0.1, 0.5, 0.1));
         Alojamiento lugar2 = new Alojamiento(20, "Corrientes", new Date(),
-                200.0f, 2, new DiscountManager(0.05, 0.3, 0.1));
+                200.0f, Alojamiento.TIPO_HOTEL,
+                new DiscountManager(0.05, 0.3, 0.1));
         Alojamiento lugar3 = new Alojamiento(15, "Corrientes", new Date(),
-                230.0f, 1, new DiscountManager(0.07, 0.4, 0.05));
+                230.0f, Alojamiento.TIPO_HOSTEL,
+                new DiscountManager(0.07, 0.4, 0.05));
         Alojamiento lugar4 = new Alojamiento(9, "Corrientes", new Date(),
-                100.0f, 0, new DiscountManager(0.05, 0.5, 0.08));
+                100.0f, Alojamiento.TIPO_HOTEL,
+                new DiscountManager(0.05, 0.5, 0.08));
         Transporte transp1 = new Transporte(30, "Corrientes", new Date(),
-                120.0f, 0, new DiscountManager(0.08, 0.45, 0.05));
+                120.0f, Transporte.TIPO_AVION,
+                new DiscountManager(0.08, 0.45, 0.05));
         Transporte transp2 = new Transporte(20, "Corrientes", new Date(),
-                120.0f, 1, new DiscountManager(0.15, 0.6, 0.06));
+                120.0f, Transporte.TIPO_COLECTIVO,
+                new DiscountManager(0.15, 0.6, 0.06));
 
         List<String> lugar1Agencias = new ArrayList<>();
         List<String> lugar2Agencias = new ArrayList<>();

@@ -115,10 +115,19 @@ public class UITransporte {
                 }
             }
 
+            int tipo;
+            if(avionRadioButton.isSelected()) {
+                tipo = 0;
+            } else if(colectivoRadioButton.isSelected()) {
+                tipo = 1;
+            } else {
+                tipo = 2;
+            }
+
             transp.setDestino(ciudad);
             transp.setCapacidad(capacidad);
             transp.setFecha(dateFecha.getDate());
-            transp.setTipo(comboCategoria.getSelectedIndex());
+            transp.setTipo(tipo);
             descuento.setValue(descIni);
             descuento.setMax(descMax);
             descuento.setStep(incDesc);

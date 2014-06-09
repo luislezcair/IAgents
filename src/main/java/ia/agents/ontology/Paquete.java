@@ -20,7 +20,13 @@ public class Paquete implements Concept {
     private double importeMaxPorPersona;
     private int personas;
 
-    public Paquete() { }
+    private static final String[] formasDePago = {"Efectivo", "Tarjeta"};
+    public static final int PAGO_EFECTIVO = 0;
+    public static final int PAGO_TARJETA = 1;
+
+    public Paquete() {
+        fecha = new Date();
+    }
 
     public Paquete(String destino, int dias, Date fecha, int formaDePago,
                    double importeMaxPorPersona, int personas) {
@@ -61,7 +67,15 @@ public class Paquete implements Concept {
     }
 
     public void setFormaDePago(int formaDePago) {
-        this.formaDePago = formaDePago;
+        int last = formasDePago.length - 1;
+        if(formaDePago > last)
+            this.formaDePago = last;
+        else
+            this.formaDePago = formaDePago;
+    }
+
+    public static String[] getFormasDePago() {
+        return formasDePago;
     }
 
     public double getImporteMaxPorPersona() {
