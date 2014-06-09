@@ -16,6 +16,8 @@ public class PaqueteAgencia implements Concept {
     private Transporte transporte;
     private Paquete paquete;
     private AID agencia;
+    private AID agenteLugar;
+    private AID agenteTransporte;
 
     public Alojamiento getAlojamiento() {
         return alojamiento;
@@ -47,6 +49,22 @@ public class PaqueteAgencia implements Concept {
 
     public void setAgencia(AID agencia) {
         this.agencia = agencia;
+    }
+
+    public AID getAgenteLugar() {
+        return agenteLugar;
+    }
+
+    public void setAgenteLugar(AID agenteLugar) {
+        this.agenteLugar = agenteLugar;
+    }
+
+    public AID getAgenteTransporte() {
+        return agenteTransporte;
+    }
+
+    public void setAgenteTransporte(AID agenteTransporte) {
+        this.agenteTransporte = agenteTransporte;
     }
 
     public double getPrecioTotal() {

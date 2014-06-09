@@ -402,8 +402,12 @@ public class AgenteAgencia extends Agent {
             propose.setLanguage(slCodec.getName());
             propose.setOntology(ontology.getName());
 
-            // Esta agencia dice ser la mejor
-            mejorOferta.getPaqueteAgencia().setAgencia(getAID());
+            PaqueteAgencia pa = mejorOferta.getPaqueteAgencia();
+
+            // Estos agentes dicen ser los mejores
+            pa.setAgencia(getAID());
+            pa.setAgenteLugar(mejorOferta.getAgenteLugar());
+            pa.setAgenteTransporte(mejorOferta.getAgenteTransporte());
 
             // Construimos la oferta que se envía al turista
             OfertarPaqueteAction of = new OfertarPaqueteAction();

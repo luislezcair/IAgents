@@ -6,7 +6,7 @@
 package ia.agents;
 
 import ia.agents.ontology.*;
-import ia.agents.ui.UIServicioAgencia;
+import ia.agents.ui.UIPaqueteAgencia;
 import ia.agents.ui.UITurista;
 import ia.agents.util.DFAgentSubscriber;
 import jade.content.lang.Codec;
@@ -226,7 +226,7 @@ public class AgenteTurista extends Agent {
                     // Ordenamos la lista de ofertas por precio
                     ofertas.sort((o1, o2) -> o1.compareTo(o2));
                     SwingUtilities.invokeLater( () ->
-                            new UIServicioAgencia(myAgent, ofertas));
+                            new UIPaqueteAgencia(myAgent, ofertas));
                 } else {
                     System.out.println("[TURISTA] FAILURE de la agencia " +
                             resp.getSender().getName());
