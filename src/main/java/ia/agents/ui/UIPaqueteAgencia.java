@@ -67,6 +67,12 @@ public class UIPaqueteAgencia extends JDialog {
         setContentPane(contentPane);
         getRootPane().setDefaultButton(buttonOK);
         setTitle("Propuestas para el turista " + turista.getLocalName());
+
+        // Carga y establece un ícono para la ventana
+        ImageIcon icon = new ImageIcon(
+                getClass().getResource("/icons/PaqueteAgencia.png"));
+        setIconImage(icon.getImage());
+
         pack();
         setVisible(true);
     }

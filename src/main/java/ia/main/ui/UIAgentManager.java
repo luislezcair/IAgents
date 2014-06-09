@@ -28,6 +28,12 @@ public class UIAgentManager {
 
         mainWindow = new JFrame("Sistema Multiagente de Turismo");
         mainWindow.getContentPane().add(mainPanel);
+
+        // Carga y establece un ícono para la ventana
+        ImageIcon icon = new ImageIcon(
+                getClass().getResource("/icons/MainWindow.png"));
+        mainWindow.setIconImage(icon.getImage());
+
         mainWindow.pack();
 
         // Coloca la ventana en el centro de la pantalla

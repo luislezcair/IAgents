@@ -33,6 +33,12 @@ public class UiCreateAgent {
         window = new JFrame("Crear agente " + tipoAgente);
         window.getContentPane().add(mainPanel);
         window.getRootPane().setDefaultButton(buttonCrearAgente);
+
+        // Carga y establece un ícono para la ventana
+        ImageIcon icon = new ImageIcon(
+                getClass().getResource("/icons/Agente.png"));
+        window.setIconImage(icon.getImage());
+
         window.pack();
 
         // Coloca la ventana en el centro de la pantalla

@@ -302,9 +302,6 @@ public class AgenteAgencia extends Agent {
                 }
             }
 
-            System.out.println("Mejor lugar: " + ofertaActual.getAlojamiento());
-            System.out.println("Mejor transp: " + ofertaActual.getTransporte());
-
             if(!ofertaActual.isValidOffer()) {
                 // No encontramos ningún lugar o ningún transporte que pueda
                 // satisfacer el pedido del turista. Se lo rechaza.
@@ -327,9 +324,6 @@ public class AgenteAgencia extends Agent {
                     x.setPerformative(ACLMessage.REJECT_PROPOSAL);
                     acceptances.add(x);
                 });
-
-                System.out.println("Precio total: " + mejorOferta
-                        .getPaqueteAgencia().getPrecioPorPersona());
             } else {
                 // El mejor lugar y el mejor transporte superan el precio
                 // máximo, así que volvemos a enviarles CFPs para que mejoren

@@ -154,6 +154,12 @@ public class UITransporte {
         // Crear una ventana principal, agrega el contenido y ajusta al tamaño
         mainWindow = new JFrame("Crear agente Transporte");
         mainWindow.getContentPane().add(panelTransporte);
+
+        // Carga y establece un ícono para la ventana
+        ImageIcon icon = new ImageIcon(
+                getClass().getResource("/icons/Transporte.png"));
+        mainWindow.setIconImage(icon.getImage());
+
         mainWindow.pack();
         mainWindow.setVisible(true);
         mainWindow.getRootPane().setDefaultButton(buttonCT);

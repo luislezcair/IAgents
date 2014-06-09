@@ -25,6 +25,12 @@ public class UIAgencia {
         // Crea una ventana con el nombre del agente como título y la muestra
         mainWindow = new JFrame("Agencia " + agente.getName());
         mainWindow.getContentPane().add(panelAgencia);
+
+        // Carga y establece un ícono para la ventana
+        ImageIcon icon = new ImageIcon(
+                getClass().getResource("/icons/Agencia.png"));
+        mainWindow.setIconImage(icon.getImage());
+
         mainWindow.pack();
         mainWindow.setVisible(true);
     }

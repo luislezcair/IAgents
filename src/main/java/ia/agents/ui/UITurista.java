@@ -91,6 +91,12 @@ public class UITurista {
         mainWindow = new JFrame(agente.getName());
         mainWindow.getContentPane().add(panelTurista);
         mainWindow.getRootPane().setDefaultButton(buttonConsultar);
+
+        // Carga y establece un ícono para la ventana
+        ImageIcon icon = new ImageIcon(
+                getClass().getResource("/icons/Turista.png"));
+        mainWindow.setIconImage(icon.getImage());
+
         mainWindow.pack();
         mainWindow.setVisible(true);
     }

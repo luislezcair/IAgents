@@ -3,7 +3,7 @@
   <grid id="27dc6" binding="panelTurista" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="3" left="3" bottom="3" right="3"/>
     <constraints>
-      <xy x="20" y="20" width="350" height="355"/>
+      <xy x="20" y="20" width="364" height="411"/>
     </constraints>
     <properties/>
     <border type="none"/>

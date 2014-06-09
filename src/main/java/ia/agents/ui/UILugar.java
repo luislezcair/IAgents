@@ -153,6 +153,12 @@ public class UILugar {
         // Crear una ventana principal, agrega el contenido y ajusta al tamaño
         mainWindow = new JFrame("Crear agente Lugar") ;
         mainWindow.getContentPane().add(panelLugar);
+
+        // Carga y establece un ícono para la ventana
+        ImageIcon icon = new ImageIcon(
+                getClass().getResource("/icons/Lugar.png"));
+        mainWindow.setIconImage(icon.getImage());
+
         mainWindow.pack();
         mainWindow.setVisible(true);
         mainWindow.getRootPane().setDefaultButton(buttonCL);
