@@ -6,6 +6,7 @@
 package ia.agents.ontology;
 
 import jade.content.Concept;
+import jade.core.AID;
 
 /**
  * Un paquete turístico compuesto por un Lugar de alojamiento y un Transporte
@@ -14,6 +15,7 @@ public class PaqueteAgencia implements Concept {
     private Alojamiento alojamiento;
     private Transporte transporte;
     private Paquete paquete;
+    private AID agencia;
 
     public Alojamiento getAlojamiento() {
         return alojamiento;
@@ -37,6 +39,14 @@ public class PaqueteAgencia implements Concept {
 
     public void setPaquete(Paquete paquete) {
         this.paquete = paquete;
+    }
+
+    public AID getAgencia() {
+        return agencia;
+    }
+
+    public void setAgencia(AID agencia) {
+        this.agencia = agencia;
     }
 
     public double getPrecioTotal() {

@@ -156,6 +156,12 @@ public class AgenteAgencia extends Agent {
 
         @Override
         protected Vector prepareCfps(ACLMessage cfp) {
+            // Si no tenemos ningún servicio asociado no podemos hacer nada
+            if(servicios.isEmpty()) {
+                sendRefuseMessage();
+                return null;
+            }
+
             // Obtenemos el CFP del turista, que contiene la información del
             // paquete.
             String key = ((ContractNetResponder) parent).CFP_KEY;
@@ -251,7 +257,10 @@ public class AgenteAgencia extends Agent {
                         }
                         ofertaActual.setMejor(aloj, action.getActor());
                     } else {
-                        performative = ACLMessage.CFP;
+                        if(aloj.isFinalOffer())
+                            performative = ACLMessage.REJECT_PROPOSAL;
+                        else
+                            performative = ACLMessage.CFP;
                     }
                 }
                 else if(concept instanceof OfertarTransporteAction) {
@@ -275,13 +284,17 @@ public class AgenteAgencia extends Agent {
                         }
                         ofertaActual.setMejor(transp, action.getActor());
                     } else {
-                        performative = ACLMessage.CFP;
+                        if(transp.isFinalOffer())
+                            performative = ACLMessage.REJECT_PROPOSAL;
+                        else
+                            performative = ACLMessage.CFP;
                     }
                 }
 
                 // Construye la repropuesta para volver a enviar a los servicios
                 // Acá podría modificarse el paquete del turista
-                if(performative != ACLMessage.FAILURE) {
+//                if(performative != ACLMessage.FAILURE) {
+                if(performative == ACLMessage.CFP) {
                     ACLMessage cfp = constructCfp();
                     cfp.setPerformative(performative);
                     cfp.addReceiver(aid);
@@ -388,6 +401,9 @@ public class AgenteAgencia extends Agent {
             ACLMessage propose = new ACLMessage(ACLMessage.PROPOSE);
             propose.setLanguage(slCodec.getName());
             propose.setOntology(ontology.getName());
+
+            // Esta agencia dice ser la mejor
+            mejorOferta.getPaqueteAgencia().setAgencia(getAID());
 
             // Construimos la oferta que se envía al turista
             OfertarPaqueteAction of = new OfertarPaqueteAction();

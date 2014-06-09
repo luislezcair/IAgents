@@ -6,6 +6,7 @@
 package ia.agents;
 
 import ia.agents.ontology.*;
+import ia.agents.ui.UIServicioAgencia;
 import ia.agents.ui.UITurista;
 import ia.agents.util.DFAgentSubscriber;
 import jade.content.lang.Codec;
@@ -39,10 +40,10 @@ public class AgenteTurista extends Agent {
 
         subscribeToDf();
 
-        ui = new UITurista(this);
-        ui.show();
-
-        ui.setPaquete(getPaqueteArg());
+        SwingUtilities.invokeLater( () -> {
+            ui = new UITurista(this);
+            ui.setPaquete(getPaqueteArg());
+        });
     }
 
     private void subscribeToDf() {
@@ -83,12 +84,14 @@ public class AgenteTurista extends Agent {
 
         @Override
         protected void onRegister(DFAgentDescription dfad) {
-            ui.setAgenciesList(agencias);
+            SwingUtilities.invokeLater(
+                    () -> ui.setAgenciesList(agencias));
         }
 
         @Override
         protected void onDeregister(DFAgentDescription dfad) {
-            ui.setAgenciesList(agencias);
+            SwingUtilities.invokeLater(
+                    () -> ui.setAgenciesList(agencias));
         }
     }
 
@@ -204,8 +207,11 @@ public class AgenteTurista extends Agent {
 
             // Todas las agencias respondieron REFUSE
             if(acceptances.isEmpty()) {
-                ui.showMessage("No existe ninguna agencia que pueda " +
-                        "satisfacer los parámetros solicitados.");
+                SwingUtilities.invokeLater(() ->
+                                ui.showMessage("No existe ninguna agencia que" +
+                                        " pueda " +
+                                        "satisfacer los parámetros solicitados.")
+                );
             }
         }
 
@@ -219,6 +225,8 @@ public class AgenteTurista extends Agent {
 
                     // Ordenamos la lista de ofertas por precio
                     ofertas.sort((o1, o2) -> o1.compareTo(o2));
+                    SwingUtilities.invokeLater( () ->
+                            new UIServicioAgencia(myAgent, ofertas));
                 } else {
                     System.out.println("[TURISTA] FAILURE de la agencia " +
                             resp.getSender().getName());
