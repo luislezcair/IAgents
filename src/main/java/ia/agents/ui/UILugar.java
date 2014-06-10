@@ -12,23 +12,15 @@ import ia.agents.util.Util;
 import org.jdesktop.swingx.JXDatePicker;
 
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class UILugar {
     private JButton buttonCL;
     private JButton buttonOcultar;
     private JTextField textCiudad;
     private JSpinner spinnerCapacidad;
-    private final String[] catHotel = {"Hotel 5 Estrellas (*****)",
-                                 "Hotel 4 Estrellas (****)",
-                                 "Hotel 3 Estrellas (***)",
-                                 "Hotel 2 Estrellas (**)",
-                                 "Hotel 1 Estrella (*)"};
-    private final String[] catHostel = {"Premium", "Estándar"};
-    private final String[] catCasaAlq = {"Premium", "Estándar"};
-    private DefaultComboBoxModel<String> catHotelModel;
-    private DefaultComboBoxModel<String> catHostelModel;
-    private DefaultComboBoxModel<String> catCasaAlqModel;
     private JComboBox<String> comboTipo;
     private JXDatePicker dateFecha;
     private JTextField textDescuentoIni;
@@ -41,6 +33,7 @@ public class UILugar {
     private JRadioButton casaDeAlquilerRadioButton;
     private JButton buttonGenerar;
     private JFrame mainWindow;
+    private List<DefaultComboBoxModel<String>> modelos;
     private final Util util = new Util();
 
     public UILugar(AgenteLugar agente) {
@@ -127,6 +120,7 @@ public class UILugar {
             aloj.setCapacidad(capacidad);
             aloj.setFecha(dateFecha.getDate());
             aloj.setTipo(tipo);
+            aloj.setCategoria(comboTipo.getSelectedIndex());
             aloj.setPrecioPorPersona(importe);
             descuento.setValue(descIni);
             descuento.setMax(descMax);
@@ -144,11 +138,11 @@ public class UILugar {
 
         // Click en los radio-buttons
         hotelRadioButton.addActionListener(
-                e -> comboTipo.setModel(catHotelModel));
+                e -> comboTipo.setModel(modelos.get(0)));
         hostelRadioButton.addActionListener(
-                e -> comboTipo.setModel(catHostelModel));
+                e -> comboTipo.setModel(modelos.get(1)));
         casaDeAlquilerRadioButton.addActionListener(
-                e -> comboTipo.setModel(catCasaAlqModel));
+                e -> comboTipo.setModel(modelos.get(2)));
 
         // Crear una ventana principal, agrega el contenido y ajusta al tamaño
         mainWindow = new JFrame("Crear agente Lugar") ;
@@ -176,6 +170,14 @@ public class UILugar {
         textDescuentoIni.setText(String.valueOf(d.getValue()));
         textDescuentoMax.setText(String.valueOf(d.getMax()));
         textIncDescuento.setText(String.valueOf(d.getStep()));
+
+        selectTipo(a.getTipo());
+
+        try {
+            comboTipo.setSelectedIndex(a.getCategoria());
+        } catch(Exception e) {
+            comboTipo.setSelectedIndex(-1);
+        }
     }
 
     private void showMessage(String msg) {
@@ -185,9 +187,10 @@ public class UILugar {
 
     private void createUIComponents() {
         spinnerCapacidad = new JSpinner(new SpinnerNumberModel(0, 0, 1000, 1));
-        catHotelModel = new DefaultComboBoxModel<>(catHotel);
-        catHostelModel = new DefaultComboBoxModel<>(catHostel);
-        catCasaAlqModel = new DefaultComboBoxModel<>(catCasaAlq);
+        modelos = new ArrayList<>();
+        for(String[] cat : Alojamiento.getCategorias()) {
+            modelos.add(new DefaultComboBoxModel<>(cat));
+        }
     }
 
     /**
@@ -202,7 +205,10 @@ public class UILugar {
         textDescuentoMax.setText(util.getRandomNumberString("0.2", "0.5"));
         textIncDescuento.setText(util.getRandomNumberString("0.01", "0.1"));
 
-        int tipo = util.getRandomNumber(1, 3);
+        selectTipo(util.getRandomNumber(1, 3));
+    }
+
+    private void selectTipo(int tipo) {
         switch(tipo) {
             case 1:
                 hotelRadioButton.doClick();

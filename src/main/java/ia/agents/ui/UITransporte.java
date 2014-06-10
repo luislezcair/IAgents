@@ -12,7 +12,9 @@ import ia.agents.util.Util;
 import org.jdesktop.swingx.JXDatePicker;
 
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class UITransporte {
     private JPanel panelTransporte;
@@ -20,13 +22,6 @@ public class UITransporte {
     private JButton buttonOcultar;
     private JTextField textCiudad;
     private JXDatePicker dateFecha;
-    private final String[] catColectivos = {"Suite Premium", "Cama",
-            "Semi-Cama"};
-    private final String[] catAviones = {"Primera Clase", "Clase Turista"};
-    private final String[] otros = {"Combi", "Ferrocarril"};
-    private DefaultComboBoxModel<String> colectivosModel;
-    private DefaultComboBoxModel<String> avionesModel;
-    private DefaultComboBoxModel<String> otrosModel;
     private JComboBox<String> comboCategoria;
     private JSpinner spinnerCapacidad;
     private JTextField textDescuentoIni;
@@ -38,6 +33,7 @@ public class UITransporte {
     private JRadioButton otrosRadioButton;
     private JButton buttonGenerar;
     private JFrame mainWindow;
+    private List<DefaultComboBoxModel<String>> modelos;
     private final Util util = new Util();
 
     public UITransporte(AgenteTransporte agente) {
@@ -128,6 +124,7 @@ public class UITransporte {
             transp.setCapacidad(capacidad);
             transp.setFecha(dateFecha.getDate());
             transp.setTipo(tipo);
+            transp.setCategoria(comboCategoria.getSelectedIndex());
             descuento.setValue(descIni);
             descuento.setMax(descMax);
             descuento.setStep(incDesc);
@@ -145,11 +142,11 @@ public class UITransporte {
 
         // Click en los radio-buttons
         avionRadioButton.addActionListener(
-                e -> comboCategoria.setModel(avionesModel));
+                e -> comboCategoria.setModel(modelos.get(0)));
         colectivoRadioButton.addActionListener(
-                e -> comboCategoria.setModel(colectivosModel));
+                e -> comboCategoria.setModel(modelos.get(1)));
         otrosRadioButton.addActionListener(
-                e -> comboCategoria.setModel(otrosModel));
+                e -> comboCategoria.setModel(modelos.get(2)));
 
         // Crear una ventana principal, agrega el contenido y ajusta al tamaño
         mainWindow = new JFrame("Crear agente Transporte");
@@ -177,6 +174,14 @@ public class UITransporte {
         textDescuentoIni.setText(String.valueOf(d.getValue()));
         textDescuentoMax.setText(String.valueOf(d.getMax()));
         textIncDescuento.setText(String.valueOf(d.getStep()));
+
+        selectTipo(t.getTipo());
+
+        try {
+            comboCategoria.setSelectedIndex(t.getCategoria());
+        } catch(Exception e) {
+            comboCategoria.setSelectedIndex(-1);
+        }
     }
 
     private void showMessage(String msg) {
@@ -186,10 +191,10 @@ public class UITransporte {
 
     private void createUIComponents() {
         spinnerCapacidad = new JSpinner(new SpinnerNumberModel(0, 0, 500, 1));
-
-        avionesModel = new DefaultComboBoxModel<>(catAviones);
-        colectivosModel = new DefaultComboBoxModel<>(catColectivos);
-        otrosModel = new DefaultComboBoxModel<>(otros);
+        modelos = new ArrayList<>();
+        for(String[] s : Transporte.getCategorias()) {
+            modelos.add(new DefaultComboBoxModel<>(s));
+        }
     }
 
     /**
@@ -204,7 +209,10 @@ public class UITransporte {
         textDescuentoMax.setText(util.getRandomNumberString("0.2", "0.5"));
         textIncDescuento.setText(util.getRandomNumberString("0.01", "0.1"));
 
-        int tipo = util.getRandomNumber(1, 3);
+        selectTipo(util.getRandomNumber(1, 3));
+    }
+
+    private void selectTipo(int tipo) {
         switch(tipo) {
             case 1:
                 colectivoRadioButton.doClick();
