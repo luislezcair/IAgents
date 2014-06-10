@@ -10,6 +10,8 @@ import jade.core.AID;
 import jade.wrapper.ContainerController;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.util.List;
 
 public class UiCreateAgent {
@@ -23,9 +25,12 @@ public class UiCreateAgent {
     private JScrollPane paneAgencia;
     private JLabel labelHelp;
     private final JFrame window;
+    private final boolean hasAgency;
 
     public UiCreateAgent(AgentManager am, String tipoAgente, String claseAgente,
                          boolean hasAgency, ContainerController cc) {
+        this.hasAgency = hasAgency;
+
         labelAgencia.setVisible(hasAgency);
         paneAgencia.setVisible(hasAgency);
         labelHelp.setVisible(hasAgency);
@@ -55,9 +60,45 @@ public class UiCreateAgent {
         panelCreateAgent.setBorder(
                BorderFactory.createTitledBorder("Crear agente " + tipoAgente));
 
+        // Si no selecciona nunguna agencia, deshabilita el botón Crear Agente
+        listAgencias.addListSelectionListener( e -> {
+            if(!e.getValueIsAdjusting()) {
+                setButtonEnabled();
+            }
+        });
+
+        // Si el campo NombreAgente está vacío también deshabilita el botón
+        textNombreAgente.getDocument().addDocumentListener(
+            new DocumentListener() {
+                @Override
+                public void insertUpdate (DocumentEvent e) {
+                    changedUpdate(e);
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    changedUpdate(e);
+                }
+
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    setButtonEnabled();
+                }
+            }
+        );
+
         if(hasAgency) {
             am.registerSubscriber(this);
         }
+    }
+
+    /**
+     * Habilita / Deshabilita el botón CrearAgente si se cumplen los requisitos
+     */
+    private void setButtonEnabled() {
+        buttonCrearAgente.setEnabled(
+             !textNombreAgente.getText().isEmpty() &&
+             (!hasAgency || !listAgencias.getSelectedValuesList().isEmpty()));
     }
 
     /**

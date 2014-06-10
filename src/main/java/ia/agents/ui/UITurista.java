@@ -75,7 +75,7 @@ public class UITurista {
                 return;
             }
             else
-                p.setPersonas(dias);
+                p.setPersonas(personas);
 
             turista.sendCfp(p);
         });

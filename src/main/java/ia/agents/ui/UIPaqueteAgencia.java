@@ -121,8 +121,8 @@ public class UIPaqueteAgencia extends JDialog {
 
         labelTotal.setText(money(pa.getPrecioTotal()));
 
-        labelPersonasDias.setText("Montos para " + p.getPersonas() + " por "
-                + p.getDias() + " días");
+        labelPersonasDias.setText("Montos para " + p.getPersonas() +
+                " personas  por " + p.getDias() + " días");
 
         String text;
         Color color;

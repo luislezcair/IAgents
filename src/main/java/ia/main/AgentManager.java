@@ -213,7 +213,9 @@ public class AgentManager extends Agent {
             ac = cc.createNewAgent(nombre, clase, params);
             ac.start();
         } catch (StaleProxyException e) {
-            e.printStackTrace();
+            SwingUtilities.invokeLater( () ->
+                   JOptionPane.showMessageDialog(null, e.getMessage(), "Error",
+                           JOptionPane.WARNING_MESSAGE));
         }
         return ac;
     }
