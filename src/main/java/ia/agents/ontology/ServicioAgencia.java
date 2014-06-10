@@ -20,6 +20,7 @@ public class ServicioAgencia implements Concept {
     private Date fecha;
     private double precioPorPersona;
     private int tipo;
+    private int categoria;
 
     private DiscountManager ds;
 
@@ -28,12 +29,14 @@ public class ServicioAgencia implements Concept {
     }
 
     public ServicioAgencia(int capacidad, String destino, Date fecha,
-                       double precioPorPersona, int tipo, DiscountManager ds) {
+                       double precioPorPersona, int tipo, int categoria,
+                       DiscountManager ds) {
         this.capacidad = capacidad;
         this.destino = destino;
         this.fecha = fecha;
         this.precioPorPersona = precioPorPersona;
         this.tipo = tipo;
+        this.categoria = categoria;
         this.ds = ds;
     }
 
@@ -43,6 +46,7 @@ public class ServicioAgencia implements Concept {
         this.fecha = other.fecha;
         this.precioPorPersona = other.precioPorPersona;
         this.tipo = other.tipo;
+        this.categoria = other.categoria;
         this.ds = new DiscountManager(other.ds);
     }
 
@@ -92,6 +96,14 @@ public class ServicioAgencia implements Concept {
 
     public void setTipo(int tipo) {
         this.tipo = tipo;
+    }
+
+    public int getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(int categoria) {
+        this.categoria = categoria;
     }
 
     /**

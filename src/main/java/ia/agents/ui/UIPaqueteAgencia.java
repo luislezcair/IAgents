@@ -86,7 +86,8 @@ public class UIPaqueteAgencia extends JDialog {
         // Alojamiento
         labelAgenteA.setText(pa.getAgenteLugar().getName());
         labelDestinoA.setText(a.getDestino());
-        labelTipoA.setText(Alojamiento.getTipos()[a.getTipo()]);
+        labelTipoA.setText(Alojamiento.getTipos()[a.getTipo()] +
+            " / " + Alojamiento.getCategorias()[a.getTipo()][a.getCategoria()]);
         labelCapacidadA.setText(
                 String.valueOf(a.getCapacidad()) + " personas");
 
@@ -103,7 +104,8 @@ public class UIPaqueteAgencia extends JDialog {
         // Transporte
         labelAgenteT.setText(pa.getAgenteTransporte().getName());
         labelDestinoT.setText(t.getDestino());
-        labelTipoT.setText(Transporte.getTipos()[t.getTipo()]);
+        labelTipoT.setText(Transporte.getTipos()[t.getTipo()] +
+            " / " + Transporte.getCategorias()[t.getTipo()][t.getCategoria()]);
         labelCapacidadT.setText(
                 String.valueOf(t.getCapacidad()) + " personas");
 
