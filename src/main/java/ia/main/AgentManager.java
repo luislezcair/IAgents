@@ -110,27 +110,39 @@ public class AgentManager extends Agent {
         if(testAgentsLaunched)
             return;
 
-        Paquete paquete = new Paquete("Corrientes", 5, new Date(),
+        Paquete paquete = new Paquete("Buenos Aires", 5, new Date(),
                 Paquete.PAGO_EFECTIVO, 1000.0, 5);
-        Paquete paquete2 = new Paquete("Chaco", 6, new Date(),
+        Paquete paquete2 = new Paquete("Cordoba", 6, new Date(),
                 Paquete.PAGO_TARJETA, 200.0, 7);
-        Alojamiento lugar1 = new Alojamiento(10, "Corrientes", new Date(),
+        Alojamiento lugar1 = new Alojamiento(10, "Buenos Aires", new Date(),
                 123.0f, Alojamiento.TIPO_CASA_ALQ, 1,
                 new DiscountManager(0.1, 0.5, 0.1));
-        Alojamiento lugar2 = new Alojamiento(20, "Corrientes", new Date(),
-                200.0f, Alojamiento.TIPO_HOTEL, 3,
+        Alojamiento lugar2 = new Alojamiento(20, "Buenos Aires", new Date(),
+                200.0f, Alojamiento.TIPO_HOTEL, 4,
                 new DiscountManager(0.05, 0.3, 0.1));
-        Alojamiento lugar3 = new Alojamiento(15, "Corrientes", new Date(),
+        Alojamiento lugar3 = new Alojamiento(15, "Buenos Aires", new Date(),
                 230.0f, Alojamiento.TIPO_HOSTEL, 1,
                 new DiscountManager(0.07, 0.4, 0.05));
-        Alojamiento lugar4 = new Alojamiento(9, "Corrientes", new Date(),
+        Alojamiento lugar4 = new Alojamiento(9, "Buenos Aires", new Date(),
                 100.0f, Alojamiento.TIPO_HOTEL, 3,
                 new DiscountManager(0.05, 0.5, 0.08));
-        Transporte transp1 = new Transporte(30, "Corrientes", new Date(),
-                120.0f, Transporte.TIPO_AVION, 0,
+        Alojamiento lugar5 = new Alojamiento(20, "Cordoba", new Date(),
+                200.0f, Alojamiento.TIPO_HOTEL, 3,
+                new DiscountManager(0.05, 0.3, 0.1));
+        Alojamiento lugar6 = new Alojamiento(15, "Cordoba", new Date(),
+                230.0f, Alojamiento.TIPO_HOSTEL, 3,
+                new DiscountManager(0.07, 0.4, 0.05));
+        Transporte transp1 = new Transporte(30, "Buenos Aires", new Date(),
+                120.0f, Transporte.TIPO_AVION, 1,
                 new DiscountManager(0.08, 0.45, 0.05));
-        Transporte transp2 = new Transporte(20, "Corrientes", new Date(),
-                120.0f, Transporte.TIPO_COLECTIVO, 0,
+        Transporte transp2 = new Transporte(20, "Buenos Aires", new Date(),
+                120.0f, Transporte.TIPO_COLECTIVO, 1,
+                new DiscountManager(0.15, 0.6, 0.06));
+        Transporte transp3 = new Transporte(30, "Cordoba", new Date(),
+                120.0f, Transporte.TIPO_AVION, 1,
+                new DiscountManager(0.08, 0.45, 0.05));
+        Transporte transp4 = new Transporte(20, "Cordoba", new Date(),
+                120.0f, Transporte.TIPO_COLECTIVO, 1,
                 new DiscountManager(0.15, 0.6, 0.06));
 
         List<String> lugar1Agencias = new ArrayList<>();
@@ -148,19 +160,28 @@ public class AgentManager extends Agent {
         Object lugar2_86[] = {lugar2Agencias, lugar2};
         Object lugar3_007[] = {lugar3Agencias, lugar3};
         Object lugar4_007[] = {lugar3Agencias, lugar4};
+        Object lugar5_86[] = {lugar2Agencias, lugar5};
+        Object lugar6_007[] = {lugar3Agencias,lugar6};
         Object transp_86[] = {lugar2Agencias, transp1};
         Object transp_007[] = {lugar3Agencias, transp2};
+        Object transp2_86[] = {lugar1Agencias, transp3};
+        Object transp2_007[] = {lugar1Agencias, transp4};
 
-        createAgent("Turista1", "ia.agents.AgenteTurista", turista, turistasContainer);
-        createAgent("Turista2", "ia.agents.AgenteTurista", turista2, turistasContainer);
+
+        createAgent("Turista Premium", "ia.agents.AgenteTurista", turista, turistasContainer);
+        createAgent("Turista Economico", "ia.agents.AgenteTurista", turista2, turistasContainer);
         createAgent("Agencia86", "ia.agents.AgenteAgencia", null, agenciasContainer);
         createAgent("Agencia007", "ia.agents.AgenteAgencia", null, agenciasContainer);
-        createAgent("Lugar86", "ia.agents.AgenteLugar", lugar1_86, lugaresContainer);
-        createAgent("Lugar2_86", "ia.agents.AgenteLugar", lugar2_86, lugaresContainer);
-        createAgent("Lugar007", "ia.agents.AgenteLugar", lugar3_007, lugaresContainer);
-        createAgent("Lugar2_007", "ia.agents.AgenteLugar", lugar4_007, lugaresContainer);
-        createAgent("Transporte86", "ia.agents.AgenteTransporte", transp_86, transportesContainer);
-        createAgent("Transporte007", "ia.agents.AgenteTransporte", transp_007, transportesContainer);
+        createAgent("Casa La Familia", "ia.agents.AgenteLugar", lugar1_86, lugaresContainer);
+        createAgent("Hotel Avenida", "ia.agents.AgenteLugar", lugar2_86, lugaresContainer);
+        createAgent("Comodidad Hostel", "ia.agents.AgenteLugar", lugar3_007, lugaresContainer);
+        createAgent("Hotel Cabildo", "ia.agents.AgenteLugar", lugar4_007, lugaresContainer);
+        createAgent("Hotel Nueva Córdoba", "ia.agents.AgenteLugar", lugar5_86, lugaresContainer);
+        createAgent("Hostel Los Inmigrantes", "ia.agents.AgenteLugar", lugar6_007, lugaresContainer);
+        createAgent("Aerolíneas Argentinas", "ia.agents.AgenteTransporte", transp_86, transportesContainer);
+        createAgent("Flecha Bus", "ia.agents.AgenteTransporte", transp_007, transportesContainer);
+        createAgent("LAN", "ia.agents.AgenteTransporte", transp2_86, transportesContainer);
+        createAgent("ERSA", "ia.agents.AgenteTransporte", transp2_007, transportesContainer);
 
         testAgentsLaunched = true;
     }
