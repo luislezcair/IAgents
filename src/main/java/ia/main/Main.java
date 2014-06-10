@@ -12,6 +12,8 @@ import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
 import jade.wrapper.StaleProxyException;
 
+import javax.swing.*;
+
 class Main {
     public static void main(String[] args) {
         Profile profile = new ProfileImpl();
@@ -21,6 +23,13 @@ class Main {
         Runtime rt = Runtime.instance();
 
         AgentContainer mainContainer = rt.createMainContainer(profile);
+
+        // Usa el look&feel nativo. En Windows funciona.
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         try {
             // Crear el agente principal y le pasa el mainContainer como
