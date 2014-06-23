@@ -123,7 +123,7 @@ public class ServicioAgencia implements Concept {
      * @return true si es mejor, false si no es mejor
      */
     public boolean isBetter(ServicioAgencia otro, Paquete p) {
-        return getPrecio(p) < otro.getPrecio(p);
+        return otro == null || getPrecio(p) < otro.getPrecio(p);
     }
 
     public boolean isFinalOffer() {

@@ -6,13 +6,11 @@
 package ia.agents.negotiation;
 
 import ia.agents.ontology.*;
-import jade.core.AID;
 
 public class BestOfferManager {
     private final PaqueteAgencia pa = new PaqueteAgencia();
-    private AID agenteLugar;
-    private AID agenteTransporte;
-
+    private OfertaServicio transporte;
+    private OfertaServicio alojamiento;
     private boolean validTransporte = false;
     private boolean validAlojamiento = false;
 
@@ -20,46 +18,12 @@ public class BestOfferManager {
         pa.setPaquete(p);
     }
 
-    public void setMejor(Alojamiento a, AID mejorAgente) {
-        pa.setAlojamiento(a);
-        agenteLugar = mejorAgente;
-        validAlojamiento = true;
-    }
-
-    public void setMejor(Transporte t, AID mejorAgente) {
-        pa.setTransporte(t);
-        agenteTransporte = mejorAgente;
-        validTransporte = true;
-    }
-
     public void setMejorAlojamiento(BestOfferManager oferta) {
-        pa.setAlojamiento(oferta.getAlojamiento());
-        agenteLugar = oferta.getAgenteLugar();
-        validAlojamiento = true;
+        setMejorAlojamiento(oferta.getOfertaAlojamiento());
     }
 
     public void setMejorTransporte(BestOfferManager oferta) {
-        pa.setTransporte(oferta.getTransporte());
-        agenteTransporte = oferta.getAgenteTransporte();
-        validTransporte = true;
-    }
-
-    public boolean esMejor(Alojamiento a) {
-        return validAlojamiento &&
-                pa.getAlojamiento().isBetter(a, pa.getPaquete());
-    }
-
-    public boolean esMejor(Transporte t) {
-        return validTransporte &&
-                pa.getTransporte().isBetter(t, pa.getPaquete());
-    }
-
-    public AID getAgenteLugar() {
-        return agenteLugar;
-    }
-
-    public AID getAgenteTransporte() {
-        return agenteTransporte;
+        setMejorTransporte(oferta.getOfertaTransporte());
     }
 
     public boolean isValidTransporte() {
@@ -100,19 +64,23 @@ public class BestOfferManager {
         return pa;
     }
 
-    /**
-     * Método de conveniencia para acortar las llamadas
-     * @return Alojamiento de esta oferta
-     */
-    public Alojamiento getAlojamiento() {
-        return pa.getAlojamiento();
+    public void setMejorAlojamiento(OfertaServicio aloj) {
+        alojamiento = aloj;
+        pa.setAlojamiento((Alojamiento)aloj.getServicio());
+        validAlojamiento = true;
     }
 
-    /**
-     * Método de conveniencia para acortar las llamadas
-     * @return Transporte de esta oferta
-     */
-    public Transporte getTransporte() {
-        return pa.getTransporte();
+    public void setMejorTransporte(OfertaServicio transp) {
+        transporte = transp;
+        pa.setTransporte((Transporte)transp.getServicio());
+        validTransporte = true;
+    }
+
+    public OfertaServicio getOfertaAlojamiento() {
+        return alojamiento;
+    }
+
+    public OfertaServicio getOfertaTransporte() {
+        return transporte;
     }
 }
