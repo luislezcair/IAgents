@@ -200,7 +200,7 @@ public class AgenteAgencia extends Agent {
          * agencia va a buscar el paquete más conveniente para el turista y
          * para ella misma. Esto es, va a devolver el primer paquete cuyo precio
          * por persona esté por debajo del precio máximo establecido por el
-         * turista.  
+         * turista.
          */
         @Override
         @SuppressWarnings("unchecked")
@@ -280,8 +280,8 @@ public class AgenteAgencia extends Agent {
                 transportes.remove(0);
             }
 
-            // Si tenemos una oferta guardada de esta iteración o la anterior,
-            // la ponemos como la oferta actual.
+            // Si tenemos una oferta guardada, la ponemos como la oferta actual.
+            // Si no, buscamos la mejor oferta de esta iteración.
             if(mejorOferta.isValidAlojamiento())
                 ofertaActual.setMejorAlojamiento(mejorOferta);
             else
