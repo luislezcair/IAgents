@@ -7,7 +7,7 @@
       <root url="jar://$MAVEN_REPOSITORY$/com/tilab/jade/jade/4.3.2/jade-4.3.2-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
-      <root url="jar://$MAVEN_REPOSITORY$/com/tilab/jade/jade/4.3.2/jade-4.3.2-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/JADE-src-4.3.2.zip!/jade/src" />
     </SOURCES>
   </library>
 </component>

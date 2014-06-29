@@ -16,11 +16,11 @@ import javax.swing.*;
 
 class Main {
     public static void main(String[] args) {
+        Runtime rt = Runtime.instance();
+
         Profile profile = new ProfileImpl();
         profile.setParameter(Profile.PLATFORM_ID, "IAMainPlatform");
         profile.setParameter(Profile.CONTAINER_NAME, "IAMainContainer");
-
-        Runtime rt = Runtime.instance();
 
         AgentContainer mainContainer = rt.createMainContainer(profile);
 

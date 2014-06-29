@@ -76,6 +76,7 @@ public class AgenteLugar extends Agent {
             lugar = new Alojamiento();
             new UILugar(this);
         }
+        System.out.println("Se creó el agente Lugar " + getName());
     }
 
     @Override
@@ -123,7 +124,7 @@ public class AgenteLugar extends Agent {
          */
         @Override
         public boolean canOfferService(Paquete p) {
-            return lugar.getCapacidad() > p.getPersonas() &&
+            return lugar.getCapacidad() >= p.getPersonas() &&
                    lugar.getDestino().equalsIgnoreCase(p.getDestino()) &&
                    DateTimeComparator.getDateOnlyInstance().compare(
                            lugar.getFecha(), p.getFecha()) <= 0;

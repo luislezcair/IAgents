@@ -75,6 +75,7 @@ public class AgenteTransporte extends Agent {
             transporte = new Transporte();
             new UITransporte(this);
         }
+        System.out.println("Se creó el agente Transporte " + getName());
     }
 
     protected void takeDown() {
@@ -118,7 +119,7 @@ public class AgenteTransporte extends Agent {
 
         @Override
         public boolean canOfferService(Paquete p) {
-            return transporte.getCapacidad() > p.getPersonas() &&
+            return transporte.getCapacidad() >= p.getPersonas() &&
                    transporte.getDestino().equalsIgnoreCase(p.getDestino()) &&
                    DateTimeComparator.getDateOnlyInstance().compare(
                             transporte.getFecha(), p.getFecha()) <= 0;

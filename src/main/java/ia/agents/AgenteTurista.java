@@ -42,6 +42,8 @@ public class AgenteTurista extends Agent {
 
         SwingUtilities.invokeLater(
                 () -> ui = new UITurista(this, getPaqueteArg()));
+
+        System.out.println("Se creó el agente Turista " + getName());
     }
 
     private void subscribeToDf() {

@@ -8,10 +8,16 @@ package ia.agents.ui;
 import ia.agents.AgenteLugar;
 import ia.agents.negotiation.DiscountManager;
 import ia.agents.ontology.Alojamiento;
+import ia.agents.ui.util.ImprovedFormattedTextField;
 import ia.agents.util.Util;
 import org.jdesktop.swingx.JXDatePicker;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import java.awt.*;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,11 +29,11 @@ public class UILugar {
     private JSpinner spinnerCapacidad;
     private JComboBox<String> comboTipo;
     private JXDatePicker dateFecha;
-    private JTextField textDescuentoIni;
-    private JTextField textPrecioPP;
+    private JFormattedTextField textDescuentoIni;
+    private JFormattedTextField textPrecioPP;
     private JPanel panelLugar;
-    private JTextField textDescuentoMax;
-    private JTextField textIncDescuento;
+    private JFormattedTextField textDescuentoMax;
+    private JFormattedTextField textIncDescuento;
     private JRadioButton hotelRadioButton;
     private JRadioButton hostelRadioButton;
     private JRadioButton casaDeAlquilerRadioButton;
@@ -41,71 +47,6 @@ public class UILugar {
         buttonCL.addActionListener(event -> {
             // Obtiene el alojamiento del agente para establecer los valores
             // de los atributos.
-            Alojamiento aloj = agente.getAlojamiento();
-            DiscountManager descuento = aloj.getDescuento();
-
-            String ciudad = textCiudad.getText();
-            if (ciudad.isEmpty()) {
-                this.showMessage(
-                   "Por favor ingrese la ciudad donde se ubica el alojamiento");
-                return;
-            }
-
-            int capacidad = (int)spinnerCapacidad.getValue();
-            if(capacidad <= 0) {
-                this.showMessage(
-                        "Por favor ingrese una capacidad máxima válida");
-                return;
-            }
-
-            double descIni;
-            if (textDescuentoIni.getText().isEmpty()) {
-                this.showMessage("Por favor ingrese un descuento inicial");
-                return;
-            } else {
-                try {
-                    descIni = Double.valueOf(textDescuentoIni.getText());
-                } catch (NumberFormatException excepcionInutil) {
-                    descIni = 0.0d;
-                }
-            }
-
-            double descMax;
-            if (textDescuentoMax.getText().isEmpty()) {
-                this.showMessage("Por favor ingrese un descuento máximo");
-                return;
-            } else {
-                try {
-                    descMax = Double.valueOf(textDescuentoMax.getText());
-                } catch (NumberFormatException excepcionInutil) {
-                    descMax = 0.0d;
-                }
-            }
-
-            double incDesc;
-            if (textIncDescuento.getText().isEmpty()) {
-                this.showMessage(
-                        "Por favor ingrese la variación del descuento");
-                return;
-            } else {
-                try {
-                    incDesc = Double.valueOf(textIncDescuento.getText());
-                } catch (NumberFormatException excepcionInutil) {
-                    incDesc = 0.0d;
-                }
-            }
-
-            double importe;
-            if (textPrecioPP.getText().isEmpty()) {
-                this.showMessage("Por favor ingrese el precio por persona");
-                return;
-            } else {
-                try {
-                    importe = Double.valueOf(textPrecioPP.getText());
-                } catch (NumberFormatException excepcionInutil) {
-                    importe = 0.0d;
-                }
-            }
 
             int tipo;
             if(hotelRadioButton.isSelected()) {
@@ -116,15 +57,19 @@ public class UILugar {
                 tipo = 2;
             }
 
-            aloj.setDestino(ciudad);
-            aloj.setCapacidad(capacidad);
+            Alojamiento aloj = agente.getAlojamiento();
+            DiscountManager desc = aloj.getDescuento();
+
+            aloj.setDestino(textCiudad.getText());
+            aloj.setCapacidad((int)spinnerCapacidad.getValue());
             aloj.setFecha(dateFecha.getDate());
             aloj.setTipo(tipo);
             aloj.setCategoria(comboTipo.getSelectedIndex());
-            aloj.setPrecioPorPersona(importe);
-            descuento.setValue(descIni);
-            descuento.setMax(descMax);
-            descuento.setStep(incDesc);
+            aloj.setPrecioPorPersona(Double.valueOf(textPrecioPP.getValue().toString()));
+
+            desc.setValue(Double.valueOf(textDescuentoIni.getValue().toString()));
+            desc.setMax(Double.valueOf(textDescuentoMax.getValue().toString()));
+            desc.setStep(Double.valueOf(textIncDescuento.getValue().toString()));
 
             mainWindow.dispose();
         });
@@ -144,6 +89,26 @@ public class UILugar {
         casaDeAlquilerRadioButton.addActionListener(
                 e -> comboTipo.setModel(modelos.get(2)));
 
+        EventQueue.invokeLater(() -> spinnerCapacidad.setValue(1));
+
+        setAlojamiento(agente.getAlojamiento());
+
+        textCiudad.getDocument().addDocumentListener(new DocumentListener() {
+            @Override public void insertUpdate(DocumentEvent e) {
+                setEstablecerEnabled();
+            }
+
+            @Override public void removeUpdate(DocumentEvent e) {
+                setEstablecerEnabled();
+            }
+
+            @Override public void changedUpdate(DocumentEvent e) {
+                setEstablecerEnabled();
+            }
+        });
+        dateFecha.addPropertyChangeListener("date", e -> setEstablecerEnabled());
+        dateFecha.getEditor().setEditable(false);
+
         // Crear una ventana principal, agrega el contenido y ajusta al tamaño
         mainWindow = new JFrame("Crear agente Lugar") ;
         mainWindow.getContentPane().add(panelLugar);
@@ -156,8 +121,6 @@ public class UILugar {
         mainWindow.pack();
         mainWindow.setVisible(true);
         mainWindow.getRootPane().setDefaultButton(buttonCL);
-
-        setAlojamiento(agente.getAlojamiento());
     }
 
     private void setAlojamiento(Alojamiento a) {
@@ -167,9 +130,10 @@ public class UILugar {
         spinnerCapacidad.setValue(a.getCapacidad());
         dateFecha.setDate(a.getFecha());
 
-        textDescuentoIni.setText(String.valueOf(d.getValue()));
-        textDescuentoMax.setText(String.valueOf(d.getMax()));
-        textIncDescuento.setText(String.valueOf(d.getStep()));
+        textDescuentoIni.setValue(d.getValue());
+        textDescuentoMax.setValue(d.getMax());
+        textIncDescuento.setValue(d.getStep());
+        textPrecioPP.setValue(a.getPrecioPorPersona());
 
         selectTipo(a.getTipo());
 
@@ -180,17 +144,23 @@ public class UILugar {
         }
     }
 
-    private void showMessage(String msg) {
-        JOptionPane.showMessageDialog(mainWindow, msg, mainWindow.getTitle()
-                + " - Error", JOptionPane.WARNING_MESSAGE);
+    private void setEstablecerEnabled() {
+        buttonCL.setEnabled(
+            !textCiudad.getText().isEmpty() && dateFecha.getDate() != null
+        );
     }
 
     private void createUIComponents() {
-        spinnerCapacidad = new JSpinner(new SpinnerNumberModel(0, 0, 1000, 1));
+        spinnerCapacidad = new JSpinner(new SpinnerNumberModel(1, 1, 1000, 1));
         modelos = new ArrayList<>();
         for(String[] cat : Alojamiento.getCategorias()) {
             modelos.add(new DefaultComboBoxModel<>(cat));
         }
+        NumberFormat decimals = DecimalFormat.getInstance();
+        textPrecioPP = new ImprovedFormattedTextField(decimals);
+        textDescuentoIni = new ImprovedFormattedTextField(decimals);
+        textDescuentoMax = new ImprovedFormattedTextField(decimals);
+        textIncDescuento = new ImprovedFormattedTextField(decimals);
     }
 
     /**
@@ -200,10 +170,10 @@ public class UILugar {
     private void generateValues() {
         spinnerCapacidad.setValue(util.getRandomNumber(10, 50));
         dateFecha.setDate(new Date());
-        textPrecioPP.setText(util.getRandomNumberString("300.0", "1000.0"));
-        textDescuentoIni.setText(util.getRandomNumberString("0.0", "0.2"));
-        textDescuentoMax.setText(util.getRandomNumberString("0.2", "0.5"));
-        textIncDescuento.setText(util.getRandomNumberString("0.01", "0.1"));
+        textPrecioPP.setValue(util.getRandomNumber("300.0", "1000.0"));
+        textDescuentoIni.setValue(util.getRandomNumber("0.0", "0.2"));
+        textDescuentoMax.setValue(util.getRandomNumber("0.2", "0.5"));
+        textIncDescuento.setValue(util.getRandomNumber("0.01", "0.1"));
 
         selectTipo(util.getRandomNumber(1, 3));
     }
