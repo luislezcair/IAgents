@@ -31,4 +31,4 @@ sistema de control de versiones.
  También es necesario destacar que la aplicación desarrollada no es compatible
  con versiones del JDK anteriores a la 8, ya que se utilizaron características
  propias de esta versión para simplificar el desarrollo y mantenibilidad del
- código fuente, tales como operadores lambda e inferencia de tipos automáticas.
+ código fuente, tales como operadores lambda e inferencia automática de tipos.

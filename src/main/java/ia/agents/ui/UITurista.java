@@ -15,12 +15,7 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.MaskFormatter;
-import javax.swing.text.NumberFormatter;
-import java.awt.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.text.*;
-import java.util.Formatter;
 import java.util.List;
 
 /**
@@ -59,12 +54,6 @@ public class UITurista {
 
         // Click en Salir. Elimina la interfaz, el agente sigue funcionando
         buttonOcultar.addActionListener(event -> dispose());
-
-        EventQueue.invokeLater(() -> {
-            spinnerPersonas.setValue(1);
-            spinnerDias.setValue(1);
-            textImporteMax.setValue(0.0);
-        });
 
         // Listeners para habilitar/deshabilitar el botón de consulta cuando
         // se modifican los campos de texto.
@@ -146,7 +135,7 @@ public class UITurista {
         } catch(IllegalArgumentException e) {
             comboFormaDePago.setSelectedIndex(-1);
         }
-        textImporteMax.setText(String.valueOf(p.getImporteMaxPorPersona()));
+        textImporteMax.setValue(p.getImporteMaxPorPersona());
     }
 
     private void createUIComponents() {

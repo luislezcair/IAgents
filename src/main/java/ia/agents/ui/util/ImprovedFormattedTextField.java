@@ -1,3 +1,7 @@
+/**
+ * Esta clase fue sacada de
+ * http://stackoverflow.com/a/13424140/1481623
+ */
 package ia.agents.ui.util;
 
 import javax.swing.JFormattedTextField;

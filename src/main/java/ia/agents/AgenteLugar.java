@@ -60,7 +60,8 @@ public class AgenteLugar extends Agent {
                         MessageTemplate.MatchLanguage(slCodec.getName()))));
 
         // El despachador crea un Responder cuando llega un CFP para
-        // manejar cada conversación.
+        // manejar cada conversación. Seguimos los protocolos estándares, pero
+        // eso no me va a dar mejor nota.
         addBehaviour(new SSResponderDispatcher(this, mt) {
             @Override
             protected Behaviour createResponder(ACLMessage initiationMsg) {

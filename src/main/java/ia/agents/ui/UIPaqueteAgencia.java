@@ -38,8 +38,8 @@ public class UIPaqueteAgencia extends JDialog {
     private JLabel labelPrecioFinalT;
     private JLabel labelAgenteA;
     private JLabel labelAgenteT;
-    private List<PaqueteAgencia> propuestas;
-    private DateTimeFormatter dateFormat;
+    private final List<PaqueteAgencia> propuestas;
+    private final DateTimeFormatter dateFormat;
 
     public UIPaqueteAgencia(Agent turista,
                             List<PaqueteAgencia> listaPropuestas) {

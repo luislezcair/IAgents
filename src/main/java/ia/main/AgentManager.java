@@ -32,7 +32,8 @@ public class AgentManager extends Agent {
     private boolean testAgentsLaunched;
     private Runtime rt;
 
-    // Containers:
+    // Separamos los agentes en containers distintos porque somos buenos, pero
+    // seguro vamos a sacar un 4 igual, o menos.
     private ContainerController mainContainer;
     private ContainerController turistasContainer;
     private ContainerController agenciasContainer;
@@ -139,10 +140,10 @@ public class AgentManager extends Agent {
                 120.0f, Transporte.TIPO_COLECTIVO, 1,
                 new DiscountManager(0.15, 0.6, 0.06));
         Transporte transp3 = new Transporte(30, "Córdoba", new Date(),
-                120.0f, Transporte.TIPO_AVION, 1,
+                130.0f, Transporte.TIPO_AVION, 1,
                 new DiscountManager(0.08, 0.45, 0.05));
         Transporte transp4 = new Transporte(20, "Córdoba", new Date(),
-                120.0f, Transporte.TIPO_COLECTIVO, 1,
+                140.0f, Transporte.TIPO_COLECTIVO, 1,
                 new DiscountManager(0.15, 0.6, 0.06));
 
         List<String> lugar1Agencias = new ArrayList<>();
@@ -151,8 +152,11 @@ public class AgentManager extends Agent {
 
         lugar1Agencias.add("Agencia86@IAMainPlatform");
         lugar1Agencias.add("Agencia007@IAMainPlatform");
+        lugar1Agencias.add("AgenciaIA@IAMainPlatform");
         lugar2Agencias.add("Agencia86@IAMainPlatform");
+        lugar2Agencias.add("AgenciaIA@IAMainPlatform");
         lugar3Agencias.add("Agencia007@IAMainPlatform");
+        lugar3Agencias.add("AgenciaIA@IAMainPlatform");
 
         Object turista[] = {paquete};
         Object turista2[] = {paquete2};
@@ -172,6 +176,7 @@ public class AgentManager extends Agent {
         createAgent("Turista Economico", "ia.agents.AgenteTurista", turista2, turistasContainer);
         createAgent("Agencia86", "ia.agents.AgenteAgencia", null, agenciasContainer);
         createAgent("Agencia007", "ia.agents.AgenteAgencia", null, agenciasContainer);
+        createAgent("AgenciaIA", "ia.agents.AgenteAgencia", null, agenciasContainer);
         createAgent("Casa La Familia", "ia.agents.AgenteLugar", lugar1_86, lugaresContainer);
         createAgent("Hotel Avenida", "ia.agents.AgenteLugar", lugar2_86, lugaresContainer);
         createAgent("Comodidad Hostel", "ia.agents.AgenteLugar", lugar3_007, lugaresContainer);
