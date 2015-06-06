@@ -25,6 +25,8 @@
         <module name="IAgents" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="IAgents" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>
-
