@@ -26,6 +26,8 @@ public class Paquete implements Concept {
 
     public Paquete() {
         fecha = new Date();
+        dias = personas = 1;
+        importeMaxPorPersona = 100.0;
     }
 
     public Paquete(String destino, int dias, Date fecha, int formaDePago,

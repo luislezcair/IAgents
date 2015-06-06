@@ -26,6 +26,7 @@ public class ServicioAgencia implements Concept {
 
     public ServicioAgencia() {
         ds = new DiscountManager();
+        capacidad = 1;
     }
 
     public ServicioAgencia(int capacidad, String destino, Date fecha,

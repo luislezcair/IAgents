@@ -7,6 +7,10 @@ package ia.agents.ontology;
 
 import jade.content.onto.*;
 
+/**
+ * Definición de la ontología usada para la negociación. Esto debería darme
+ * mejor nota, pero eso se lo lleva la gente que parsea strings.
+ */
 public class TurismoOntology extends BeanOntology {
     private static final String ONTOLOGY_NAME = "turismo-ontology";
 

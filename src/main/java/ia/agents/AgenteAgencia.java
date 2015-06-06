@@ -49,6 +49,8 @@ public class AgenteAgencia extends Agent {
 
         // Crear y mostrar la interfaz
         ui = new UIAgencia(this);
+        //ui.show();
+        System.out.println("Se creó el agente Agencia " + getName());
     }
 
     @Override
@@ -392,7 +394,7 @@ public class AgenteAgencia extends Agent {
             // Recibimos inform o failure de algún Lugar o Transporte
             System.out.println("[AGENCIA] INFORM de algún Lugar o Transporte");
 
-            // Creamos el mensaje PROPOSE
+            // Creamos el mensaje PROPOSE para enviar al turista
             ACLMessage propose = new ACLMessage(ACLMessage.PROPOSE);
             propose.setLanguage(slCodec.getName());
             propose.setOntology(ontology.getName());

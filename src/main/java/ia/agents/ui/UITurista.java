@@ -7,10 +7,15 @@ package ia.agents.ui;
 
 import ia.agents.AgenteTurista;
 import ia.agents.ontology.Paquete;
+import ia.agents.ui.util.ImprovedFormattedTextField;
 import jade.core.AID;
 import org.jdesktop.swingx.JXDatePicker;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.MaskFormatter;
+import java.text.*;
 import java.util.List;
 
 /**
@@ -23,7 +28,7 @@ public class UITurista {
     private JSpinner spinnerDias;
     private JSpinner spinnerPersonas;
     private JComboBox comboFormaDePago;
-    private JTextField textImporteMax;
+    private JFormattedTextField textImporteMax;
     private JXDatePicker dateFecha;
     private JPanel panelTurista;
     private JList<String> listAgencies;
@@ -38,50 +43,42 @@ public class UITurista {
         buttonConsultar.addActionListener(event -> {
             // Carga los datos del paquete y envía un CFP a las agencias
             Paquete p = new Paquete();
-
-            String destino = textDestino.getText();
-            if(destino.isEmpty()) {
-                showMessage("Por favor ingrese un destino.");
-                return;
-            }
-            else
-                p.setDestino(destino);
-
-
-            int dias = (int) spinnerDias.getValue();
-            if (dias <= 0) {
-                showMessage("Por favor ingrese una cantidad válida de días.");
-                return;
-            }
-            else
-                p.setDias(dias);
-
+            p.setDestino(textDestino.getText());
+            p.setDias((int) spinnerDias.getValue());
             p.setFecha(dateFecha.getDate());
-
             p.setFormaDePago(comboFormaDePago.getSelectedIndex());
-
-            // En vez de devolver cero, Javita se quiere pasar de listo
-            double importe;
-            try {
-                importe = Double.valueOf(textImporteMax.getText());
-            } catch (NumberFormatException excepcionInutil) {
-                importe = 0.0d;
-            }
-            p.setImporteMaxPorPersona(importe);
-
-            int personas = (int) spinnerPersonas.getValue();
-            if (personas <= 0) {
-                this.showMessage("Por favor ingrese una cantidad válida de personas");
-                return;
-            }
-            else
-                p.setPersonas(personas);
-
+            p.setImporteMaxPorPersona(Double.valueOf(textImporteMax.getValue().toString()));
+            p.setPersonas((int) spinnerPersonas.getValue());
             turista.sendCfp(p);
         });
 
         // Click en Salir. Elimina la interfaz, el agente sigue funcionando
         buttonOcultar.addActionListener(event -> dispose());
+
+        // Listeners para habilitar/deshabilitar el botón de consulta cuando
+        // se modifican los campos de texto.
+        textImporteMax.addPropertyChangeListener("editValid",
+                e -> setConsultaEnabled());
+        textDestino.getDocument().addDocumentListener(new DocumentListener() {
+            @Override public void insertUpdate(DocumentEvent e) {
+                setConsultaEnabled();
+            }
+
+            @Override public void removeUpdate(DocumentEvent e) {
+                setConsultaEnabled();
+            }
+
+            @Override public void changedUpdate(DocumentEvent e) {
+                setConsultaEnabled();
+            }
+        });
+
+        try {
+            MaskFormatter decimals = new MaskFormatter("####.##");
+            decimals.install(textImporteMax);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         setPaquete(paquete);
 
@@ -99,6 +96,12 @@ public class UITurista {
 
         mainWindow.pack();
         mainWindow.setVisible(true);
+    }
+
+    public void setConsultaEnabled() {
+        buttonConsultar.setEnabled(
+            textImporteMax.isEditValid() && !textDestino.getText().isEmpty()
+        );
     }
 
     public void setAgenciesList(List<AID> agencies) {
@@ -132,7 +135,7 @@ public class UITurista {
         } catch(IllegalArgumentException e) {
             comboFormaDePago.setSelectedIndex(-1);
         }
-        textImporteMax.setText(String.valueOf(p.getImporteMaxPorPersona()));
+        textImporteMax.setValue(p.getImporteMaxPorPersona());
     }
 
     private void createUIComponents() {
@@ -140,5 +143,8 @@ public class UITurista {
         spinnerDias = new JSpinner(new SpinnerNumberModel(1, 1, 99, 1));
         spinnerPersonas = new JSpinner(new SpinnerNumberModel(1, 1, 99, 1));
         comboFormaDePago = new JComboBox<>(Paquete.getFormasDePago());
+
+        textImporteMax = new ImprovedFormattedTextField(
+                DecimalFormat.getInstance());
     }
 }

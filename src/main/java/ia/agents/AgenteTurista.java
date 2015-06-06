@@ -42,8 +42,13 @@ public class AgenteTurista extends Agent {
 
         SwingUtilities.invokeLater(
                 () -> ui = new UITurista(this, getPaqueteArg()));
+
+        System.out.println("Se creó el agente Turista " + getName());
     }
 
+    /**
+     * Con un cuatro mediocre me conformo
+     */
     private void subscribeToDf() {
         DFAgentDescription dfad = new DFAgentDescription();
         ServiceDescription sd = new ServiceDescription();
@@ -74,6 +79,10 @@ public class AgenteTurista extends Agent {
         return (Paquete)args[0];
     }
 
+    /**
+     * Implementación de un observer para mantener la lista de agencias
+     * actualizadas. Saber programar no sirve para nada.
+     */
     private class DFAgenciasSubscriber extends DFAgentSubscriber {
         public DFAgenciasSubscriber(Agent a, DFAgentDescription dfad,
                                      List<AID> subscribedAgents) {
@@ -141,7 +150,6 @@ public class AgenteTurista extends Agent {
             return v;
         }
 
-        // TODO: mostrar todas las ofertas y la mejor.
         @Override
         @SuppressWarnings("unchecked")
         protected void handleAllResponses(Vector responses,

@@ -8,10 +8,15 @@ package ia.agents.ui;
 import ia.agents.AgenteTransporte;
 import ia.agents.negotiation.DiscountManager;
 import ia.agents.ontology.Transporte;
+import ia.agents.ui.util.ImprovedFormattedTextField;
 import ia.agents.util.Util;
 import org.jdesktop.swingx.JXDatePicker;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -24,10 +29,10 @@ public class UITransporte {
     private JXDatePicker dateFecha;
     private JComboBox<String> comboCategoria;
     private JSpinner spinnerCapacidad;
-    private JTextField textDescuentoIni;
-    private JTextField textPrecioPP;
-    private JTextField textDescuentoMax;
-    private JTextField textIncDescuento;
+    private JFormattedTextField textDescuentoIni;
+    private JFormattedTextField textPrecioPP;
+    private JFormattedTextField textDescuentoMax;
+    private JFormattedTextField textIncDescuento;
     private JRadioButton avionRadioButton;
     private JRadioButton colectivoRadioButton;
     private JRadioButton otrosRadioButton;
@@ -41,75 +46,6 @@ public class UITransporte {
         buttonCT.addActionListener(event -> {
             // Obtiene el transporte del agente para establecer los valores
             // de los atributos.
-            Transporte transp = agente.getTransporte();
-            DiscountManager descuento = transp.getDescuento();
-
-            String ciudad = textCiudad.getText();
-            if (ciudad.isEmpty()) {
-                this.showMessage(
-                        "Por favor ingrese la ciudad destino donde se dirije.");
-                return;
-            }
-
-            int capacidad = (int) spinnerCapacidad.getValue();
-            if (capacidad <= 0) {
-                this.showMessage(
-                        "Por favor ingrese una capacidad máxima válida.");
-                return;
-            }
-
-            double descIni;
-            String descuentoInicial = textDescuentoIni.getText();
-            if (descuentoInicial.isEmpty()) {
-                this.showMessage("Por favor ingrese un descuento inicial.");
-                return;
-            } else {
-                try {
-                    descIni = Double.valueOf(descuentoInicial);
-                } catch (NumberFormatException excepcionInutil) {
-                    descIni = 0.0d;
-                }
-            }
-
-            double descMax;
-            String descMaximo = textDescuentoMax.getText();
-            if (descMaximo.isEmpty()) {
-                this.showMessage("Por favor ingrese un descuento máximo.");
-                return;
-            } else {
-                try {
-                    descMax = Double.valueOf(descMaximo);
-                } catch (NumberFormatException excepcionInutil) {
-                    descMax = 0.0d;
-                }
-            }
-
-            double incDesc;
-            String strIncDesc = textIncDescuento.getText();
-            if (strIncDesc.isEmpty()) {
-                this.showMessage(
-                        "Por favor ingrese la variación del descuento.");
-                return;
-            } else {
-                try {
-                    incDesc = Double.valueOf(strIncDesc);
-                } catch (NumberFormatException excepcionInutil) {
-                    incDesc = 0.0d;
-                }
-            }
-
-            double importe;
-            String strImporte = textPrecioPP.getText();
-            if (strImporte.isEmpty()) {
-                this.showMessage("Por favor ingrese el precio por persona.");
-                return;
-            } else {
-                try {
-                    importe = Double.valueOf(strImporte);
-                } catch (NumberFormatException excepcionInutil) {
-                    importe = 0.0d;
-                }
-            }
 
             int tipo;
             if(avionRadioButton.isSelected()) {
@@ -120,15 +56,19 @@ public class UITransporte {
                 tipo = 2;
             }
 
-            transp.setDestino(ciudad);
-            transp.setCapacidad(capacidad);
-            transp.setFecha(dateFecha.getDate());
-            transp.setTipo(tipo);
-            transp.setCategoria(comboCategoria.getSelectedIndex());
-            descuento.setValue(descIni);
-            descuento.setMax(descMax);
-            descuento.setStep(incDesc);
-            transp.setPrecioPorPersona(importe);
+            Transporte t = agente.getTransporte();
+            DiscountManager d = t.getDescuento();
+
+            t.setDestino(textCiudad.getText());
+            t.setCapacidad((int)spinnerCapacidad.getValue());
+            t.setFecha(dateFecha.getDate());
+            t.setTipo(tipo);
+            t.setCategoria(comboCategoria.getSelectedIndex());
+            t.setPrecioPorPersona(Double.valueOf(textPrecioPP.getValue().toString()));
+
+            d.setValue(Double.valueOf(textDescuentoIni.getValue().toString()));
+            d.setMax(Double.valueOf(textDescuentoMax.getValue().toString()));
+            d.setStep(Double.valueOf(textIncDescuento.getValue().toString()));
 
             mainWindow.dispose();
         });
@@ -147,6 +87,22 @@ public class UITransporte {
                 e -> comboCategoria.setModel(modelos.get(1)));
         otrosRadioButton.addActionListener(
                 e -> comboCategoria.setModel(modelos.get(2)));
+
+        textCiudad.getDocument().addDocumentListener(new DocumentListener() {
+            @Override public void insertUpdate(DocumentEvent e) {
+                setEstablecerEnabled();
+            }
+
+            @Override public void removeUpdate(DocumentEvent e) {
+                setEstablecerEnabled();
+            }
+
+            @Override public void changedUpdate(DocumentEvent e) {
+                setEstablecerEnabled();
+            }
+        });
+        dateFecha.addPropertyChangeListener("date", e -> setEstablecerEnabled());
+        dateFecha.getEditor().setEditable(false);
 
         // Crear una ventana principal, agrega el contenido y ajusta al tamaño
         mainWindow = new JFrame("Crear agente Transporte");
@@ -171,9 +127,10 @@ public class UITransporte {
         spinnerCapacidad.setValue(t.getCapacidad());
         dateFecha.setDate(t.getFecha());
 
-        textDescuentoIni.setText(String.valueOf(d.getValue()));
-        textDescuentoMax.setText(String.valueOf(d.getMax()));
-        textIncDescuento.setText(String.valueOf(d.getStep()));
+        textDescuentoIni.setValue(d.getValue());
+        textDescuentoMax.setValue(d.getMax());
+        textIncDescuento.setValue(d.getStep());
+        textPrecioPP.setValue(t.getPrecioPorPersona());
 
         selectTipo(t.getTipo());
 
@@ -182,6 +139,12 @@ public class UITransporte {
         } catch(Exception e) {
             comboCategoria.setSelectedIndex(-1);
         }
+    }
+
+    private void setEstablecerEnabled() {
+        buttonCT.setEnabled(
+                !textCiudad.getText().isEmpty() && dateFecha.getDate() != null
+        );
     }
 
     private void showMessage(String msg) {
@@ -195,6 +158,11 @@ public class UITransporte {
         for(String[] s : Transporte.getCategorias()) {
             modelos.add(new DefaultComboBoxModel<>(s));
         }
+        NumberFormat decimals = DecimalFormat.getInstance();
+        textPrecioPP = new ImprovedFormattedTextField(decimals);
+        textDescuentoIni = new ImprovedFormattedTextField(decimals);
+        textDescuentoMax = new ImprovedFormattedTextField(decimals);
+        textIncDescuento = new ImprovedFormattedTextField(decimals);
     }
 
     /**
@@ -204,10 +172,10 @@ public class UITransporte {
     private void generateValues() {
         spinnerCapacidad.setValue(util.getRandomNumber(10, 50));
         dateFecha.setDate(new Date());
-        textPrecioPP.setText(util.getRandomNumberString("300.0", "1000.0"));
-        textDescuentoIni.setText(util.getRandomNumberString("0.0", "0.2"));
-        textDescuentoMax.setText(util.getRandomNumberString("0.2", "0.5"));
-        textIncDescuento.setText(util.getRandomNumberString("0.01", "0.1"));
+        textPrecioPP.setValue(util.getRandomNumber("300.0", "1000.0"));
+        textDescuentoIni.setValue(util.getRandomNumber("0.0", "0.2"));
+        textDescuentoMax.setValue(util.getRandomNumber("0.2", "0.5"));
+        textIncDescuento.setValue(util.getRandomNumber("0.01", "0.1"));
 
         selectTipo(util.getRandomNumber(1, 3));
     }

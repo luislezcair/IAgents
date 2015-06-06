@@ -32,6 +32,9 @@ public class UIAgencia {
         mainWindow.setIconImage(icon.getImage());
 
         mainWindow.pack();
+    }
+
+    public void show() {
         mainWindow.setVisible(true);
     }
 
