@@ -1,0 +1,284 @@
+{
+  "turistas":
+    [
+      {
+        "nombre": "Turista Económico",
+        "paquete": {
+          "destino": "Córdoba",
+          "dias": 6,
+          "fecha": "Jun 6, 2015 9:05:48 PM",
+          "formaDePago": 1,
+          "importeMaxPorPersona": 200.0,
+          "personas": 7
+        }
+      },
+
+      {
+        "nombre": "Turista Premium",
+        "paquete": {
+          "destino": "Buenos Aires",
+          "dias": 5,
+          "fecha": "Jun 6, 2015 9:05:48 PM",
+          "formaDePago": 0,
+          "importeMaxPorPersona": 1000.0,
+          "personas": 5
+        }
+      }
+    ],
+
+  "agencias":
+    [
+      {
+        "nombre": "Agencia86"
+      },
+
+      {
+        "nombre": "Agencia007"
+      },
+
+      {
+        "nombre": "AgenciaIA"
+      }
+    ],
+
+  "transportes":
+    [
+      {
+        "nombre": "Aerolineas Argentinas",
+        "transporte": {
+          "capacidad": 30,
+          "destino": "Buenos Aires",
+          "fecha": "Jun 6, 2015 9:05:48 PM",
+          "precioPorPersona": 120.0,
+          "tipo": 0,
+          "categoria": 1,
+          "ds": {
+            "value": 0.08,
+            "max": 0.45,
+            "step": 0.05
+          }
+        },
+
+        "agencias":
+          [
+            "AgenciaIA",
+            "Agencia86"
+          ]
+      },
+
+      {
+        "nombre": "Flecha Bus",
+        "transporte": {
+          "capacidad": 20,
+          "destino": "Buenos Aires",
+          "fecha": "Jun 6, 2015 9:05:48 PM",
+          "precioPorPersona": 120.0,
+          "tipo": 1,
+          "categoria": 1,
+          "ds": {
+            "value": 0.15,
+            "max": 0.6,
+            "step": 0.06
+          }
+        },
+
+        "agencias":
+        [
+          "AgenciaIA",
+          "Agencia007"
+        ]
+      },
+
+      {
+        "nombre": "LAN",
+        "transporte": {
+          "capacidad": 30,
+          "destino": "Córdoba",
+          "fecha": "Jun 6, 2015 9:05:48 PM",
+          "precioPorPersona": 130.0,
+          "tipo": 0,
+          "categoria": 1,
+          "ds": {
+            "value": 0.08,
+            "max": 0.45,
+            "step": 0.05
+          }
+        },
+
+        "agencias":
+        [
+          "AgenciaIA",
+          "Agencia007",
+          "Agencia86"
+        ]
+      },
+
+      {
+        "nombre": "ERSA",
+        "transporte": {
+          "capacidad": 20,
+          "destino": "Córdoba",
+          "fecha": "Jun 6, 2015 9:05:48 PM",
+          "precioPorPersona": 140.0,
+          "tipo": 1,
+          "categoria": 1,
+          "ds": {
+            "value": 0.15,
+            "max": 0.6,
+            "step": 0.06
+          }
+        },
+
+        "agencias":
+        [
+          "AgenciaIA",
+          "Agencia007",
+          "Agencia86"
+        ]
+      }
+
+    ],
+
+  "lugares":
+    [
+      {
+        "nombre": "Casa La Familia",
+        "alojamiento": {
+          "capacidad": 10,
+          "destino": "Buenos Aires",
+          "fecha": "Jun 6, 2015 9:05:48 PM",
+          "precioPorPersona": 123.0,
+          "tipo": 2,
+          "categoria": 1,
+          "ds": {
+            "value": 0.1,
+            "max": 0.5,
+            "step": 0.1
+          }
+        },
+
+        "agencias":
+        [
+          "AgenciaIA",
+          "Agencia007",
+          "Agencia86"
+        ]
+      },
+
+      {
+        "nombre": "Hotel Avenida",
+        "alojamiento": {
+          "capacidad": 20,
+          "destino": "Buenos Aires",
+          "fecha": "Jun 6, 2015 9:05:48 PM",
+          "precioPorPersona": 200.0,
+          "tipo": 0,
+          "categoria": 4,
+          "ds": {
+            "value": 0.05,
+            "max": 0.3,
+            "step": 0.1
+          }
+        },
+
+        "agencias":
+        [
+          "AgenciaIA",
+          "Agencia86"
+        ]
+      },
+
+      {
+        "nombre": "Comodidad Hostel",
+        "alojamiento": {
+          "capacidad": 15,
+          "destino": "Buenos Aires",
+          "fecha": "Jun 6, 2015 9:05:48 PM",
+          "precioPorPersona": 230.0,
+          "tipo": 1,
+          "categoria": 1,
+          "ds": {
+            "value": 0.07,
+            "max": 0.4,
+            "step": 0.05
+          }
+        },
+
+        "agencias":
+        [
+          "AgenciaIA",
+          "Agencia007"
+        ]
+      },
+
+      {
+        "nombre": "Hotel Cabildo",
+        "alojamiento": {
+          "capacidad": 9,
+          "destino": "Buenos Aires",
+          "fecha": "Jun 6, 2015 9:05:48 PM",
+          "precioPorPersona": 100.0,
+          "tipo": 0,
+          "categoria": 3,
+          "ds": {
+            "value": 0.05,
+            "max": 0.5,
+            "step": 0.08
+          }
+        },
+
+        "agencias":
+        [
+          "AgenciaIA",
+          "Agencia007"
+        ]
+      },
+
+      {
+        "nombre": "Hotel Nueva Cordoba",
+        "alojamiento": {
+          "capacidad": 20,
+          "destino": "Córdoba",
+          "fecha": "Jun 6, 2015 9:05:48 PM",
+          "precioPorPersona": 200.0,
+          "tipo": 0,
+          "categoria": 3,
+          "ds": {
+            "value": 0.05,
+            "max": 0.3,
+            "step": 0.1
+          }
+        },
+
+        "agencias":
+        [
+          "AgenciaIA",
+          "Agencia86"
+        ]
+      },
+
+      {
+        "nombre": "Hostel Los Inmigrantes",
+        "alojamiento": {
+          "capacidad": 15,
+          "destino": "Córdoba",
+          "fecha": "Jun 6, 2015 9:05:48 PM",
+          "precioPorPersona": 230.0,
+          "tipo": 1,
+          "categoria": 1,
+          "ds": {
+            "value": 0.07,
+            "max": 0.4,
+            "step": 0.05
+          }
+        },
+
+        "agencias":
+        [
+          "AgenciaIA",
+          "Agencia007"
+        ]
+      }
+
+    ]
+}

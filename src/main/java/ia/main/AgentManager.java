@@ -177,12 +177,14 @@ public class AgentManager extends Agent {
         createAgent("Agencia86", "ia.agents.AgenteAgencia", null, agenciasContainer);
         createAgent("Agencia007", "ia.agents.AgenteAgencia", null, agenciasContainer);
         createAgent("AgenciaIA", "ia.agents.AgenteAgencia", null, agenciasContainer);
+
         createAgent("Casa La Familia", "ia.agents.AgenteLugar", lugar1_86, lugaresContainer);
         createAgent("Hotel Avenida", "ia.agents.AgenteLugar", lugar2_86, lugaresContainer);
         createAgent("Comodidad Hostel", "ia.agents.AgenteLugar", lugar3_007, lugaresContainer);
         createAgent("Hotel Cabildo", "ia.agents.AgenteLugar", lugar4_007, lugaresContainer);
         createAgent("Hotel Nueva Cordoba", "ia.agents.AgenteLugar", lugar5_86, lugaresContainer);
         createAgent("Hostel Los Inmigrantes", "ia.agents.AgenteLugar", lugar6_007, lugaresContainer);
+
         createAgent("Aerolineas Argentinas", "ia.agents.AgenteTransporte", transp_86, transportesContainer);
         createAgent("Flecha Bus", "ia.agents.AgenteTransporte", transp_007, transportesContainer);
         createAgent("LAN", "ia.agents.AgenteTransporte", transp2_86, transportesContainer);

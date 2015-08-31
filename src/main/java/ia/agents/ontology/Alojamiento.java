@@ -12,7 +12,6 @@ import java.util.Date;
  * Clase que representa un lugar de alojamiento para los turistas
  */
 public class Alojamiento extends ServicioAgencia {
-    //TODO: Esto haría sangrar los ojos a Torossi
     private static final String[] tipos = {
             "Hotel", "Hostel", "Casa de alquiler"};
 
