@@ -47,6 +47,8 @@ public class UIAgentManager {
             }
         });
 
+        mainWindow.setMinimumSize(mainWindow.getSize());
+
         buttonSalir.addActionListener(event -> manager.shutdown());
         buttonTestAgents.addActionListener(event -> manager.launchTestAgents());
         buttonRma.addActionListener(event -> manager.launchRma());

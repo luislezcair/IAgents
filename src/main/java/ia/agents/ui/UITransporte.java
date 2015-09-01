@@ -15,6 +15,8 @@ import org.jdesktop.swingx.JXDatePicker;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -89,15 +91,18 @@ public class UITransporte {
                 e -> comboCategoria.setModel(modelos.get(2)));
 
         textCiudad.getDocument().addDocumentListener(new DocumentListener() {
-            @Override public void insertUpdate(DocumentEvent e) {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
                 setEstablecerEnabled();
             }
 
-            @Override public void removeUpdate(DocumentEvent e) {
+            @Override
+            public void removeUpdate(DocumentEvent e) {
                 setEstablecerEnabled();
             }
 
-            @Override public void changedUpdate(DocumentEvent e) {
+            @Override
+            public void changedUpdate(DocumentEvent e) {
                 setEstablecerEnabled();
             }
         });
@@ -105,7 +110,7 @@ public class UITransporte {
         dateFecha.getEditor().setEditable(false);
 
         // Crear una ventana principal, agrega el contenido y ajusta al tamaño
-        mainWindow = new JFrame("Crear agente Transporte");
+        mainWindow = new JFrame("Agente Transporte " + agente.getName());
         mainWindow.getContentPane().add(panelTransporte);
 
         // Carga y establece un ícono para la ventana
@@ -116,6 +121,8 @@ public class UITransporte {
         mainWindow.pack();
         mainWindow.setVisible(true);
         mainWindow.getRootPane().setDefaultButton(buttonCT);
+
+        mainWindow.setMinimumSize(mainWindow.getSize());
 
         setTransporte(agente.getTransporte());
     }

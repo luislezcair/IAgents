@@ -32,6 +32,7 @@ public class UIAgencia {
         mainWindow.setIconImage(icon.getImage());
 
         mainWindow.pack();
+        mainWindow.setMinimumSize(mainWindow.getSize());
     }
 
     public void show() {

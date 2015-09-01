@@ -158,6 +158,7 @@ public class ImprovedFormattedTextField extends JFormattedTextField {
                     if ( dot == mark ) {
                         field.getCaret().setDot( dot );
                     }
+                    field.selectAll();
                 });
             }
         }

@@ -35,7 +35,7 @@ public class UiCreateAgent {
         paneAgencia.setVisible(hasAgency);
         labelHelp.setVisible(hasAgency);
 
-        window = new JFrame("Crear agente " + tipoAgente);
+        window = new JFrame("Crear " + tipoAgente);
         window.getContentPane().add(mainPanel);
         window.getRootPane().setDefaultButton(buttonCrearAgente);
 
@@ -50,6 +50,8 @@ public class UiCreateAgent {
         window.setLocationRelativeTo(null);
         window.setVisible(true);
 
+        window.setMinimumSize(window.getSize());
+
         buttonCancelar.addActionListener(
                 e -> {window.dispose(); am.unregisterSubscriber(this);});
         buttonCrearAgente.addActionListener(e -> {
@@ -58,7 +60,7 @@ public class UiCreateAgent {
             window.dispose();});
 
         panelCreateAgent.setBorder(
-               BorderFactory.createTitledBorder("Crear agente " + tipoAgente));
+               BorderFactory.createTitledBorder("Crear " + tipoAgente));
 
         // Si no selecciona nunguna agencia, deshabilita el botón Crear Agente
         listAgencias.addListSelectionListener( e -> {

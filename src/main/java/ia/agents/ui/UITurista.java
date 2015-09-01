@@ -96,6 +96,7 @@ public class UITurista {
 
         mainWindow.pack();
         mainWindow.setVisible(true);
+        mainWindow.setMinimumSize(mainWindow.getSize());
     }
 
     public void setConsultaEnabled() {

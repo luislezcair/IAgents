@@ -75,6 +75,8 @@ public class UIPaqueteAgencia extends JDialog {
 
         pack();
         setVisible(true);
+
+        setMinimumSize(getSize());
     }
 
     private void setPropuesta(int index) {

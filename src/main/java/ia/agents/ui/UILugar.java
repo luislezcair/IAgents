@@ -91,8 +91,6 @@ public class UILugar {
 
         EventQueue.invokeLater(() -> spinnerCapacidad.setValue(1));
 
-        setAlojamiento(agente.getAlojamiento());
-
         textCiudad.getDocument().addDocumentListener(new DocumentListener() {
             @Override public void insertUpdate(DocumentEvent e) {
                 setEstablecerEnabled();
@@ -110,7 +108,7 @@ public class UILugar {
         dateFecha.getEditor().setEditable(false);
 
         // Crear una ventana principal, agrega el contenido y ajusta al tamaño
-        mainWindow = new JFrame("Crear agente Lugar") ;
+        mainWindow = new JFrame("Agente Lugar " + agente.getName()) ;
         mainWindow.getContentPane().add(panelLugar);
 
         // Carga y establece un ícono para la ventana
@@ -121,6 +119,10 @@ public class UILugar {
         mainWindow.pack();
         mainWindow.setVisible(true);
         mainWindow.getRootPane().setDefaultButton(buttonCL);
+
+        mainWindow.setMinimumSize(mainWindow.getSize());
+
+        setAlojamiento(agente.getAlojamiento());
     }
 
     private void setAlojamiento(Alojamiento a) {
