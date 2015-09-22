@@ -5,11 +5,14 @@
 
 package ia.main;
 
-import ia.agents.negotiation.DiscountManager;
-import ia.agents.ontology.Alojamiento;
-import ia.agents.ontology.Paquete;
-import ia.agents.ontology.Transporte;
+import com.google.gson.*;
+import ia.agents.AgenteAgencia;
+import ia.agents.AgenteLugar;
+import ia.agents.AgenteTransporte;
+import ia.agents.AgenteTurista;
 import ia.agents.util.DFAgentSubscriber;
+import ia.agents.util.Util;
+import ia.main.storage.*;
 import ia.main.ui.UIAgentManager;
 import ia.main.ui.UiCreateAgent;
 import jade.core.*;
@@ -19,21 +22,20 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.wrapper.*;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class AgentManager extends Agent {
     private final List<AID> agencias = new ArrayList<>();
     private final List<UiCreateAgent> subscriptors = new ArrayList<>();
+    private final Map<String, Class<? extends JsonAgent>> agentTypes = new HashMap<>();
+    private final Map<String, ContainerController> agentContainers = new HashMap<>();
     private AgentController rma;
     private AgentController sniffer;
     private UIAgentManager ui;
     private boolean testAgentsLaunched;
     private Runtime rt;
 
-    // Separamos los agentes en containers distintos porque somos buenos, pero
-    // seguro vamos a sacar un 4 igual, o menos.
+    // Separamos los agentes en containers distintos porque somos buenos
     private ContainerController mainContainer;
     private ContainerController turistasContainer;
     private ContainerController agenciasContainer;
@@ -60,10 +62,26 @@ public class AgentManager extends Agent {
         sd.setType("Agencia");
         dfad.addServices(sd);
 
+        initializeAgentDB();
+
         ui = new UIAgentManager(this);
         ui.show();
 
         addBehaviour(new AgenciasSubscriber(this, dfad, agencias));
+    }
+
+    private void initializeAgentDB() {
+        // Registra los tipos de agentes para leer los casos de prueba
+        agentTypes.put("turistas", JsonTurista.class);
+        agentTypes.put("agencias", JsonAgencia.class);
+        agentTypes.put("transportes", JsonTransporte.class);
+        agentTypes.put("lugares", JsonLugar.class);
+
+        // Registra los contenedores para cada tipo de agente
+        agentContainers.put(AgenteTurista.class.getName(), turistasContainer);
+        agentContainers.put(AgenteAgencia.class.getName(), agenciasContainer);
+        agentContainers.put(AgenteLugar.class.getName(), lugaresContainer);
+        agentContainers.put(AgenteTransporte.class.getName(), transportesContainer);
     }
 
 
@@ -107,90 +125,24 @@ public class AgentManager extends Agent {
                 mainContainer);
     }
 
-    public void launchTestAgents() {
+    public void launchSimpleTestCase() {
         if(testAgentsLaunched)
             return;
-
-        Paquete paquete = new Paquete("Buenos Aires", 5, new Date(),
-                Paquete.PAGO_EFECTIVO, 1000.0, 5);
-        Paquete paquete2 = new Paquete("Córdoba", 6, new Date(),
-                Paquete.PAGO_TARJETA, 200.0, 7);
-        Alojamiento lugar1 = new Alojamiento(10, "Buenos Aires", new Date(),
-                123.0f, Alojamiento.TIPO_CASA_ALQ, 1,
-                new DiscountManager(0.1, 0.5, 0.1));
-        Alojamiento lugar2 = new Alojamiento(20, "Buenos Aires", new Date(),
-                200.0f, Alojamiento.TIPO_HOTEL, 4,
-                new DiscountManager(0.05, 0.3, 0.1));
-        Alojamiento lugar3 = new Alojamiento(15, "Buenos Aires", new Date(),
-                230.0f, Alojamiento.TIPO_HOSTEL, 1,
-                new DiscountManager(0.07, 0.4, 0.05));
-        Alojamiento lugar4 = new Alojamiento(9, "Buenos Aires", new Date(),
-                100.0f, Alojamiento.TIPO_HOTEL, 3,
-                new DiscountManager(0.05, 0.5, 0.08));
-        Alojamiento lugar5 = new Alojamiento(20, "Córdoba", new Date(),
-                200.0f, Alojamiento.TIPO_HOTEL, 3,
-                new DiscountManager(0.05, 0.3, 0.1));
-        Alojamiento lugar6 = new Alojamiento(15, "Córdoba", new Date(),
-                230.0f, Alojamiento.TIPO_HOSTEL, 1,
-                new DiscountManager(0.07, 0.4, 0.05));
-        Transporte transp1 = new Transporte(30, "Buenos Aires", new Date(),
-                120.0f, Transporte.TIPO_AVION, 1,
-                new DiscountManager(0.08, 0.45, 0.05));
-        Transporte transp2 = new Transporte(20, "Buenos Aires", new Date(),
-                120.0f, Transporte.TIPO_COLECTIVO, 1,
-                new DiscountManager(0.15, 0.6, 0.06));
-        Transporte transp3 = new Transporte(30, "Córdoba", new Date(),
-                130.0f, Transporte.TIPO_AVION, 1,
-                new DiscountManager(0.08, 0.45, 0.05));
-        Transporte transp4 = new Transporte(20, "Córdoba", new Date(),
-                140.0f, Transporte.TIPO_COLECTIVO, 1,
-                new DiscountManager(0.15, 0.6, 0.06));
-
-        List<String> lugar1Agencias = new ArrayList<>();
-        List<String> lugar2Agencias = new ArrayList<>();
-        List<String> lugar3Agencias = new ArrayList<>();
-
-        lugar1Agencias.add("Agencia86@IAMainPlatform");
-        lugar1Agencias.add("Agencia007@IAMainPlatform");
-        lugar1Agencias.add("AgenciaIA@IAMainPlatform");
-        lugar2Agencias.add("Agencia86@IAMainPlatform");
-        lugar2Agencias.add("AgenciaIA@IAMainPlatform");
-        lugar3Agencias.add("Agencia007@IAMainPlatform");
-        lugar3Agencias.add("AgenciaIA@IAMainPlatform");
-
-        Object turista[] = {paquete};
-        Object turista2[] = {paquete2};
-        Object lugar1_86[] = {lugar1Agencias, lugar1};
-        Object lugar2_86[] = {lugar2Agencias, lugar2};
-        Object lugar3_007[] = {lugar3Agencias, lugar3};
-        Object lugar4_007[] = {lugar3Agencias, lugar4};
-        Object lugar5_86[] = {lugar2Agencias, lugar5};
-        Object lugar6_007[] = {lugar3Agencias,lugar6};
-        Object transp_86[] = {lugar2Agencias, transp1};
-        Object transp_007[] = {lugar3Agencias, transp2};
-        Object transp2_86[] = {lugar1Agencias, transp3};
-        Object transp2_007[] = {lugar1Agencias, transp4};
-
-
-        createAgent("Turista Premium", "ia.agents.AgenteTurista", turista, turistasContainer);
-        createAgent("Turista Economico", "ia.agents.AgenteTurista", turista2, turistasContainer);
-        createAgent("Agencia86", "ia.agents.AgenteAgencia", null, agenciasContainer);
-        createAgent("Agencia007", "ia.agents.AgenteAgencia", null, agenciasContainer);
-        createAgent("AgenciaIA", "ia.agents.AgenteAgencia", null, agenciasContainer);
-
-        createAgent("Casa La Familia", "ia.agents.AgenteLugar", lugar1_86, lugaresContainer);
-        createAgent("Hotel Avenida", "ia.agents.AgenteLugar", lugar2_86, lugaresContainer);
-        createAgent("Comodidad Hostel", "ia.agents.AgenteLugar", lugar3_007, lugaresContainer);
-        createAgent("Hotel Cabildo", "ia.agents.AgenteLugar", lugar4_007, lugaresContainer);
-        createAgent("Hotel Nueva Cordoba", "ia.agents.AgenteLugar", lugar5_86, lugaresContainer);
-        createAgent("Hostel Los Inmigrantes", "ia.agents.AgenteLugar", lugar6_007, lugaresContainer);
-
-        createAgent("Aerolineas Argentinas", "ia.agents.AgenteTransporte", transp_86, transportesContainer);
-        createAgent("Flecha Bus", "ia.agents.AgenteTransporte", transp_007, transportesContainer);
-        createAgent("LAN", "ia.agents.AgenteTransporte", transp2_86, transportesContainer);
-        createAgent("ERSA", "ia.agents.AgenteTransporte", transp2_007, transportesContainer);
-
+        createAgentsFromJSONList(readAgentsDB("test_case_simple.json"));
         testAgentsLaunched = true;
+    }
+
+    public void launchComplexTestCase() {
+        if(testAgentsLaunched)
+            return;
+        createAgentsFromJSONList(readAgentsDB("test_case_complex.json"));
+        testAgentsLaunched = true;
+    }
+
+    public void createAgentsFromJSONList(List<JsonAgent> agents) {
+        for(JsonAgent agent : agents) {
+            createAgent(agent.getName(), agent.getType(), agent.getDataArray(), agentContainers.get(agent.getType()));
+        }
     }
 
     /**
@@ -222,7 +174,7 @@ public class AgentManager extends Agent {
             if (ac != null) {
                 ac.kill();
             }
-        } catch( StaleProxyException e) {
+        } catch(StaleProxyException e) {
             //e.printStackTrace();
         }
     }
@@ -249,7 +201,31 @@ public class AgentManager extends Agent {
     }
 
     /**
-     * Implementación de una especie de Oberserver para que se actualice la
+     * Lee el archivo en formato JSON con los datos de los agentes
+     * @param jsonFile Ruta al archivo JSON con los agentes de prueba
+     * @return Devuelve una lista de JsonAgents que contiene los datos de los agentes.
+     */
+    private List<JsonAgent> readAgentsDB(String jsonFile) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        JsonParser parser = new JsonParser();
+        List<JsonAgent> agents = new ArrayList<>();
+
+        String agentsFile = Util.readFile(jsonFile);
+        JsonObject jsonAgents = parser.parse(agentsFile).getAsJsonObject();
+
+        for(Map.Entry<String, Class<? extends JsonAgent>> entry : agentTypes.entrySet()) {
+            JsonArray agentArray = jsonAgents.getAsJsonArray(entry.getKey());
+
+            for (JsonElement agentElement : agentArray) {
+                JsonAgent agent = gson.fromJson(agentElement, entry.getValue());
+                agents.add(agent);
+            }
+        }
+        return agents;
+    }
+
+    /**
+     * Implementación de un Oberserver para que se actualice la
      * interfaz de crear agente cuando aparezcan nuevas agencias en el DF.
      * @param ui Interfaz crear agente.
      */

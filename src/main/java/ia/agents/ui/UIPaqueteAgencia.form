@@ -3,7 +3,7 @@
   <grid id="cbd77" binding="contentPane" layout-manager="GridLayoutManager" row-count="5" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="10" left="10" bottom="10" right="10"/>
     <constraints>
-      <xy x="48" y="54" width="460" height="778"/>
+      <xy x="48" y="54" width="460" height="784"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -138,7 +138,7 @@
             </constraints>
             <properties>
               <labelFor value="5459f"/>
-              <text value="Propuestas recibidas"/>
+              <text value="&amp;Propuestas recibidas"/>
             </properties>
           </component>
           <component id="583d6" class="javax.swing.JLabel">

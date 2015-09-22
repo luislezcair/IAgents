@@ -7,8 +7,12 @@ package ia.agents.util;
 
 import ia.agents.ontology.ServicioAgencia;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -44,6 +48,21 @@ public class Util {
     }
 
     /**
+     * Lee el contenido de un archivo y lo devuelve como String
+     * @param path Nombre o ruta al archivo
+     * @return Contenido del archivo
+     */
+    public static String readFile(String path) {
+        byte[] encoded = new byte[0];
+        try {
+            encoded = Files.readAllBytes(Paths.get(path));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new String(encoded, StandardCharsets.UTF_8);
+    }
+
+    /**
      * Devuelve el número aleatorio como un String
      */
     public final String getRandomNumberString(String min, String max) {
@@ -56,7 +75,6 @@ public class Util {
      * @return Lista de Strings con los nombres de las agencias
      */
     public static List<String> getAgencias(Object[] args) {
-        //Object[] args = getArguments();
         if (args == null || args.length < 1 || args[0] == null ||
                 !(args[0] instanceof List<?>)) {
             return new ArrayList<>();

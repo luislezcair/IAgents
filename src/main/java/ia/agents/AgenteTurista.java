@@ -230,7 +230,7 @@ public class AgenteTurista extends Agent {
                             resp.getSender().getName());
 
                     // Ordenamos la lista de ofertas por precio
-                    ofertas.sort((o1, o2) -> o1.compareTo(o2));
+                    ofertas.sort(PaqueteAgencia::compareTo);
                     SwingUtilities.invokeLater( () ->
                             new UIPaqueteAgencia(myAgent, ofertas));
                 } else {

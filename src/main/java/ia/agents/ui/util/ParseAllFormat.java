@@ -28,17 +28,17 @@ public class ParseAllFormat extends Format {
     }
 
     @Override
-    public StringBuffer format( Object obj, StringBuffer toAppendTo, FieldPosition pos ) {
-        return fDelegate.format( obj, toAppendTo, pos );
+    public StringBuffer format(Object obj, StringBuffer toAppendTo, FieldPosition pos) {
+        return fDelegate.format(obj, toAppendTo, pos);
     }
 
     @Override
-    public AttributedCharacterIterator formatToCharacterIterator( Object obj ) {
+    public AttributedCharacterIterator formatToCharacterIterator(Object obj) {
         return fDelegate.formatToCharacterIterator( obj );
     }
 
     @Override
-    public Object parseObject( String source, ParsePosition pos ) {
+    public Object parseObject(String source, ParsePosition pos) {
         int initialIndex = pos.getIndex();
         Object result = fDelegate.parseObject( source, pos );
         if ( result != null && pos.getIndex() < source.length() ) {
@@ -51,8 +51,8 @@ public class ParseAllFormat extends Format {
     }
 
     @Override
-    public Object parseObject( String source ) throws ParseException {
+    public Object parseObject(String source) throws ParseException {
         //no need to delegate the call, super will call the parseObject( source, pos ) method
-        return super.parseObject( source );
+        return super.parseObject(source);
     }
 }

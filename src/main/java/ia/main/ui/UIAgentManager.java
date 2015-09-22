@@ -15,13 +15,14 @@ public class UIAgentManager {
     private final JFrame mainWindow;
     private JPanel mainPanel;
     private JButton buttonSalir;
-    private JButton buttonTestAgents;
+    private JButton buttonComplexTestCase;
     private JButton buttonRma;
     private JButton buttonSniffer;
     private JButton buttonTransporte;
     private JButton buttonLugar;
     private JButton buttonAgencia;
     private JButton buttonTurista;
+    private JButton buttonSimpleTestCase;
 
     public UIAgentManager(AgentManager am) {
         manager = am;
@@ -50,7 +51,8 @@ public class UIAgentManager {
         mainWindow.setMinimumSize(mainWindow.getSize());
 
         buttonSalir.addActionListener(event -> manager.shutdown());
-        buttonTestAgents.addActionListener(event -> manager.launchTestAgents());
+        buttonComplexTestCase.addActionListener(event -> manager.launchComplexTestCase());
+        buttonSimpleTestCase.addActionListener(event -> manager.launchSimpleTestCase());
         buttonRma.addActionListener(event -> manager.launchRma());
         buttonSniffer.addActionListener(event -> manager.launchSniffer());
 
