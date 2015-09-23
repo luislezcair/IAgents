@@ -1,0 +1,121 @@
+{
+  "turistas":
+  [
+    {
+      "nombre": "Turista",
+      "paquete": {
+        "destino": "Buenos Aires",
+        "dias": 5,
+        "fecha": "Sep 23, 2015 17:35:48 PM",
+        "formaDePago": 0,
+        "importeMaxPorPersona": 1000.0,
+        "personas": 5
+      }
+    }
+  ],
+
+  "agencias":
+  [
+    {
+      "nombre": "Agencia1"
+    },
+
+    {
+      "nombre": "Agencia2"
+    }
+  ],
+
+  "transportes":
+  [
+    {
+      "nombre": "Transporte1",
+      "transporte": {
+        "capacidad": 30,
+        "destino": "Buenos Aires",
+        "fecha": "Sep 23, 2015 17:35:48 PM",
+        "precioPorPersona": 120.0,
+        "tipo": 0,
+        "categoria": 1,
+        "ds": {
+          "value": 0.08,
+          "max": 0.45,
+          "step": 0.05
+        }
+      },
+
+      "agencias":
+      [
+        "Agencia1@IAMainPlatform"
+      ]
+    },
+
+    {
+      "nombre": "Transporte2",
+      "transporte": {
+        "capacidad": 20,
+        "destino": "Buenos Aires",
+        "fecha": "Sep 23, 2015 17:35:48 PM",
+        "precioPorPersona": 120.0,
+        "tipo": 1,
+        "categoria": 1,
+        "ds": {
+          "value": 0.15,
+          "max": 0.6,
+          "step": 0.06
+        }
+      },
+
+      "agencias":
+      [
+        "Agencia2@IAMainPlatform"
+      ]
+    }
+  ],
+
+  "lugares":
+  [
+    {
+      "nombre": "Lugar1",
+      "alojamiento": {
+        "capacidad": 10,
+        "destino": "Buenos Aires",
+        "fecha": "Sep 23, 2015 17:35:48 PM",
+        "precioPorPersona": 123.0,
+        "tipo": 2,
+        "categoria": 1,
+        "ds": {
+          "value": 0.1,
+          "max": 0.5,
+          "step": 0.1
+        }
+      },
+
+      "agencias":
+      [
+        "Agencia1@IAMainPlatform"
+      ]
+    },
+
+    {
+      "nombre": "Lugar2",
+      "alojamiento": {
+        "capacidad": 20,
+        "destino": "Buenos Aires",
+        "fecha": "Sep 23, 2015 17:35:48 PM",
+        "precioPorPersona": 200.0,
+        "tipo": 0,
+        "categoria": 4,
+        "ds": {
+          "value": 0.05,
+          "max": 0.3,
+          "step": 0.1
+        }
+      },
+
+      "agencias":
+      [
+        "Agencia2@IAMainPlatform"
+      ]
+    }
+  ]
+}
