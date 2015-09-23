@@ -2,11 +2,11 @@
   "turistas":
     [
       {
-        "nombre": "Turista Económico",
+        "nombre": "Turista Economico",
         "paquete": {
           "destino": "Córdoba",
           "dias": 6,
-          "fecha": "Jun 6, 2015 9:05:48 PM",
+          "fecha": "Sep 23, 2015 17:35:48 PM",
           "formaDePago": 1,
           "importeMaxPorPersona": 200.0,
           "personas": 7
@@ -18,7 +18,7 @@
         "paquete": {
           "destino": "Buenos Aires",
           "dias": 5,
-          "fecha": "Jun 6, 2015 9:05:48 PM",
+          "fecha": "Sep 23, 2015 17:35:48 PM",
           "formaDePago": 0,
           "importeMaxPorPersona": 1000.0,
           "personas": 5
@@ -48,7 +48,7 @@
         "transporte": {
           "capacidad": 30,
           "destino": "Buenos Aires",
-          "fecha": "Jun 6, 2015 9:05:48 PM",
+          "fecha": "Sep 23, 2015 17:35:48 PM",
           "precioPorPersona": 120.0,
           "tipo": 0,
           "categoria": 1,
@@ -71,7 +71,7 @@
         "transporte": {
           "capacidad": 20,
           "destino": "Buenos Aires",
-          "fecha": "Jun 6, 2015 9:05:48 PM",
+          "fecha": "Sep 23, 2015 17:35:48 PM",
           "precioPorPersona": 120.0,
           "tipo": 1,
           "categoria": 1,
@@ -94,7 +94,7 @@
         "transporte": {
           "capacidad": 30,
           "destino": "Córdoba",
-          "fecha": "Jun 6, 2015 9:05:48 PM",
+          "fecha": "Sep 23, 2015 17:35:48 PM",
           "precioPorPersona": 130.0,
           "tipo": 0,
           "categoria": 1,
@@ -118,7 +118,7 @@
         "transporte": {
           "capacidad": 20,
           "destino": "Córdoba",
-          "fecha": "Jun 6, 2015 9:05:48 PM",
+          "fecha": "Sep 23, 2015 17:35:48 PM",
           "precioPorPersona": 140.0,
           "tipo": 1,
           "categoria": 1,
@@ -146,7 +146,7 @@
         "alojamiento": {
           "capacidad": 10,
           "destino": "Buenos Aires",
-          "fecha": "Jun 6, 2015 9:05:48 PM",
+          "fecha": "Sep 23, 2015 17:35:48 PM",
           "precioPorPersona": 123.0,
           "tipo": 2,
           "categoria": 1,
@@ -170,7 +170,7 @@
         "alojamiento": {
           "capacidad": 20,
           "destino": "Buenos Aires",
-          "fecha": "Jun 6, 2015 9:05:48 PM",
+          "fecha": "Sep 23, 2015 17:35:48 PM",
           "precioPorPersona": 200.0,
           "tipo": 0,
           "categoria": 4,
@@ -193,7 +193,7 @@
         "alojamiento": {
           "capacidad": 15,
           "destino": "Buenos Aires",
-          "fecha": "Jun 6, 2015 9:05:48 PM",
+          "fecha": "Sep 23, 2015 17:35:48 PM",
           "precioPorPersona": 230.0,
           "tipo": 1,
           "categoria": 1,
@@ -216,7 +216,7 @@
         "alojamiento": {
           "capacidad": 9,
           "destino": "Buenos Aires",
-          "fecha": "Jun 6, 2015 9:05:48 PM",
+          "fecha": "Sep 23, 2015 17:35:48 PM",
           "precioPorPersona": 100.0,
           "tipo": 0,
           "categoria": 3,
@@ -239,7 +239,7 @@
         "alojamiento": {
           "capacidad": 20,
           "destino": "Córdoba",
-          "fecha": "Jun 6, 2015 9:05:48 PM",
+          "fecha": "Sep 23, 2015 17:35:48 PM",
           "precioPorPersona": 200.0,
           "tipo": 0,
           "categoria": 3,
@@ -262,7 +262,7 @@
         "alojamiento": {
           "capacidad": 15,
           "destino": "Córdoba",
-          "fecha": "Jun 6, 2015 9:05:48 PM",
+          "fecha": "Sep 23, 2015 17:35:48 PM",
           "precioPorPersona": 230.0,
           "tipo": 1,
           "categoria": 1,
